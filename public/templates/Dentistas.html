@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odonto Premium | Transformando Sorrisos</title>
+
+    <!-- Frameworks e Fontes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600%7CRaleway:300,400,500,600,700,800"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Paleta Odonto: Azul Turquesa / Sky Blue Premium */
+            --brand: #0284c7;
+            /* Sky 600 */
+            --brand-light: #e0f2fe;
+            /* Sky 100 */
+            --dark: #0f172a;
+            --whatsapp-green: #25d366;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 700;
+        }
+
+        .bg-brand {
+            background-color: var(--brand);
+        }
+
+        .text-brand {
+            color: var(--brand);
+        }
+
+        .border-brand {
+            border-color: var(--brand);
+        }
+
+        .smooth-transition {
+            transition: all 0.3s ease;
+        }
+
+        /* Hero Section com Imagem Temática de Odontologia */
+        #inicio {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.8)),
+                url('https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            /* Efeito Parallax */
+            position: relative;
+        }
+
+        /* Efeito de Luz Clean (Feixe de luz suave azulado) */
+        .light-beam {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(2, 132, 199, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Título Animado */
+        .txt-rotate>.wrap {
+            border-right: 0.08em solid var(--brand);
+        }
+
+        /* Floating Labels estilo Apoio */
+        .input-group {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 12px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #ddd;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group label {
+            position: absolute;
+            left: 0;
+            top: 12px;
+            color: #999;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus~label,
+        .input-group input:valid~label,
+        .input-group textarea:focus~label,
+        .input-group textarea:valid~label {
+            top: -15px;
+            font-size: 12px;
+            color: var(--brand);
+            font-weight: 600;
+        }
+
+        .input-group input:focus {
+            border-bottom-color: var(--brand);
+        }
+
+        /* WhatsApp Chat Style */
+        #wa-chat-box {
+            display: none;
+            transform-origin: bottom right;
+            z-index: 100;
+        }
+
+        .wa-header {
+            background-color: var(--brand);
+            padding: 15px;
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .wa-chat-body {
+            background-color: #f0f4f8;
+            padding: 20px;
+            min-height: 100px;
+        }
+
+        .wa-bubble-msg {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 0 15px 15px 15px;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        /* Glass effect navbar */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-heading h2 {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .section-heading h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            background: var(--brand);
+            bottom: -10px;
+            left: 25%;
+        }
+
+        @keyframes popUp {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .animate-pop {
+            animation: popUp 0.4s ease-out forwards;
+        }
+
+        .faq-item input:checked~.faq-content {
+            max-height: 300px;
+            padding: 20px;
+        }
+
+        /* Customização Range Slider HTML5 (Remover estilo padrão) */
+        input[type=range]::-webkit-slider-thumb {
+            pointer-events: all;
+            width: 40px;
+            height: 40px;
+            -webkit-appearance: none;
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+
+    <!-- Header -->
+    <header id="navbar" class="fixed w-full z-[60] py-4 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <a href="#inicio"
+                class="text-2xl font-extrabold tracking-tighter logo-text text-white flex items-center gap-2">
+                <i class="fas fa-tooth text-brand"></i>
+                <span class="text-brand">ODONTO PREMIUM</span>
+            </a>
+
+            <nav class="hidden lg:flex items-center space-x-8 font-medium">
+                <a href="#inicio" class="nav-link text-white hover:text-brand smooth-transition text-sm">Início</a>
+                <a href="#atuacao"
+                    class="nav-link text-white hover:text-brand smooth-transition text-sm">Tratamentos</a>
+                <a href="#antes-depois"
+                    class="nav-link text-white hover:text-brand smooth-transition text-sm">Resultados</a>
+                <a href="#sobre" class="nav-link text-white hover:text-brand smooth-transition text-sm">A
+                    Especialista</a>
+                <a href="#contato"
+                    class="bg-brand text-white px-6 py-2 rounded-full hover:shadow-xl smooth-transition text-sm font-semibold">Agendar
+                    Avaliação</a>
+            </nav>
+
+            <button class="lg:hidden text-white text-2xl logo-text"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Home Section -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden">
+        <div class="light-beam"></div>
+
+        <div class="relative z-10 px-6 max-w-4xl mt-20">
+            <div
+                class="inline-block bg-brand/20 text-blue-200 px-4 py-1 rounded-full text-[10px] font-bold tracking-[0.3em] uppercase mb-6 backdrop-blur-sm border border-brand/30">
+                Odontologia Estética Avançada
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 uppercase tracking-tighter leading-tight">
+                Transforme seu <br>
+                <span class="text-brand txt-rotate" data-period="2000"
+                    data-rotate='[ "SORRISO", "BEM-ESTAR", "FUTURO", "AUTOESTIMA" ]'></span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-200 mb-12 font-light max-w-2xl mx-auto">
+                Tecnologia de ponta e um olhar artístico para criar sorrisos harmônicos, naturais e que refletem a sua
+                melhor versão.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 md:gap-6">
+                <a href="#antes-depois"
+                    class="px-8 py-4 border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-dark smooth-transition">Ver
+                    Resultados</a>
+                <a href="#contato"
+                    class="px-8 py-4 bg-brand text-white font-bold rounded-full shadow-lg hover:shadow-brand/40 hover:-translate-y-1 smooth-transition">Agendar
+                    Consulta</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Áreas de Atuação -->
+    <section id="atuacao" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="section-heading text-center mb-20">
+                <h2 class="text-4xl font-bold uppercase tracking-tight text-gray-800">Tratamentos Premium</h2>
+                <p class="text-gray-500 mt-4">Soluções completas com foco em estética, função e conforto.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                    class="group p-10 border border-gray-100 rounded-3xl hover:border-brand hover:shadow-2xl smooth-transition bg-white">
+                    <div
+                        class="w-16 h-16 bg-[var(--brand-light)] text-brand rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-brand group-hover:text-white smooth-transition">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold mb-4 text-gray-800">Lentes de Contato</h4>
+                    <p class="text-gray-500 mb-6 text-sm leading-relaxed">Facetas ultrafinas de porcelana para corrigir
+                        cor, formato e alinhamento dos dentes em poucas sessões.</p>
+                    <a href="#contato"
+                        class="text-brand font-bold text-xs uppercase tracking-widest border-b border-brand pb-1">Agendar
+                        Avaliação</a>
+                </div>
+
+                <div
+                    class="group p-10 border border-gray-100 rounded-3xl hover:border-brand hover:shadow-2xl smooth-transition bg-white relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 bg-brand text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase">
+                        Mais Buscado</div>
+                    <div
+                        class="w-16 h-16 bg-[var(--brand-light)] text-brand rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-brand group-hover:text-white smooth-transition">
+                        <i class="fas fa-teeth"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold mb-4 text-gray-800">Implantes Dentários</h4>
+                    <p class="text-gray-500 mb-6 text-sm leading-relaxed">Reabilitação oral completa com materiais
+                        biocompatíveis, devolvendo sua segurança para mastigar e sorrir.</p>
+                    <a href="#contato"
+                        class="text-brand font-bold text-xs uppercase tracking-widest border-b border-brand pb-1">Agendar
+                        Avaliação</a>
+                </div>
+
+                <div
+                    class="group p-10 border border-gray-100 rounded-3xl hover:border-brand hover:shadow-2xl smooth-transition bg-white">
+                    <div
+                        class="w-16 h-16 bg-[var(--brand-light)] text-brand rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-brand group-hover:text-white smooth-transition">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold mb-4 text-gray-800">Clareamento a Laser</h4>
+                    <p class="text-gray-500 mb-6 text-sm leading-relaxed">Procedimento seguro e rápido em consultório
+                        para remover manchas e conquistar dentes visivelmente mais brancos.</p>
+                    <a href="#contato"
+                        class="text-brand font-bold text-xs uppercase tracking-widest border-b border-brand pb-1">Agendar
+                        Avaliação</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO ANTES E DEPOIS (SLIDER INTERATIVO) -->
+    <section id="antes-depois" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="section-heading text-center mb-16">
+                <h2 class="text-4xl font-bold uppercase text-gray-800">Transformações Reais</h2>
+                <p class="text-gray-500 mt-4">Arraste a barra central para os lados e compare a diferença nos sorrisos
+                    de nossos pacientes.</p>
+            </div>
+
+            <!-- GRID COM 4 CARDS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <!-- CARD 1 -->
+                <div
+                    class="relative w-full aspect-[4/3] overflow-hidden rounded-3xl shadow-xl bg-gray-200 select-none group slider-container">
+                    <!-- IMAGEM DEPOIS (Fundo) -->
+                    <!-- COLOQUE O LINK DA FOTO DO "DEPOIS" DO PACIENTE 1 AQUI -->
+                    <img src="https://static.vecteezy.com/ti/fotos-gratis/p1/55620923-fechar-acima-do-uma-perfeito-sorrir-com-saudavel-branco-dentes-foto.jpg"
+                        class="absolute inset-0 w-full h-full object-cover" alt="Sorriso Depois 1">
+
+                    <!-- IMAGEM ANTES (Frente) -->
+                    <!-- COLOQUE O LINK DA FOTO DO "ANTES" DO PACIENTE 1 AQUI -->
+                    <img src="https://static.vecteezy.com/ti/fotos-gratis/p2/70913160-fechar-se-imagem-do-descolorido-amarelo-dentes-enfatizando-dental-higiene-importancia-foto.jpg"
+                        class="before-image absolute inset-0 w-full h-full object-cover"
+                        style="clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);" alt="Sorriso Antes 1">
+
+                    <input type="range" min="0" max="100" value="50"
+                        class="compare-slider absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-20 m-0">
+                    <div class="slider-line absolute top-0 bottom-0 w-1 bg-white z-10 pointer-events-none shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+                        style="left: 50%; transform: translateX(-50%);">
+                        <div
+                            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-brand text-lg transition-transform group-hover:scale-110">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </div>
+                    </div>
+                    <div
+                        class="absolute top-4 left-4 bg-black/60 text-white px-3 py-1 rounded-full text-[10px] font-bold backdrop-blur-md z-10 pointer-events-none tracking-widest">
+                        ANTES</div>
+                    <div
+                        class="absolute top-4 right-4 bg-brand/90 text-white px-3 py-1 rounded-full text-[10px] font-bold backdrop-blur-md z-10 pointer-events-none tracking-widest">
+                        DEPOIS</div>
+                </div>
+
+                <!-- CARD 2 -->
+                <div
+                    class="relative w-full aspect-[4/3] overflow-hidden rounded-3xl shadow-xl bg-gray-200 select-none group slider-container">
+                    <!-- IMAGEM DEPOIS -->
+                    <!-- COLOQUE O LINK DA FOTO DO "DEPOIS" DO PACIENTE 2 AQUI -->
+                    <img src="../assets/img1.png" class="absolute inset-0 w-full h-full object-cover" alt="Sorriso Depois 2">
+
+                    <!-- IMAGEM ANTES -->
+                    <!-- COLOQUE O LINK DA FOTO DO "ANTES" DO PACIENTE 2 AQUI -->
+                    <img src="../assets/img2.png" class="before-image absolute inset-0 w-full h-full object-cover"
+                        style="clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);" alt="Sorriso Antes 2">
+
+                    <input type="range" min="0" max="100" value="50"
+                        class="compare-slider absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-20 m-0">
+                    <div class="slider-line absolute top-0 bottom-0 w-1 bg-white z-10 pointer-events-none shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+                        style="left: 50%; transform: translateX(-50%);">
+                        <div
+                            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-brand text-lg transition-transform group-hover:scale-110">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </div>
+                    </div>
+                    <div
+                        class="absolute top-4 left-4 bg-black/60 text-white px-3 py-1 rounded-full text-[10px] font-bold backdrop-blur-md z-10 pointer-events-none tracking-widest">
+                        ANTES</div>
+                    <div
+                        class="absolute top-4 right-4 bg-brand/90 text-white px-3 py-1 rounded-full text-[10px] font-bold backdrop-blur-md z-10 pointer-events-none tracking-widest">
+                        DEPOIS</div>
+                </div>
+
+                <!-- CARD 3 -->
+                <div
+                    class="relative w-full aspect-[4/3] overflow-hidden rounded-3xl shadow-xl bg-gray-200 select-none group slider-container">
+                    <!-- IMAGEM DEPOIS -->
+                    <!-- COLOQUE O LINK DA FOTO DO "DEPOIS" DO PACIENTE 3 AQUI -->
+                    <img src="https://luisgustavoleite.com.br/blog/wp-content/uploads/2017/04/lente-de-contato-dental-famosos-problemas-1.jpg"
+                        class="absolute inset-0 w-full h-full object-cover" alt="Sorriso Depois 3">
+
+                    <!-- IMAGEM ANTES -->
+                    <!-- COLOQUE O LINK DA FOTO DO "ANTES" DO PACIENTE 3 AQUI -->
+                    <img src="https://aquarelaorto.com.br/wp-content/uploads/2017/07/dentes-amarelos.x95252.jpg"
+                        class="before-image absolute inset-0 w-full h-full object-cover"
+                        style="clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);" alt="Sorriso Antes 3">
+
+                    <input type="range" min="0" max="100" value="50"
+                        class="compare-slider absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-20 m-0">
+                    <div class="slider-line absolute top-0 bottom-0 w-1 bg-white z-10 pointer-events-none shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+                        style="left: 50%; transform: translateX(-50%);">
+                        <div
+                            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-brand text-lg transition-transform group-hover:scale-110">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </div>
+                    </div>
+                    <div
+                        class="absolute top-4 left-4 bg-black/60 text-white px-3 py-1 rounded-full text-[10px] font-bold backdrop-blur-md z-10 pointer-events-none tracking-widest">
+                        ANTES</div>
+                    <div
+                        class="absolute top-4 right-4 bg-brand/90 text-white px-3 py-1 rounded-full text-[10px] font-bold backdrop-blur-md z-10 pointer-events-none tracking-widest">
+                        DEPOIS</div>
+                </div>
+
+                <!-- CARD 4 -->
+                <div
+                    class="relative w-full aspect-[4/3] overflow-hidden rounded-3xl shadow-xl bg-gray-200 select-none group slider-container">
+                    <!-- IMAGEM DEPOIS -->
+                    <!-- COLOQUE O LINK DA FOTO DO "DEPOIS" DO PACIENTE 4 AQUI -->
+                    <img src="https://images.unsplash.com/photo-1606265752439-1f18756aa5fc?auto=format&fit=crop&w=800&q=80"
+                        class="absolute inset-0 w-full h-full object-cover" alt="Sorriso Depois 4">
+
+                    <!-- IMAGEM ANTES -->
+                    <!-- COLOQUE O LINK DA FOTO DO "ANTES" DO PACIENTE 4 AQUI -->
+                    <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80"
+                        class="before-image absolute inset-0 w-full h-full object-cover"
+                        style="clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);" alt="Sorriso Antes 4">
+
+                    <input type="range" min="0" max="100" value="50"
+                        class="compare-slider absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-20 m-0">
+                    <div class="slider-line absolute top-0 bottom-0 w-1 bg-white z-10 pointer-events-none shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+                        style="left: 50%; transform: translateX(-50%);">
+                        <div
+                            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-brand text-lg transition-transform group-hover:scale-110">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </div>
+                    </div>
+                    <div
+                        class="absolute top-4 left-4 bg-black/60 text-white px-3 py-1 rounded-full text-[10px] font-bold backdrop-blur-md z-10 pointer-events-none tracking-widest">
+                        ANTES</div>
+                    <div
+                        class="absolute top-4 right-4 bg-brand/90 text-white px-3 py-1 rounded-full text-[10px] font-bold backdrop-blur-md z-10 pointer-events-none tracking-widest">
+                        DEPOIS</div>
+                </div>
+
+            </div>
+
+            <div class="text-center mt-12">
+                <p class="text-sm text-gray-400 italic">* Imagens reais de pacientes. Os resultados variam de acordo com
+                    a anatomia de cada indivíduo.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Perfil Section -->
+    <section id="sobre" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="relative">
+                <div class="bg-brand w-full h-full absolute top-6 left-6 rounded-3xl -z-10"></div>
+                <!-- Imagem do Dentista -->
+                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=800&q=80"
+                    class="rounded-3xl shadow-xl w-full h-[550px] object-cover hover:scale-[1.02] smooth-transition"
+                    alt="Dra. Especialista">
+
+                <div class="absolute -bottom-6 -right-6 bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+                    <div class="text-4xl font-extrabold text-brand">10+</div>
+                    <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Anos Cuidando <br>de
+                        Sorrisos</div>
+                </div>
+            </div>
+            <div>
+                <div class="section-heading mb-8">
+                    <h2 class="text-4xl font-bold uppercase text-gray-800">A Especialista</h2>
+                    <h6 class="text-brand font-bold tracking-[0.2em] mt-2">Dra. Camila Marques</h6>
+                </div>
+                <div class="space-y-6 text-gray-600 leading-relaxed">
+                    <p class="text-lg font-medium text-gray-800 border-l-4 border-brand pl-4">"O seu sorriso é o seu
+                        cartão de visitas mais precioso. Minha missão é revelar a sua melhor versão."</p>
+                    <p>Referência em Odontologia Estética e Reabilitação Oral, a Dra. Camila une ciência, tecnologia e
+                        arte para realizar procedimentos com o máximo de precisão e conforto.</p>
+                    <p>Nosso consultório conta com equipamentos de última geração, fluxo digital (scanners 3D) e um
+                        ambiente desenhado para que sua experiência seja relaxante, livre de ansiedade e focada nos seus
+                        resultados.</p>
+
+                    <div class="flex gap-6 pt-4">
+                        <div class="text-center">
+                            <div
+                                class="w-14 h-14 bg-[var(--brand-light)] rounded-full flex items-center justify-center text-brand shadow-sm mb-3 mx-auto">
+                                <i class="fas fa-graduation-cap text-xl"></i>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase">Mestre em<br>Estética</span>
+                        </div>
+                        <div class="text-center">
+                            <div
+                                class="w-14 h-14 bg-[var(--brand-light)] rounded-full flex items-center justify-center text-brand shadow-sm mb-3 mx-auto">
+                                <i class="fas fa-microscope text-xl"></i>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase">Fluxo<br>100% Digital</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 bg-slate-50">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="section-heading text-center mb-16">
+                <h2 class="text-4xl font-bold uppercase text-gray-800">Dúvidas Frequentes</h2>
+                <p class="text-gray-500 mt-4">Transparência total antes de iniciar o seu tratamento.</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="faq-item bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                    <input type="checkbox" id="faq1" class="hidden peer">
+                    <label for="faq1"
+                        class="flex justify-between items-center p-6 cursor-pointer hover:bg-gray-50 smooth-transition font-bold text-gray-800">
+                        A aplicação de Lentes de Contato dói?
+                        <i class="fas fa-plus text-brand peer-checked:rotate-45 smooth-transition"></i>
+                    </label>
+                    <div
+                        class="faq-content max-h-0 overflow-hidden bg-white text-gray-600 smooth-transition px-6 border-t border-gray-50">
+                        Não. O procedimento é minimamente invasivo e, na maioria dos casos, feito com anestesia local de
+                        altíssima eficácia para garantir conforto absoluto.
+                    </div>
+                </div>
+                <div class="faq-item bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                    <input type="checkbox" id="faq2" class="hidden peer">
+                    <label for="faq2"
+                        class="flex justify-between items-center p-6 cursor-pointer hover:bg-gray-50 smooth-transition font-bold text-gray-800">
+                        Quanto tempo dura o clareamento dental?
+                        <i class="fas fa-plus text-brand smooth-transition"></i>
+                    </label>
+                    <div
+                        class="faq-content max-h-0 overflow-hidden bg-white text-gray-600 smooth-transition px-6 border-t border-gray-50">
+                        Depende dos hábitos de cada paciente (consumo de café, cigarro, etc.), mas em média os
+                        resultados do clareamento a laser em consultório duram de 1 a 2 anos.
+                    </div>
+                </div>
+                <div class="faq-item bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                    <input type="checkbox" id="faq3" class="hidden peer">
+                    <label for="faq3"
+                        class="flex justify-between items-center p-6 cursor-pointer hover:bg-gray-50 smooth-transition font-bold text-gray-800">
+                        O consultório atende planos de saúde/convênios?
+                        <i class="fas fa-plus text-brand smooth-transition"></i>
+                    </label>
+                    <div
+                        class="faq-content max-h-0 overflow-hidden bg-white text-gray-600 smooth-transition px-6 border-t border-gray-50">
+                        Trabalhamos de forma particular para garantir materiais de padrão internacional e tempo de
+                        atendimento exclusivo. No entanto, emitimos recibos para que você solicite o reembolso junto ao
+                        seu plano.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contato -->
+    <section id="contato" class="py-24 bg-white relative">
+        <div class="max-w-4xl mx-auto px-6 relative z-10">
+            <div class="bg-slate-900 p-12 rounded-[40px] shadow-2xl relative overflow-hidden">
+                <!-- Efeito visual no card -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-brand rounded-full filter blur-[100px] opacity-30 -z-0">
+                </div>
+
+                <div class="text-center mb-16 relative z-10">
+                    <h2 class="text-4xl font-bold uppercase text-white">Agende sua Avaliação</h2>
+                    <p class="text-gray-400 mt-4">Deixe seus dados e nossa equipe entrará em contato para agendar o seu
+                        horário.</p>
+                </div>
+
+                <form id="contactForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 relative z-10">
+                    <div class="input-group">
+                        <input type="text" id="name" required class="text-white border-gray-600 focus:border-brand">
+                        <label for="name" class="text-gray-500">Seu Nome*</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="phone" required class="text-white border-gray-600 focus:border-brand">
+                        <label for="phone" class="text-gray-500">WhatsApp*</label>
+                    </div>
+                    <div class="input-group md:col-span-2">
+                        <select id="interesse"
+                            class="w-full padding-y-12 bg-transparent border-b-2 border-gray-600 text-white outline-none pb-3 focus:border-brand transition-all cursor-pointer">
+                            <option value="" disabled selected class="text-gray-900">Qual o seu principal interesse?
+                            </option>
+                            <option value="lentes" class="text-gray-900">Lentes de Contato / Facetas</option>
+                            <option value="implantes" class="text-gray-900">Implantes Dentários</option>
+                            <option value="clareamento" class="text-gray-900">Clareamento</option>
+                            <option value="ortodontia" class="text-gray-900">Aparelho Invisível</option>
+                            <option value="outro" class="text-gray-900">Outros / Check-up Geral</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2 text-center mt-8">
+                        <button type="submit"
+                            class="bg-brand text-white px-16 py-4 rounded-full font-bold text-lg hover:shadow-[0_10px_30px_rgba(2,132,199,0.4)] hover:scale-105 smooth-transition w-full md:w-auto">
+                            Quero Transformar Meu Sorriso
+                        </button>
+                    </div>
+                </form>
+                <div id="formStatus" class="mt-8 hidden p-4 text-center rounded-2xl relative z-10"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-50 text-gray-500 py-16 text-center border-t border-gray-200">
+        <div class="text-2xl font-extrabold text-gray-800 mb-6 uppercase flex justify-center items-center gap-2">
+            <i class="fas fa-tooth text-brand"></i>
+            ODONTO<span class="text-brand">PREMIUM</span>
+        </div>
+        <p class="text-[10px] uppercase tracking-[0.3em] mb-8 font-bold">Arte e Ciência Odontológica</p>
+        <div class="flex justify-center space-x-6 text-xl mb-12">
+            <a href="#"
+                class="hover:text-brand smooth-transition bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-sm"><i
+                    class="fab fa-facebook-f"></i></a>
+            <a href="#"
+                class="hover:text-brand smooth-transition bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-sm"><i
+                    class="fab fa-instagram"></i></a>
+            <a href="#"
+                class="hover:text-brand smooth-transition bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-sm"><i
+                    class="fab fa-tiktok"></i></a>
+        </div>
+        <p class="text-[10px] uppercase tracking-widest">© 2026 OdontoPremium | CRO-SP 00000 | Resp. Técnica: Dra.
+            Camila Marques</p>
+    </footer>
+
+    <!-- WhatsApp Area -->
+    <div class="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
+        <div id="wa-chat-box"
+            class="mb-4 w-[320px] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+            <div class="wa-header">
+                <div class="flex justify-between items-center mb-1">
+                    <h3 class="font-bold text-sm uppercase tracking-wider">Atendimento Online</h3>
+                    <button onclick="toggleChat()" class="text-white/60 hover:text-white"><i
+                            class="fas fa-times"></i></button>
+                </div>
+                <p class="text-[10px] text-white/80">Nossa equipe responde em poucos minutos</p>
+            </div>
+            <div class="wa-chat-body">
+                <div class="flex gap-2">
+                    <div
+                        class="w-8 h-8 rounded-full bg-brand flex items-center justify-center text-white flex-shrink-0">
+                        <i class="fas fa-tooth text-[10px]"></i>
+                    </div>
+                    <div class="wa-bubble-msg text-gray-700">
+                        Olá! Bem-vindo à OdontoPremium. Gostaria de saber mais sobre Lentes de Contato ou agendar uma
+                        avaliação? 😁
+                    </div>
+                </div>
+            </div>
+            <div class="p-3 bg-white border-t flex gap-2">
+                <input type="text" id="wa-input" placeholder="Escreva sua mensagem..."
+                    class="flex-1 bg-gray-100 border-none rounded-full px-4 py-2 text-sm outline-none">
+                <button onclick="sendWa()"
+                    class="w-10 h-10 bg-[#25d366] text-white rounded-full flex items-center justify-center hover:bg-green-600 smooth-transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        <div class="relative">
+            <button onclick="toggleChat()"
+                class="bg-[#25d366] text-white w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-[0_10px_40px_rgba(37,211,102,0.4)] hover:scale-110 smooth-transition relative group">
+                <i class="fab fa-whatsapp text-3xl md:text-4xl"></i>
+                <span
+                    class="absolute -top-1 -right-1 h-5 w-5 md:h-6 md:w-6 bg-red-500 border-4 border-white rounded-full animate-bounce"></span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Efeito de Luz Dinâmica na Secção Hero
+        const hero = document.querySelector('#inicio');
+        const lightBeam = document.querySelector('.light-beam');
+
+        hero.addEventListener('mousemove', e => {
+            const rect = hero.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            lightBeam.style.setProperty('--x', `${x}%`);
+            lightBeam.style.setProperty('--y', `${y}%`);
+        });
+
+        // Typing Rotate
+        var TxtRotate = function (el, toRotate, period) {
+            this.toRotate = toRotate; this.el = el; this.loopNum = 0;
+            this.period = parseInt(period, 10) || 2000; this.txt = '';
+            this.tick(); this.isDeleting = false;
+        };
+        TxtRotate.prototype.tick = function () {
+            var i = this.loopNum % this.toRotate.length; var fullTxt = this.toRotate[i];
+            if (this.isDeleting) { this.txt = fullTxt.substring(0, this.txt.length - 1); }
+            else { this.txt = fullTxt.substring(0, this.txt.length + 1); }
+            this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
+            var that = this; var delta = 200 - Math.random() * 100;
+            if (this.isDeleting) delta /= 2;
+            if (!this.isDeleting && this.txt === fullTxt) { delta = this.period; this.isDeleting = true; }
+            else if (this.isDeleting && this.txt === '') { this.isDeleting = false; this.loopNum++; delta = 500; }
+            setTimeout(function () { that.tick(); }, delta);
+        };
+
+        window.onload = function () {
+            var elements = document.getElementsByClassName('txt-rotate');
+            for (var i = 0; i < elements.length; i++) {
+                var rotate = elements[i].getAttribute('data-rotate');
+                if (rotate) new TxtRotate(elements[i], JSON.parse(rotate), elements[i].getAttribute('data-period'));
+            }
+            // Abre o chat do whatsapp após 6 segundos
+            setTimeout(() => { toggleChat(); }, 6000);
+        };
+
+        // Scroll Navbar
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            const links = document.querySelectorAll('.nav-link, .logo-text');
+            if (window.scrollY > 80) {
+                nav.classList.add('glass-nav', 'py-3', 'shadow-sm');
+                links.forEach(el => { if (!el.classList.contains('text-brand') && !el.classList.contains('bg-brand')) el.classList.add('text-gray-800'); });
+            } else {
+                nav.classList.remove('glass-nav', 'py-3', 'shadow-sm');
+                links.forEach(el => { if (!el.classList.contains('text-brand') && !el.classList.contains('bg-brand')) el.classList.remove('text-gray-800'); });
+            }
+        });
+
+        // ==========================================
+        // LÓGICA DO SLIDER ANTES / DEPOIS (VINHETA)
+        // ==========================================
+        const sliders = document.querySelectorAll('.compare-slider');
+
+        sliders.forEach(slider => {
+            slider.addEventListener('input', (e) => {
+                // Encontra o container pai exato deste slider
+                const container = e.target.closest('.slider-container');
+                // Encontra a imagem "Antes" e a "Linha" que pertencem a este container
+                const beforeImage = container.querySelector('.before-image');
+                const sliderLine = container.querySelector('.slider-line');
+                const sliderValue = e.target.value;
+
+                // Atualiza apenas os elementos do card atual
+                beforeImage.style.clipPath = `polygon(0 0, ${sliderValue}% 0, ${sliderValue}% 100%, 0 100%)`;
+                sliderLine.style.left = `${sliderValue}%`;
+            });
+        });
+
+        // WhatsApp Functions
+        function toggleChat() {
+            const box = document.getElementById('wa-chat-box');
+            box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+            if (box.style.display === 'block') box.classList.add('animate-pop');
+        }
+        function sendWa() {
+            const val = document.getElementById('wa-input').value;
+            // Substitua pelo número real do WhatsApp da clínica
+            window.open(`https://wa.me/5511999999999?text=${encodeURIComponent(val || "Olá, gostaria de agendar uma avaliação odontológica.")}`, '_blank');
+        }
+
+        // Form Submit
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const s = document.getElementById('formStatus');
+            s.classList.remove('hidden');
+            s.innerText = "Sua solicitação foi enviada! Nossa equipe entrará em contato via WhatsApp em breve.";
+            s.className = "mt-8 p-6 text-center rounded-2xl bg-[#e0f2fe] text-[#0369a1] font-bold border border-[#bae6fd] relative z-10";
+            this.reset();
+        });
+    </script>
+</body>
+
+</html>

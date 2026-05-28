@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth overflow-x-hidden">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo de Sistema | Demonstração</title>
+
+    <!-- Bibliotecas e Fontes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600;700&family=Raleway:wght@700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Configurações Customizadas do Tailwind (Paleta Neutra Corporativa) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        marca: {
+                            primaria: '#4f46e5',    /* Indigo 600 - Cor Principal Neutra */
+                            escura: '#312e81',      /* Indigo 900 - Tons escuros */
+                            clara: '#818cf8',       /* Indigo 400 - Brilhos */
+                            branca: '#ffffff',
+                            cinza: '#f8fafc',       /* Slate 50 - Fundo claro */
+                            secundaria: '#3b82f6',  /* Blue 500 */
+                            destaque: '#6366f1'     /* Indigo 500 */
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Raleway', 'sans-serif'],
+                        body: ['Poppins', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'brilho': '0 0 20px rgba(79, 70, 229, 0.35)',
+                        'brilho-branco': '0 0 20px rgba(255, 255, 255, 0.4)',
+                        'profundidade-cartao': '0 15px 35px -5px rgba(79, 70, 229, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                    },
+                    animation: {
+                        'flutuar': 'flutuar 6s ease-in-out infinite',
+                        'brilhar': 'brilhar 2s infinite',
+                        'pulso-suave': 'pulso-suave 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        flutuar: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        brilhar: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100%)' }
+                        },
+                        'pulso-suave': {
+                            '0%, 100%': { transform: 'scale(1)', opacity: '1' },
+                            '50%': { transform: 'scale(1.05)', opacity: '0.8' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+
+        .painel-vidro {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(79, 70, 229, 0.1);
+        }
+
+        .container-onda {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            z-index: 1;
+        }
+
+        .onda-inferior {
+            bottom: -1px;
+            transform: rotate(180deg);
+        }
+
+        .onda-superior {
+            top: -1px;
+        }
+
+        .svg-onda {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 40px;
+        }
+
+        @media (min-width: 768px) {
+            .svg-onda {
+                height: 100px;
+            }
+        }
+
+        .onda-preenchimento-branco {
+            fill: #ffffff;
+        }
+
+        .onda-preenchimento-cinza {
+            fill: #f8fafc;
+        }
+
+        .revelar {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .revelar.ativo {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .input-moderno {
+            width: 100%;
+            padding: 16px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            outline: none;
+            transition: all 0.3s;
+            color: #4f46e5;
+            font-weight: 500;
+            font-size: 16px;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+        }
+
+        .input-moderno:focus {
+            background: white;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1), inset 0 2px 4px 0 rgba(0, 0, 0, 0.01);
+            transform: translateY(-2px);
+        }
+
+        .botao-brilho {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .botao-brilho::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .botao-brilho:hover::after {
+            left: 100%;
+            transition: 0.7s ease-in-out;
+        }
+
+        .tag-sintoma {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .tag-sintoma:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2);
+            border-color: #4f46e5;
+        }
+
+        .tag-sintoma.selecionada {
+            background-color: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+            transform: scale(1.05);
+            box-shadow: 0 15px 25px -5px rgba(79, 70, 229, 0.4);
+            z-index: 10;
+        }
+
+        .texto-digitando::after {
+            content: '|';
+            animation: piscar-cursor 1s step-end infinite;
+        }
+
+        @keyframes piscar-cursor {
+
+            from,
+            to {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .etapa-oculta {
+            display: none !important;
+        }
+
+        .etapa-ativa {
+            display: block !important;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .recipiente-carrossel {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .trilha-carrossel {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide-carrossel {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Padrão Genérico e Neutro (Matriz de Pontos e Linhas) para o fundo interativo */
+        .parallax-bg {
+            transition: transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+            pointer-events: none;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234f46e5' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: repeat;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 pt-[100px] font-sans selection:bg-marca-primaria selection:text-white">
+
+    <!-- Barra de Urgência no Topo -->
+    <div
+        class="fixed top-0 left-0 w-full bg-gradient-to-r from-marca-primaria to-marca-escura text-white text-[10px] md:text-xs font-bold py-2.5 text-center z-[70] tracking-widest uppercase px-4 shadow-lg h-[40px] flex items-center justify-center">
+        <div class="animate-pulse flex justify-center items-center gap-2 drop-shadow-md">
+            <i class="fas fa-bolt text-yellow-300 filter drop-shadow"></i>
+            <span>Sistema em Demonstração: Vagas abertas para diagnóstico estratégico.</span>
+        </div>
+    </div>
+
+    <!-- Cabeçalho Principal -->
+    <header id="cabecalho"
+        class="fixed top-[40px] w-full z-[60] bg-white/95 backdrop-blur-xl border-b border-white/40 shadow-sm transition-all duration-300 h-[60px] md:h-[70px] flex items-center">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 w-full flex flex-row justify-between items-center gap-2">
+
+            <!-- Logo Genérica Neutra -->
+            <div class="flex-shrink-0 flex items-center gap-2 md:gap-3 min-w-fit z-[70]">
+                <div
+                    class="h-8 w-8 md:h-10 md:w-10 bg-gradient-to-br from-marca-primaria to-marca-clara rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-inner transform rotate-3">
+                    <i class="fas fa-layer-group -rotate-3"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span
+                        class="text-lg md:text-xl font-extrabold tracking-tight text-marca-primaria font-display leading-none drop-shadow-sm">
+                        SUA MARCA
+                    </span>
+                    <span
+                        class="text-[8px] md:text-[10px] font-bold tracking-widest text-slate-400 uppercase">Consultoria
+                        Estratégica</span>
+                </div>
+            </div>
+
+            <a href="#contato"
+                class="botao-brilho hidden md:block bg-marca-primaria text-white px-6 py-2.5 rounded-lg shadow-brilho hover:shadow-marca-primaria/50 transition-all transform hover:-translate-y-0.5 font-bold tracking-widest uppercase text-xs">
+                FALAR COM ESPECIALISTA
+            </a>
+            <a href="#contato" class="md:hidden text-marca-primaria text-2xl p-2 bg-indigo-50 rounded-lg">
+                <i class="fas fa-comment-dots"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Seção Inicial (Hero) 100% Nítida -->
+    <section id="inicio"
+        class="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center md:justify-start text-center md:text-left overflow-hidden bg-slate-900">
+
+        <!-- Imagem de Fundo Corporativa Neutra -->
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1920&q=80"
+                class="w-full h-full object-cover object-center" alt="Imagem corporativa abstrata">
+
+            <!-- Gradiente Escuro -->
+            <div
+                class="hidden md:block absolute inset-0 bg-gradient-to-r from-slate-900 via-marca-primaria/80 to-transparent w-full">
+            </div>
+            <div
+                class="md:hidden absolute inset-0 bg-gradient-to-b from-slate-900/80 via-transparent to-marca-primaria w-full">
+            </div>
+        </div>
+
+        <div class="relative z-10 px-4 md:px-12 max-w-7xl mx-auto w-full mt-10 md:mt-0 revelar ativo">
+            <div
+                class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-5 py-2 rounded-full mb-6 text-[10px] md:text-xs font-bold tracking-widest uppercase animate-pulso-suave mx-auto md:mx-0">
+                <i class="fas fa-chart-pie text-indigo-200"></i> Soluções Inteligentes
+            </div>
+
+            <!-- Interação de Texto adaptada para Mobile -->
+            <h1
+                class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight font-display drop-shadow-xl flex flex-col items-center md:items-start min-h-[120px] md:min-h-0">
+                <span>O seu negócio está</span>
+                <span id="texto-dinamico"
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 to-white texto-digitando min-h-[1.2em] inline-block border-b-4 border-indigo-300/50 block mt-2">perdendo
+                    vendas?</span>
+            </h1>
+
+            <p
+                class="text-base md:text-xl text-slate-100 mb-8 font-light max-w-2xl leading-relaxed text-shadow-sm px-2 md:px-0 mx-auto md:mx-0 drop-shadow-md">
+                Ajudamos empresas a estruturarem processos, implementarem tecnologias e alavancarem resultados. Uma
+                frase de efeito forte entra aqui.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 px-2 md:px-0">
+                <a href="#diagnostico-interativo"
+                    class="botao-brilho w-full sm:w-auto px-8 py-4 md:py-5 bg-white text-marca-primaria font-bold rounded-full shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-all transform hover:-translate-y-1 text-center text-sm md:text-base">
+                    <span class="relative z-10 flex items-center justify-center gap-2">FAZER DIAGNÓSTICO <i
+                            class="fas fa-search-dollar"></i></span>
+                </a>
+                <a href="#servicos"
+                    class="w-full sm:w-auto px-8 py-4 md:py-5 bg-white/10 border border-white/30 backdrop-blur-sm text-white font-bold rounded-full hover:bg-white hover:text-marca-primaria transition-all transform hover:-translate-y-1 text-center shadow-lg hover:shadow-brilho-branco text-sm md:text-base">
+                    CONHECER SERVIÇOS
+                </a>
+            </div>
+        </div>
+
+        <div class="container-onda onda-inferior">
+            <svg class="svg-onda onda-preenchimento-branco" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+                preserveAspectRatio="none">
+                <path
+                    d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z">
+                </path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Cartão Flutuante Clínico (Isca) -->
+    <div class="bg-white pb-12 pt-8 md:py-20 relative z-20 overflow-hidden">
+        <div class="max-w-5xl mx-auto px-4 md:px-6 relative z-10">
+            <div
+                class="painel-vidro rounded-3xl p-6 md:p-12 shadow-profundidade-cartao flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 transform md:-translate-y-24 revelar relative overflow-hidden bg-gradient-to-br from-white via-white to-marca-cinza">
+
+                <div
+                    class="flex flex-col md:flex-row items-center text-center md:text-left gap-4 md:gap-6 relative z-10 w-full md:w-auto">
+                    <div class="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0">
+                        <div class="absolute inset-0 bg-marca-primaria rounded-full animate-ping opacity-20"></div>
+                        <div
+                            class="w-full h-full bg-gradient-to-br from-marca-primaria to-marca-escura rounded-full flex items-center justify-center text-white text-2xl md:text-3xl shadow-lg relative z-10 border-4 border-white">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div
+                            class="inline-block bg-indigo-100 text-marca-primaria text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-2">
+                            Acelerador de Negócios</div>
+                        <h4 class="font-bold text-slate-800 text-lg md:text-2xl mb-1">Destrave o seu crescimento</h4>
+                        <p class="text-slate-500 font-medium text-xs md:text-base max-w-sm">Descubra o que está
+                            impedindo sua empresa de escalar e faturar mais hoje mesmo.</p>
+                    </div>
+                </div>
+                <button onclick="abrirModal()"
+                    class="botao-brilho w-full md:w-auto text-white font-bold text-sm bg-marca-primaria px-8 py-4 md:py-5 rounded-2xl hover:bg-marca-escura transition-all shadow-lg hover:shadow-marca-primaria/40 text-center cursor-pointer relative z-10 border-b-4 border-marca-escura/50 active:border-b-0 active:translate-y-1 uppercase">
+                    Análise Rápida <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção Interativa: Mapa de Sintomas (GENÉRICA) -->
+    <section id="diagnostico-interativo"
+        class="py-16 md:py-28 relative overflow-hidden bg-marca-cinza text-slate-800 border-y border-indigo-50">
+
+        <!-- Elemento de Fundo Parallax -->
+        <div class="parallax-bg absolute -top-[20%] -left-[20%] w-[150%] h-[150%] opacity-50" data-speed="-1.5"></div>
+
+        <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+
+            <div class="text-center mb-10 md:mb-16 revelar">
+                <span
+                    class="text-marca-primaria text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2 md:mb-3 block opacity-80">Mapeamento
+                    de Dores</span>
+                <h3 class="text-2xl md:text-5xl font-bold text-slate-800 font-display drop-shadow-sm mb-3 md:mb-4">Onde
+                    está o seu gargalo?</h3>
+                <p class="text-slate-500 text-sm md:text-base max-w-2xl mx-auto px-2">Selecione o principal desafio que
+                    você enfrenta hoje para receber nossa recomendação de projeto.</p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
+
+                <!-- Área de Clique (Sintomas Genéricos) -->
+                <div class="w-full lg:w-1/2 revelar grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                    <button
+                        class="tag-sintoma bg-white border-2 border-slate-100 rounded-2xl p-5 md:p-6 text-left flex flex-col gap-2 md:gap-3 group"
+                        onclick="analisarSintoma('vendas', this)">
+                        <i
+                            class="fas fa-chart-line text-2xl md:text-3xl text-marca-primaria group-hover:scale-110 transition-transform"></i>
+                        <span
+                            class="font-bold text-base md:text-lg text-slate-800 group-hover:text-marca-primaria transition-colors">Queda
+                            de Vendas</span>
+                        <span class="text-xs text-slate-500">Dificuldade em bater metas e fechar negócios.</span>
+                    </button>
+
+                    <button
+                        class="tag-sintoma bg-white border-2 border-slate-100 rounded-2xl p-5 md:p-6 text-left flex flex-col gap-2 md:gap-3 group"
+                        onclick="analisarSintoma('processos', this)">
+                        <i
+                            class="fas fa-cogs text-2xl md:text-3xl text-marca-primaria group-hover:scale-110 transition-transform"></i>
+                        <span
+                            class="font-bold text-base md:text-lg text-slate-800 group-hover:text-marca-primaria transition-colors">Processos
+                            Lentos</span>
+                        <span class="text-xs text-slate-500">Operação confusa e muito retrabalho interno.</span>
+                    </button>
+
+                    <button
+                        class="tag-sintoma bg-white border-2 border-slate-100 rounded-2xl p-5 md:p-6 text-left flex flex-col gap-2 md:gap-3 group"
+                        onclick="analisarSintoma('equipe', this)">
+                        <i
+                            class="fas fa-users-cog text-2xl md:text-3xl text-marca-primaria group-hover:scale-110 transition-transform"></i>
+                        <span
+                            class="font-bold text-base md:text-lg text-slate-800 group-hover:text-marca-primaria transition-colors">Gestão
+                            de Equipe</span>
+                        <span class="text-xs text-slate-500">Desalinhamento e falta de liderança clara.</span>
+                    </button>
+
+                    <button
+                        class="tag-sintoma bg-white border-2 border-slate-100 rounded-2xl p-5 md:p-6 text-left flex flex-col gap-2 md:gap-3 group"
+                        onclick="analisarSintoma('tecnologia', this)">
+                        <i
+                            class="fas fa-laptop-code text-2xl md:text-3xl text-marca-primaria group-hover:scale-110 transition-transform"></i>
+                        <span
+                            class="font-bold text-base md:text-lg text-slate-800 group-hover:text-marca-primaria transition-colors">Falta
+                            de Tecnologia</span>
+                        <span class="text-xs text-slate-500">Uso de planilhas manuais e sistemas defasados.</span>
+                    </button>
+                </div>
+
+                <!-- Área de Resposta -->
+                <div class="w-full lg:w-1/2 revelar delay-100 lg:sticky lg:top-32" id="ancora-resultado">
+
+                    <div id="estado-inicial-diag"
+                        class="bg-white/50 backdrop-blur-sm border-2 border-dashed border-marca-primaria/30 rounded-[2rem] p-8 md:p-12 text-center flex flex-col items-center justify-center h-full min-h-[300px] md:min-h-[400px]">
+                        <div
+                            class="w-20 h-20 md:w-24 md:h-24 bg-indigo-50 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-hand-pointer text-3xl md:text-4xl text-marca-clara animate-bounce"></i>
+                        </div>
+                        <h4 class="text-lg md:text-xl font-bold text-slate-400 mb-2">Aguardando Seleção</h4>
+                        <p class="text-slate-400 text-xs md:text-sm">Clique em um dos desafios ao lado para descobrir
+                            nossa sugestão estratégica.</p>
+                    </div>
+
+                    <div id="resultado-diag"
+                        class="hidden bg-white rounded-[2rem] shadow-2xl p-6 md:p-12 relative overflow-hidden border border-slate-100 min-h-[350px] md:min-h-[400px] flex flex-col justify-center transition-all mt-4 lg:mt-0">
+                        <div
+                            class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-50 rounded-full blur-3xl pointer-events-none">
+                        </div>
+
+                        <div class="relative z-10">
+                            <span
+                                class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white bg-marca-primaria px-3 py-1 rounded-full mb-4 md:mb-6 shadow-sm">
+                                <i class="fas fa-check-circle"></i> Nossa Recomendação
+                            </span>
+
+                            <h4 id="res-titulo"
+                                class="text-2xl md:text-3xl font-extrabold text-slate-800 mb-4 font-display">Solução
+                            </h4>
+
+                            <div class="bg-marca-cinza p-4 md:p-5 rounded-xl border border-indigo-50 mb-6">
+                                <p id="res-texto" class="text-slate-600 text-xs md:text-sm leading-relaxed">
+                                    Texto dinâmico vai aqui.
+                                </p>
+                            </div>
+
+                            <ul id="res-lista"
+                                class="space-y-2 md:space-y-3 mb-8 text-xs md:text-sm font-medium text-slate-700">
+                                <!-- Preenchido via JS -->
+                            </ul>
+
+                            <a href="#contato"
+                                class="botao-brilho inline-flex items-center justify-center gap-2 w-full bg-marca-primaria text-white py-4 rounded-xl font-bold text-xs md:text-sm tracking-wide shadow-lg hover:bg-marca-escura transition-all">
+                                SOLICITAR ESTE PROJETO <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre a Empresa com GRID INTERATIVO -->
+    <section id="sobre" class="py-16 md:py-28 bg-white relative overflow-hidden">
+
+        <!-- Elemento de Fundo Parallax -->
+        <div class="parallax-bg absolute -top-[20%] -right-[20%] w-[150%] h-[150%] opacity-50" data-speed="1.5"></div>
+
+        <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
+
+                <div class="revelar text-center md:text-left relative z-10 order-2 lg:order-1">
+                    <span
+                        class="text-marca-primaria text-[10px] md:text-xs font-bold uppercase tracking-widest mb-3 md:mb-4 block">A
+                        Empresa</span>
+                    <h2
+                        class="text-3xl md:text-5xl font-extrabold text-slate-800 font-display mb-6 md:mb-8 drop-shadow-sm">
+                        Muito mais que <span class="text-marca-primaria">Consultoria</span></h2>
+
+                    <div class="space-y-4 md:space-y-6 text-slate-600 text-sm md:text-base leading-relaxed text-left">
+                        <p
+                            class="bg-white/80 backdrop-blur p-5 md:p-6 rounded-2xl shadow-sm border border-marca-primaria/10 font-medium relative">
+                            Somos parceiros estratégicos focados em <strong>escalabilidade e inteligência
+                                corporativa</strong>. Atuamos onde o seu negócio mais precisa de resultados.
+                        </p>
+                        <p class="px-2">
+                            Nosso objetivo é transformar problemas complexos em <strong>planos de ação simples</strong>,
+                            alinhando tecnologia, processos e pessoas para garantir sustentabilidade no mercado moderno.
+                        </p>
+                    </div>
+
+                    <a href="#contato"
+                        class="inline-block mt-8 text-marca-primaria font-bold uppercase text-xs md:text-sm tracking-widest hover:text-marca-escura transition-colors">
+                        CONHECER NOSSO MÉTODO <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+
+                <div class="revelar delay-100 order-1 lg:order-2 h-full py-4 relative z-10">
+                    <div class="grid grid-cols-2 gap-3 md:gap-5 h-full relative">
+                        <div
+                            class="absolute inset-0 bg-indigo-50 rounded-full blur-3xl transform scale-90 opacity-50 pointer-events-none">
+                        </div>
+
+                        <div
+                            class="bg-white/90 backdrop-blur-sm p-5 md:p-8 rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-indigo-50 flex flex-col items-center justify-center text-center transform md:translate-y-8 hover:-translate-y-2 transition-transform duration-300">
+                            <div
+                                class="w-12 h-12 md:w-16 md:h-16 bg-indigo-50 rounded-full flex items-center justify-center mb-3 md:mb-4">
+                                <i class="fas fa-lightbulb text-xl md:text-2xl text-marca-primaria"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-sm md:text-base">Inovação</h4>
+                            <p class="text-[10px] md:text-xs text-slate-500 mt-2">Ideias que quebram o status quo.</p>
+                        </div>
+
+                        <div
+                            class="bg-gradient-to-br from-marca-primaria to-marca-escura p-5 md:p-8 rounded-3xl shadow-xl shadow-marca-primaria/30 flex flex-col items-center justify-center text-center text-white hover:-translate-y-2 transition-transform duration-300">
+                            <div
+                                class="w-12 h-12 md:w-16 md:h-16 bg-white/10 rounded-full flex items-center justify-center mb-3 md:mb-4">
+                                <i class="fas fa-chess-knight text-xl md:text-2xl text-white"></i>
+                            </div>
+                            <h4 class="font-bold text-sm md:text-base">Estratégia</h4>
+                            <p class="text-[10px] md:text-xs text-indigo-100 mt-2">Cada passo muito bem calculado.</p>
+                        </div>
+
+                        <div
+                            class="bg-slate-900 p-5 md:p-8 rounded-3xl shadow-xl flex flex-col items-center justify-center text-center text-white transform md:translate-y-8 hover:-translate-y-2 transition-transform duration-300">
+                            <div
+                                class="w-12 h-12 md:w-16 md:h-16 bg-white/10 rounded-full flex items-center justify-center mb-3 md:mb-4">
+                                <i class="fas fa-microchip text-xl md:text-2xl text-white"></i>
+                            </div>
+                            <h4 class="font-bold text-sm md:text-base">Tecnologia</h4>
+                            <p class="text-[10px] md:text-xs text-slate-300 mt-2">Automação para ganhar tempo.</p>
+                        </div>
+
+                        <div
+                            class="bg-white/90 backdrop-blur-sm p-5 md:p-8 rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-indigo-50 flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300">
+                            <div
+                                class="w-12 h-12 md:w-16 md:h-16 bg-indigo-50 rounded-full flex items-center justify-center mb-3 md:mb-4">
+                                <i class="fas fa-bullseye text-xl md:text-2xl text-marca-primaria"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-sm md:text-base">Resultados</h4>
+                            <p class="text-[10px] md:text-xs text-slate-500 mt-2">Dados em primeiro lugar.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Serviços Genéricos -->
+    <section id="servicos" class="py-16 md:py-28 bg-marca-cinza relative overflow-hidden">
+
+        <div class="parallax-bg absolute -top-[30%] -left-[10%] w-[150%] h-[150%] opacity-50" data-speed="2.5"></div>
+
+        <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+            <div class="text-center mb-12 md:mb-20 revelar">
+                <h2
+                    class="text-marca-primaria uppercase tracking-[0.2em] font-bold mb-3 md:mb-4 text-[10px] md:text-xs opacity-70">
+                    Nossas Soluções</h2>
+                <h3 class="text-2xl md:text-5xl font-bold text-slate-800 font-display drop-shadow-sm">Como podemos
+                    ajudar?</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
+                <!-- Serviço 1 -->
+                <div
+                    class="group bg-white/95 backdrop-blur-md p-8 md:p-10 rounded-[2rem] shadow-sm hover:shadow-2xl hover:shadow-marca-primaria/20 transition-all duration-500 border border-slate-100 hover:border-marca-primaria/30 hover:-translate-y-2 revelar relative">
+                    <div
+                        class="w-14 h-14 md:w-16 md:h-16 bg-indigo-50 rounded-2xl flex items-center justify-center text-marca-primaria text-xl md:text-2xl mb-6 shadow-sm group-hover:scale-110 group-hover:bg-marca-primaria group-hover:text-white transition-all duration-300">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4 class="text-lg md:text-xl font-bold mb-3 text-slate-800">Consultoria em Vendas</h4>
+                    <p class="text-slate-500 text-xs md:text-sm mb-6 leading-relaxed">Estruturamos sua máquina de
+                        vendas, mapeando a jornada do cliente para aumentar as taxas de conversão.</p>
+                    <ul
+                        class="text-xs md:text-sm font-medium text-slate-700 space-y-3 border-t border-slate-100 pt-5 md:pt-6">
+                        <li class="flex items-center"><i class="fas fa-check text-marca-primaria mr-3"></i> Funil de
+                            Vendas</li>
+                        <li class="flex items-center"><i class="fas fa-check text-marca-primaria mr-3"></i> Treinamento
+                            de SDRs</li>
+                        <li class="flex items-center"><i class="fas fa-check text-marca-primaria mr-3"></i> Playbook
+                            Comercial</li>
+                    </ul>
+                </div>
+
+                <!-- Serviço 2 -->
+                <div
+                    class="group bg-white/95 backdrop-blur-md p-8 md:p-10 rounded-[2rem] shadow-sm hover:shadow-2xl hover:shadow-marca-primaria/20 transition-all duration-500 border border-slate-100 hover:border-marca-primaria/30 hover:-translate-y-2 revelar delay-100 relative">
+                    <div
+                        class="w-14 h-14 md:w-16 md:h-16 bg-indigo-50 rounded-2xl flex items-center justify-center text-marca-primaria text-xl md:text-2xl mb-6 shadow-sm group-hover:scale-110 group-hover:bg-marca-primaria group-hover:text-white transition-all duration-300">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h4 class="text-lg md:text-xl font-bold mb-3 text-slate-800">Transformação Digital</h4>
+                    <p class="text-slate-500 text-xs md:text-sm mb-6 leading-relaxed">Modernizamos sua infraestrutura,
+                        integrando softwares e automatizando tarefas manuais que geram lentidão.</p>
+                    <ul
+                        class="text-xs md:text-sm font-medium text-slate-700 space-y-3 border-t border-slate-100 pt-5 md:pt-6">
+                        <li class="flex items-center"><i class="fas fa-check text-marca-primaria mr-3"></i> Implantação
+                            de CRM</li>
+                        <li class="flex items-center"><i class="fas fa-check text-marca-primaria mr-3"></i> Automação de
+                            Processos</li>
+                        <li class="flex items-center"><i class="fas fa-check text-marca-primaria mr-3"></i> Cultura de
+                            Dados</li>
+                    </ul>
+                </div>
+
+                <!-- Serviço 3 -->
+                <div
+                    class="group bg-white/95 backdrop-blur-md p-8 md:p-10 rounded-[2rem] shadow-sm hover:shadow-2xl hover:shadow-marca-primaria/20 transition-all duration-500 border border-slate-100 hover:border-marca-primaria/30 hover:-translate-y-2 revelar delay-200 relative lg:col-span-1 md:col-span-2">
+                    <div
+                        class="w-14 h-14 md:w-16 md:h-16 bg-indigo-50 rounded-2xl flex items-center justify-center text-marca-primaria text-xl md:text-2xl mb-6 shadow-sm group-hover:scale-110 group-hover:bg-marca-primaria group-hover:text-white transition-all duration-300">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4 class="text-lg md:text-xl font-bold mb-3 text-slate-800">Gestão de Equipes</h4>
+                    <p class="text-slate-500 text-xs md:text-sm mb-6 leading-relaxed">Preparamos líderes e alinhamos a
+                        comunicação interna para que todo o time foque no mesmo objetivo.</p>
+                    <ul
+                        class="text-xs md:text-sm font-medium text-slate-700 space-y-3 border-t border-slate-100 pt-5 md:pt-6">
+                        <li class="flex items-center"><i class="fas fa-check text-marca-primaria mr-3"></i> Mentoria de
+                            Líderes</li>
+                        <li class="flex items-center"><i class="fas fa-check text-marca-primaria mr-3"></i> Avaliação de
+                            Desempenho</li>
+                        <li class="flex items-center"><i class="fas fa-check text-marca-primaria mr-3"></i> Engajamento
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Depoimentos e Clientes -->
+    <section class="py-16 md:py-28 relative bg-[#0f172a] text-white overflow-hidden border-t border-marca-primaria/30">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
+
+                <div class="recipiente-carrossel relative pb-12 order-2 lg:order-1">
+                    <div class="trilha-carrossel" id="trilha-depoimentos">
+                        <div class="slide-carrossel p-2 md:p-4">
+                            <div
+                                class="bg-white/5 backdrop-blur-md border border-white/10 text-white p-6 md:p-10 rounded-[2rem] shadow-2xl relative">
+                                <i
+                                    class="fas fa-quote-left text-3xl md:text-4xl text-marca-primaria opacity-50 absolute top-6 left-6"></i>
+                                <p
+                                    class="italic text-base md:text-xl text-slate-200 mb-6 leading-relaxed mt-6 font-light">
+                                    "A plataforma mudou nossa visão estratégica. Reduzimos o tempo de operação em 40% e
+                                    a equipe de vendas bateu a meta trimestral no primeiro mês de uso."
+                                </p>
+                                <div class="flex items-center justify-between border-t border-white/10 pt-5">
+                                    <div class="flex items-center gap-3 md:gap-4">
+                                        <div
+                                            class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-marca-primaria to-marca-escura rounded-full flex items-center justify-center text-white font-bold text-lg md:text-xl">
+                                            EX</div>
+                                        <div>
+                                            <h5 class="font-bold text-white text-sm md:text-base">Empresa Exemplo</h5>
+                                            <p
+                                                class="text-[10px] md:text-xs text-marca-clara font-bold uppercase tracking-widest">
+                                                Projeto CRM</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-carrossel p-2 md:p-4">
+                            <div
+                                class="bg-white/5 backdrop-blur-md border border-white/10 text-white p-6 md:p-10 rounded-[2rem] shadow-2xl relative">
+                                <i
+                                    class="fas fa-quote-left text-3xl md:text-4xl text-marca-primaria opacity-50 absolute top-6 left-6"></i>
+                                <p
+                                    class="italic text-base md:text-xl text-slate-200 mb-6 leading-relaxed mt-6 font-light">
+                                    "O diagnóstico foi extremamente preciso. Entendemos na hora onde os processos
+                                    estavam quebrando e implementamos a solução deles com sucesso absoluto."
+                                </p>
+                                <div class="flex items-center justify-between border-t border-white/10 pt-5">
+                                    <div class="flex items-center gap-3 md:gap-4">
+                                        <div
+                                            class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-marca-primaria to-marca-escura rounded-full flex items-center justify-center text-white font-bold text-lg md:text-xl">
+                                            CL</div>
+                                        <div>
+                                            <h5 class="font-bold text-white text-sm md:text-base">Cliente Satisfeito
+                                            </h5>
+                                            <p
+                                                class="text-[10px] md:text-xs text-marca-clara font-bold uppercase tracking-widest">
+                                                Automação</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute bottom-0 right-4 flex gap-3 z-10">
+                        <button onclick="slideAnterior()"
+                            class="w-10 h-10 md:w-12 md:h-12 bg-white/5 hover:bg-marca-primaria text-white rounded-full flex items-center justify-center transition-all border border-white/20"><i
+                                class="fas fa-chevron-left"></i></button>
+                        <button onclick="proximoSlide()"
+                            class="w-10 h-10 md:w-12 md:h-12 bg-white/5 hover:bg-marca-primaria text-white rounded-full flex items-center justify-center transition-all border border-white/20"><i
+                                class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="text-white revelar delay-100 text-center md:text-left order-1 lg:order-2">
+                    <h2
+                        class="text-3xl md:text-6xl font-bold mb-4 md:mb-6 font-display text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200">
+                        Resultados Comprovados</h2>
+                    <p class="text-slate-300 mb-8 md:mb-10 text-sm md:text-lg font-light">Anos dedicados à excelência,
+                        focando em métricas que realmente importam para o negócio.</p>
+
+                    <div class="grid grid-cols-2 gap-4 md:gap-8">
+                        <div class="bg-white/5 p-5 md:p-6 rounded-2xl border border-white/10 backdrop-blur-sm">
+                            <i class="fas fa-calendar-check text-marca-primaria text-2xl md:text-3xl mb-3"></i>
+                            <h3 class="text-3xl md:text-4xl font-bold text-white">+10</h3>
+                            <p class="text-[10px] md:text-xs text-slate-400 uppercase tracking-widest mt-1">anos de
+                                mercado</p>
+                        </div>
+                        <div class="bg-white/5 p-5 md:p-6 rounded-2xl border border-white/10 backdrop-blur-sm">
+                            <i class="fas fa-chart-bar text-marca-primaria text-2xl md:text-3xl mb-3"></i>
+                            <h3 class="text-3xl md:text-4xl font-bold text-white">+500</h3>
+                            <p class="text-[10px] md:text-xs text-slate-400 uppercase tracking-widest mt-1">projetos
+                                entregues</p>
+                        </div>
+                        <div
+                            class="bg-white/5 p-5 md:p-6 rounded-2xl border border-white/10 backdrop-blur-sm col-span-2 md:col-span-1">
+                            <i class="fas fa-globe-americas text-marca-primaria text-2xl md:text-3xl mb-3"></i>
+                            <h3 class="text-2xl font-bold text-white mt-1">Global</h3>
+                            <p class="text-[10px] md:text-xs text-slate-400 uppercase tracking-widest mt-1">Atuação
+                                remota</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulário Principal -->
+    <section id="contato" class="py-16 md:py-28 bg-white relative overflow-hidden">
+
+        <div class="parallax-bg absolute top-[20%] -right-[20%] w-[150%] h-[150%] opacity-50" data-speed="-1.5"></div>
+
+        <div class="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
+            <div
+                class="bg-white/95 backdrop-blur-sm p-6 md:p-16 shadow-2xl rounded-[2rem] md:rounded-[3rem] relative overflow-hidden revelar border border-slate-100">
+                <div
+                    class="absolute top-0 left-0 w-full h-2 md:h-3 bg-gradient-to-r from-marca-primaria to-marca-clara">
+                </div>
+
+                <div class="text-center mb-10 md:mb-14">
+                    <h2 class="text-2xl md:text-5xl font-bold text-marca-primaria mb-3 md:mb-4 font-display">Fale com
+                        Especialistas</h2>
+                    <p class="text-sm md:text-lg text-slate-500">Agende uma reunião de demonstração para entender como
+                        nosso sistema atende sua empresa.</p>
+
+                    <div class="flex justify-center items-center gap-2 md:gap-3 mt-6 md:mt-8">
+                        <div class="h-1 md:h-1.5 w-12 md:w-16 rounded-full bg-marca-primaria shadow-brilho transition-all"
+                            id="progresso-1"></div>
+                        <div class="h-1 md:h-1.5 w-12 md:w-16 rounded-full bg-slate-200 transition-all"
+                            id="progresso-2"></div>
+                    </div>
+                </div>
+
+                <form id="formularioContato" class="relative z-10 max-w-lg mx-auto">
+
+                    <div id="etapa-1" class="etapa-ativa">
+                        <div class="mb-5 md:mb-6">
+                            <label for="nomeCliente"
+                                class="block text-[10px] md:text-xs font-bold text-marca-primaria uppercase mb-1 md:mb-2 ml-1 tracking-wider">Seu
+                                Nome</label>
+                            <input type="text" id="nomeCliente" name="nome" class="input-moderno text-sm md:text-base"
+                                placeholder="Nome Completo" required>
+                        </div>
+                        <div class="mb-6 md:mb-8">
+                            <label for="telefoneCelular"
+                                class="block text-[10px] md:text-xs font-bold text-marca-primaria uppercase mb-1 md:mb-2 ml-1 tracking-wider">WhatsApp
+                                corporativo</label>
+                            <input type="tel" id="telefoneCelular" name="telefone"
+                                class="input-moderno text-sm md:text-base" placeholder="(00) 00000-0000" required>
+                        </div>
+                        <button type="button" onclick="proximaEtapa()"
+                            class="botao-brilho w-full bg-marca-primaria text-white py-4 rounded-xl font-bold hover:shadow-lg hover:shadow-marca-primaria/40 transition-all uppercase tracking-widest text-xs md:text-sm flex items-center justify-center gap-2 md:gap-3">
+                            Continuar <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div id="etapa-2" class="etapa-oculta">
+                        <div class="mb-5 md:mb-6">
+                            <label for="nomeEmpresa"
+                                class="block text-[10px] md:text-xs font-bold text-marca-primaria uppercase mb-1 md:mb-2 ml-1 tracking-wider">Sua
+                                Empresa</label>
+                            <input type="text" id="nomeEmpresa" name="empresa"
+                                class="input-moderno text-sm md:text-base" placeholder="Nome do negócio" required>
+                        </div>
+
+                        <div class="mb-5 md:mb-6">
+                            <label for="dorPrincipal"
+                                class="block text-[10px] md:text-xs font-bold text-marca-primaria uppercase mb-1 md:mb-2 ml-1 tracking-wider">O
+                                que você busca?</label>
+                            <select id="dorPrincipal" name="dor"
+                                class="input-moderno cursor-pointer bg-white text-sm md:text-base" required>
+                                <option value="" disabled selected>Selecione uma opção...</option>
+                                <option value="Consultoria Comercial">Melhorar setor Comercial</option>
+                                <option value="Tecnologia">Sistemas e Tecnologia</option>
+                                <option value="Gestao">Gestão e Treinamento</option>
+                                <option value="Outro">Ainda não sei bem</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-6 md:mb-8">
+                            <label for="mensagemAdicional"
+                                class="block text-[10px] md:text-xs font-bold text-marca-primaria uppercase mb-1 md:mb-2 ml-1 tracking-wider">Observações</label>
+                            <textarea id="mensagemAdicional" name="mensagem" rows="2"
+                                class="input-moderno text-sm md:text-base"
+                                placeholder="Algum detalhe extra?"></textarea>
+                        </div>
+
+                        <div class="flex gap-3 md:gap-4">
+                            <button type="button" onclick="etapaAnterior()"
+                                class="w-1/3 border-2 border-slate-200 text-slate-500 py-3 md:py-4 rounded-xl font-bold hover:bg-slate-100 transition-all text-[10px] md:text-sm uppercase tracking-wide">
+                                Voltar
+                            </button>
+                            <button type="submit"
+                                class="w-2/3 bg-marca-primaria text-white py-3 md:py-4 rounded-xl font-bold hover:bg-marca-escura transition-all uppercase tracking-widest text-xs md:text-sm shadow-lg hover:shadow-marca-primaria/40 flex items-center justify-center gap-2">
+                                Enviar <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div id="statusFormulario"
+                    class="mt-6 md:mt-8 hidden p-3 md:p-4 text-center rounded-xl border text-xs md:text-sm font-bold">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer
+        class="bg-[#0f172a] text-white py-12 md:py-16 border-t border-marca-primaria/30 text-sm relative overflow-hidden">
+        <div
+            class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 relative z-10 text-center md:text-left">
+            <div>
+                <span
+                    class="text-xl md:text-2xl font-extrabold tracking-tight text-white font-display mb-4 md:mb-6 block flex items-center justify-center md:justify-start gap-2">
+                    <div
+                        class="h-6 w-6 md:h-8 md:w-8 bg-marca-primaria rounded-md flex items-center justify-center text-white text-base md:text-lg">
+                        <i class="fas fa-layer-group"></i></div> SUA MARCA
+                </span>
+                <p class="text-slate-400 text-xs md:text-sm leading-relaxed mb-4 md:mb-6 max-w-xs mx-auto md:mx-0">
+                    Empresa modelo para demonstração de interface de usuário e funil de conversão.</p>
+                <div class="flex justify-center md:justify-start gap-4">
+                    <a href="#" class="text-slate-400 hover:text-white text-xl"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-white text-xl"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div>
+                <h5 class="font-bold uppercase text-[10px] md:text-xs mb-4 md:mb-6 tracking-widest text-marca-primaria">
+                    Contato</h5>
+                <p
+                    class="mb-3 md:mb-4 flex items-center justify-center md:justify-start gap-2 md:gap-3 text-slate-300 text-xs md:text-sm">
+                    <i class="fas fa-phone text-marca-primaria"></i> Vendas: (00) 00000-0000</p>
+                <p
+                    class="mb-3 md:mb-4 flex items-center justify-center md:justify-start gap-2 md:gap-3 text-slate-300 text-[10px] md:text-sm">
+                    <i class="fas fa-envelope text-marca-primaria"></i> contato@suaempresa.com.br</p>
+            </div>
+            <div>
+                <h5 class="font-bold uppercase text-[10px] md:text-xs mb-4 md:mb-6 tracking-widest text-marca-primaria">
+                    Navegação</h5>
+                <ul class="space-y-3 md:space-y-4 text-slate-300 text-xs md:text-sm">
+                    <li><a href="#contato" class="hover:text-white transition-all">Agendar Demo</a></li>
+                    <li><a href="#servicos" class="hover:text-white transition-all">Soluções</a></li>
+                </ul>
+            </div>
+        </div>
+        <div
+            class="text-center mt-10 md:mt-16 pt-6 md:pt-8 border-t border-white/10 text-[10px] md:text-xs text-slate-500 relative z-10">
+            &copy; 2026 Sua Empresa Modelo. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <!-- Ícone Flutuante (Falso) -->
+    <a href="#" onclick="alert('Na versão final, isso abre o WhatsApp da empresa.')"
+        class="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 bg-[#25D366] text-white w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all border-2 md:border-4 border-white">
+        <i class="fab fa-whatsapp text-2xl md:text-3xl"></i>
+    </a>
+
+    <!-- Modal Rápido -->
+    <div id="modal-diagnostico" class="fixed inset-0 z-[100] hidden transition-opacity duration-300 opacity-0 px-4">
+        <div class="absolute inset-0 bg-marca-primaria/90 backdrop-blur-sm" onclick="fecharModal()"></div>
+        <div
+            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden m-auto transition-transform duration-300 scale-95 border border-white/20">
+
+            <div class="bg-marca-cinza p-5 md:p-6 border-b border-indigo-50 flex justify-between items-center">
+                <div>
+                    <span class="text-[10px] md:text-xs font-bold text-marca-primaria uppercase tracking-widest">Triagem
+                        Rápida</span>
+                    <h3 class="font-bold text-lg md:text-xl text-slate-800"><i
+                            class="fas fa-search text-marca-primaria mr-2"></i> Diagnóstico</h3>
+                </div>
+                <button onclick="fecharModal()" class="text-slate-400 hover:text-marca-primaria text-lg md:text-xl"><i
+                        class="fas fa-times"></i></button>
+            </div>
+
+            <div class="p-5 md:p-8">
+                <div class="space-y-4 md:space-y-6">
+                    <p class="text-xs md:text-sm text-slate-500 mb-2 md:mb-4">Responda para acionarmos o consultor ideal
+                        para o seu caso:</p>
+                    <div>
+                        <label class="block text-[10px] md:text-xs font-bold text-slate-700 uppercase mb-2">Tamanho da
+                            empresa?</label>
+                        <select id="tamanhoEmpresaQuiz" class="input-moderno w-full text-xs md:text-sm bg-slate-50">
+                            <option value="Pequena">Até 10 colaboradores</option>
+                            <option value="Media">11 a 50 colaboradores</option>
+                            <option value="Grande">Mais de 50 colaboradores</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] md:text-xs font-bold text-slate-700 uppercase mb-2">Principal
+                            Objetivo?</label>
+                        <select id="dorPrincipalQuiz" class="input-moderno w-full text-xs md:text-sm bg-slate-50">
+                            <option value="Vendas">Aumentar Faturamento</option>
+                            <option value="Processos">Organizar a casa / Processos</option>
+                            <option value="Tecnologia">Implementar Sistemas</option>
+                        </select>
+                    </div>
+                    <button onclick="enviarDiagnostico()"
+                        class="botao-brilho w-full bg-marca-primaria text-white font-bold py-3 md:py-4 rounded-xl mt-2 hover:bg-marca-escura shadow-lg text-xs md:text-sm tracking-widest uppercase">
+                        INICIAR ATENDIMENTO
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT PRINCIPAL -->
+    <script>
+        // Animação de Texto Dinâmico
+        const palavrasDinamicas = ["perdendo vendas?", "com processos lentos?", "sem gestão de dados?", "precisando inovar?"];
+        let indicePalavra = 0;
+        const textoDinamicoEl = document.getElementById('texto-dinamico');
+
+        setInterval(() => {
+            indicePalavra = (indicePalavra + 1) % palavrasDinamicas.length;
+            textoDinamicoEl.style.opacity = 0;
+            setTimeout(() => {
+                textoDinamicoEl.innerText = palavrasDinamicas[indicePalavra];
+                textoDinamicoEl.style.opacity = 1;
+            }, 300);
+        }, 3500);
+
+        // Lógica do Efeito Parallax
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            document.querySelectorAll('.parallax-bg').forEach(el => {
+                const speed = parseFloat(el.getAttribute('data-speed'));
+                el.style.transform = `translateY(${scrollY * speed * 0.1}px) rotate(${scrollY * 0.02}deg)`;
+            });
+        });
+
+        // Banco de Dados do Diagnóstico GENÉRICO
+        const dbSintomas = {
+            'vendas': {
+                titulo: 'Reestruturação Comercial',
+                texto: 'Se a empresa não vende, ela não cresce. Nossa solução audita o seu processo comercial, treina a equipe de vendas e implementa táticas para aumentar a taxa de conversão.',
+                lista: [
+                    '<i class="fas fa-check text-marca-primaria mr-2"></i> Criação de Playbook de Vendas',
+                    '<i class="fas fa-check text-marca-primaria mr-2"></i> Treinamento de Negociação',
+                    '<i class="fas fa-check text-marca-primaria mr-2"></i> Otimização de Funil'
+                ]
+            },
+            'processos': {
+                titulo: 'Mapeamento de Processos',
+                texto: 'Tarefas duplicadas e falta de clareza destroem o lucro. Mapeamos toda a operação para criar fluxos enxutos, padrões documentados e redução de custos operacionais.',
+                lista: [
+                    '<i class="fas fa-check text-marca-primaria mr-2"></i> Auditoria Operacional',
+                    '<i class="fas fa-check text-marca-primaria mr-2"></i> Desenho de Fluxogramas',
+                    '<i class="fas fa-check text-marca-primaria mr-2"></i> Padronização (SOPs)'
+                ]
+            },
+            'equipe': {
+                titulo: 'Gestão de Liderança',
+                texto: 'Uma empresa forte é feita de líderes fortes. Implementamos avaliações de desempenho, metodologias ágeis e treinamentos para engajar e extrair o melhor da sua equipe.',
+                lista: [
+                    '<i class="fas fa-check text-marca-primaria mr-2"></i> Treinamento de Gestores',
+                    '<i class="fas fa-check text-marca-primaria mr-2"></i> Cultura Organizacional',
+                    '<i class="fas fa-check text-marca-primaria mr-2"></i> Avaliação de Desempenho'
+                ]
+            },
+            'tecnologia': {
+                titulo: 'Transformação Digital (Sistemas)',
+                texto: 'Não dá para escalar usando planilhas manuais. Analisamos sua infraestrutura de software para implementar CRMs, ERPs e automações que fazem a máquina rodar sozinha.',
+                lista: [
+                    '<i class="fas fa-check text-marca-primaria mr-2"></i> Implantação de Software',
+                    '<i class="fas fa-check text-marca-primaria mr-2"></i> Automação de Tarefas',
+                    '<i class="fas fa-check text-marca-primaria mr-2"></i> Business Intelligence'
+                ]
+            }
+        };
+
+        function analisarSintoma(idSintoma, elementoBotao) {
+            document.querySelectorAll('.tag-sintoma').forEach(el => el.classList.remove('selecionada'));
+            elementoBotao.classList.add('selecionada');
+
+            document.getElementById('estado-inicial-diag').classList.add('hidden');
+            const resBox = document.getElementById('resultado-diag');
+            resBox.classList.remove('hidden');
+            resBox.classList.add('animate-pulse');
+            setTimeout(() => resBox.classList.remove('animate-pulse'), 300);
+
+            const dados = dbSintomas[idSintoma];
+            document.getElementById('res-titulo').innerText = dados.titulo;
+            document.getElementById('res-texto').innerText = dados.texto;
+            document.getElementById('res-lista').innerHTML = dados.lista.join('');
+
+            if (window.innerWidth < 1024) {
+                setTimeout(() => {
+                    const yOffset = -80;
+                    const element = document.getElementById('ancora-resultado');
+                    const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                }, 100);
+            }
+        }
+
+        // Carrossel
+        let slideAtual = 0;
+        const trilha = document.getElementById('trilha-depoimentos');
+        const slides = document.querySelectorAll('.slide-carrossel');
+
+        function atualizarCarrossel() {
+            trilha.style.transform = `translateX(-${slideAtual * slides[0].clientWidth}px)`;
+        }
+        function proximoSlide() {
+            slideAtual = (slideAtual + 1) % slides.length;
+            atualizarCarrossel();
+        }
+        function slideAnterior() {
+            slideAtual = (slideAtual - 1 + slides.length) % slides.length;
+            atualizarCarrossel();
+        }
+        window.addEventListener('resize', atualizarCarrossel);
+
+        // Animação Scroll
+        const observador = new IntersectionObserver((elementos) => {
+            elementos.forEach(el => {
+                if (el.isIntersecting) el.target.classList.add('ativo');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.revelar').forEach(el => observador.observe(el));
+
+        // Form
+        function proximaEtapa() {
+            if (!document.getElementById('nomeCliente').value || !document.getElementById('telefoneCelular').value) {
+                return alert("Por favor, preencha os campos iniciais para testar a demo.");
+            }
+            document.getElementById('etapa-1').classList.replace('etapa-ativa', 'etapa-oculta');
+            document.getElementById('etapa-2').classList.replace('etapa-oculta', 'etapa-ativa');
+            document.getElementById('progresso-2').classList.replace('bg-slate-200', 'bg-marca-primaria');
+        }
+
+        function etapaAnterior() {
+            document.getElementById('etapa-2').classList.replace('etapa-ativa', 'etapa-oculta');
+            document.getElementById('etapa-1').classList.replace('etapa-oculta', 'etapa-ativa');
+            document.getElementById('progresso-2').classList.replace('bg-marca-primaria', 'bg-slate-200');
+        }
+
+        // Modal Rápido
+        let dadosDiagnostico = { tamanho: null, dor: null };
+        function abrirModal() {
+            const modal = document.getElementById('modal-diagnostico');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.replace('scale-95', 'scale-100');
+            }, 10);
+        }
+        function fecharModal() {
+            const modal = document.getElementById('modal-diagnostico');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function enviarDiagnostico() {
+            dadosDiagnostico.tamanho = document.getElementById('tamanhoEmpresaQuiz').value;
+            dadosDiagnostico.dor = document.getElementById('dorPrincipalQuiz').value;
+
+            const menuSuspensoForm = document.getElementById('dorPrincipal');
+            if (dadosDiagnostico.dor === "Vendas") menuSuspensoForm.value = "Consultoria Comercial";
+            if (dadosDiagnostico.dor === "Processos") menuSuspensoForm.value = "Gestao";
+            if (dadosDiagnostico.dor === "Tecnologia") menuSuspensoForm.value = "Tecnologia";
+
+            fecharModal();
+            window.location.href = '#contato';
+        }
+
+        // Fake Submit (Simulação de Envio na Demo)
+        document.getElementById('formularioContato').addEventListener('submit', function (evento) {
+            evento.preventDefault();
+
+            const botaoEnviar = this.querySelector('button[type="submit"]');
+            const textoOriginalBotao = botaoEnviar.innerHTML;
+
+            botaoEnviar.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Simulando envio...';
+            botaoEnviar.disabled = true;
+
+            setTimeout(() => {
+                const avisoStatus = document.getElementById('statusFormulario');
+                avisoStatus.innerHTML = "Excelente! Na versão final do cliente, isso redireciona para o WhatsApp dele automaticamente.";
+                avisoStatus.classList.remove('hidden');
+                avisoStatus.classList.add('bg-green-50', 'text-green-700', 'border-green-200');
+
+                setTimeout(() => {
+                    botaoEnviar.innerHTML = textoOriginalBotao;
+                    botaoEnviar.disabled = false;
+                    document.getElementById('formularioContato').reset();
+                    etapaAnterior();
+                    avisoStatus.classList.add('hidden');
+                }, 4000);
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>

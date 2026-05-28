@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CASA PRONTA | Design & Elegância</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #fafafa;
+      color: #1a1a1a;
+      padding-bottom: 80px;
+    }
+
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .product-card {
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+    }
+
+    .category-card {
+      position: relative;
+      overflow: hidden;
+      height: 280px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .category-card img {
+      transition: transform 1.2s ease;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .category-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .category-overlay {
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+    }
+
+    .btn-action {
+      background-color: #1a1a1a;
+      color: white;
+      transition: all 0.3s;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-action:hover {
+      background-color: #e63946;
+      transform: scale(1.01);
+    }
+
+    .loader {
+      border-top-color: #1a1a1a;
+      animation: spinner 0.8s linear infinite;
+    }
+
+    @keyframes spinner {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .hero-gradient {
+      background: linear-gradient(to right, rgba(255, 255, 255, 1) 30%, rgba(255, 255, 255, 0.7) 60%, transparent 100%);
+    }
+
+    .carousel-btn {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(4px);
+      transition: all 0.2s;
+      pointer-events: auto;
+    }
+
+    .carousel-btn:hover {
+      background: #fff;
+      transform: scale(1.1);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #d1d1d1;
+      border-radius: 10px;
+    }
+
+    .img-fit {
+      object-fit: contain;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Carrinho Flutuante Destacado */
+    .cart-float {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 50;
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #dc2626;
+      color: white;
+      border-radius: 50%;
+      box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: floatPulse 3s infinite ease-in-out;
+      border: 4px solid white;
+    }
+
+    .cart-float:hover {
+      transform: scale(1.1);
+      background-color: #b91c1c;
+    }
+
+    @keyframes floatPulse {
+      0% {
+        transform: translateY(0px);
+        box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4);
+      }
+
+      50% {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(220, 38, 38, 0.2);
+      }
+
+      100% {
+        transform: translateY(0px);
+        box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4);
+      }
+    }
+
+    .badge-count {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: #fbbf24;
+      color: #1a1a1a;
+      font-size: 12px;
+      font-weight: 900;
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Toast Notificação -->
+  <div id="toast"
+    class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[1000] bg-black text-white px-6 py-3 rounded-md font-bold text-xs uppercase tracking-widest shadow-xl transition-all duration-300 opacity-0 pointer-events-none translate-y-[-20px]">
+    Mensagem
+  </div>
+
+  <div class=" text-[#666] text-[10px] py-2.5 text-center font-medium tracking-[0.2em] uppercase px-4">
+    Qualidade artesanal & Entrega cuidadosa para sua região
+  </div>
+  <div class=" text-[#666] text-[10px] py-2.5 text-center font-medium tracking-[0.2em] uppercase px-4">
+    Atendemos em Uberlândia, Uberaba e Araguari
+  </div>
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+      <div class="flex items-center gap-2 cursor-pointer" onclick="window.showHome()">
+        <span class="text-xl font-bold tracking-widest text-slate-900 uppercase">CASA<span
+            class="text-red-600">PRONTA</span></span>
+      </div>
+
+      <div class="hidden md:flex items-center flex-grow max-w-sm mx-10">
+        <div class="relative w-full">
+          <input type="text" id="headerSearch" oninput="window.handleGlobalSearch(this.value)"
+            placeholder="Procurar um móvel..."
+            class="w-full bg-gray-50 border border-gray-100 rounded-full py-2 px-10 text-xs focus:outline-none focus:ring-1 focus:ring-gray-200 transition-all">
+          <svg class="w-3.5 h-3.5 absolute left-4 top-3 text-gray-400" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2.5" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a href="javascript:window.showHome()"
+          class="text-[10px] font-bold uppercase tracking-widest hover:text-red-600 transition hidden sm:block">Início</a>
+        <button onclick="window.toggleCart()" class="relative p-2 text-slate-900 hover:text-red-600 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+          </svg>
+          <span id="headerCartCount"
+            class="absolute top-0 right-0 h-4 w-4 bg-red-600 text-white text-[9px] font-bold rounded-full flex items-center justify-center hidden">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section id="heroBanner" class="relative min-h-[70vh] flex items-center overflow-hidden bg-white">
+    <div class="absolute inset-0 z-0">
+      <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000&auto=format&fit=crop"
+        alt="Móveis Minimalistas" class="w-full h-full object-cover">
+      <div class="absolute inset-0 hero-gradient"></div>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-6 py-20">
+      <div class="max-w-xl">
+        <p class="text-red-600 uppercase tracking-[0.4em] font-bold text-[10px] mb-4">Curadoria 2026</p>
+        <h1 class="text-4xl md:text-6xl font-light leading-[1.1] mb-8 text-slate-900 tracking-tighter">
+          A elegância do <br><span class="font-bold italic">essencial</span> para o seu lar.
+        </h1>
+        <button onclick="window.scrollToContent()"
+          class="bg-black text-white px-8 py-3.5 rounded-full font-bold uppercase tracking-[0.15em] text-[10px] hover:bg-red-600 transition-all shadow-lg">Explorar
+          Catálogo</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="loading" class="flex flex-col items-center justify-center py-40 px-4">
+    <div class="loader ease-linear rounded-full border-2 border-t-2 border-gray-100 h-10 w-10 mb-6"></div>
+    <p class="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Sincronizando catálogo...</p>
+  </div>
+
+  <section id="homeView" class="hidden">
+    <div id="anchor" class="max-w-7xl mx-auto px-6 py-20">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div>
+          <h2 class="text-3xl font-bold tracking-tight text-slate-900 uppercase italic">Departamentos</h2>
+          <p class="text-gray-400 text-xs mt-2">Selecione o ambiente que deseja transformar</p>
+        </div>
+        <div class="h-[1px] flex-grow bg-gray-100 mx-8 hidden md:block mb-4"></div>
+      </div>
+      <div id="categoryGrid"
+        class="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 [&>div]:aspect-square [&>div]:h-auto"></div>
+    </div>
+
+    <div class="bg-white py-24 border-t border-gray-50">
+      <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
+        <div class="w-full md:w-1/2">
+          <div class="relative">
+            <div class="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 border-gray-100"></div>
+            <img id="vendedorFoto" src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=800"
+              alt="Vendedor" class="rounded-sm shadow-xl relative z-10 w-full">
+          </div>
+        </div>
+        <div class="w-full md:w-1/2 text-center md:text-left">
+          <span class="text-red-600 font-bold uppercase tracking-[0.3em] text-[10px]">Consultoria Exclusiva</span>
+          <h2 class="text-4xl font-bold text-slate-900 mt-4 mb-6 tracking-tight uppercase italic">Atendimento
+            Personalizado</h2>
+          <p class="text-gray-500 text-sm leading-relaxed mb-8">Nossa missão é unir qualidade industrial com o carinho
+            do atendimento individualizado. Selecionamos as melhores peças para transformar o seu espaço em um
+            verdadeiro lar.</p>
+          <div class="p-6 border-l-2 border-red-600 bg-gray-50 inline-block md:block">
+            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">Contato Direto</p>
+            <span id="storePhoneDisplay" class="text-2xl font-light text-slate-900 tracking-tight">Atendimento
+              Online</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main id="catalogView" class="max-w-7xl mx-auto px-6 py-12 hidden">
+    <nav class="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-gray-300 mb-10">
+      <button onclick="window.showHome()" class="hover:text-black transition">Início</button>
+      <span class="text-gray-200">/</span>
+      <span id="currentCategoryTitle" class="text-black">Categoria</span>
+    </nav>
+
+    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12"></div>
+
+    <div id="emptyState" class="hidden text-center py-32">
+      <p class="text-gray-400 text-sm uppercase tracking-widest">Nenhum móvel nesta categoria.</p>
+      <button onclick="window.showHome()"
+        class="mt-6 border-b border-black text-[10px] font-black uppercase pb-1 hover:text-red-600 hover:border-red-600 transition">Voltar
+        ao início</button>
+    </div>
+  </main>
+
+  <footer class="bg-white border-t border-gray-100 pt-20 pb-10">
+    <div class="max-w-7xl mx-auto px-6">
+      <!-- Changed from md:grid-cols-4 to md:grid-cols-5 to fit the new Location section gracefully -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-12 mb-20">
+        <div class="md:col-span-2 text-center md:text-left">
+          <h3 class="text-lg font-bold tracking-widest mb-6 uppercase">CASA<span class="text-red-600">PRONTA</span></h3>
+          <p class="text-gray-400 text-xs leading-relaxed max-w-sm mx-auto md:mx-0 uppercase tracking-wider">Design
+            consciente e acessível direto para o seu lar.</p>
+
+          <!-- Ícones Redes Sociais -->
+          <div class="flex items-center justify-center md:justify-start gap-4 mt-8">
+            <a href="https://www.instagram.com/casapronta.udi/" class="text-gray-400 hover:text-[#E1306C] transition"
+              title="Instagram">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+              </svg>
+            </a>
+          </div>
+
+        </div>
+        <div class="text-center md:text-left">
+          <h4 class="text-[10px] font-bold uppercase tracking-[0.2em] mb-6 text-slate-900">Suporte</h4>
+          <p class="text-gray-400 text-xs font-medium uppercase tracking-tighter" id="footerPhone">Online</p>
+        </div>
+        <div class="text-center md:text-left">
+          <h4 class="text-[10px] font-bold uppercase tracking-[0.2em] mb-6 text-slate-900">Navegação</h4>
+          <button onclick="window.showHome()"
+            class="text-gray-400 text-xs font-medium uppercase tracking-tighter hover:text-black transition">Departamentos</button>
+        </div>
+        <!-- Nova Coluna: Localização com link do Google Maps -->
+        <div class="text-center md:text-left">
+          <h4 class="text-[10px] font-bold uppercase tracking-[0.2em] mb-6 text-slate-900">Localização</h4>
+          <div
+            class="w-full h-32 md:h-40 rounded-lg overflow-hidden border border-gray-100 shadow-sm relative grayscale hover:grayscale-0 transition-all duration-500">
+            <iframe src="https://maps.google.com/maps?q=Uberl%C3%A2ndia%20-%20MG&t=&z=12&ie=UTF8&iwloc=&output=embed"
+              width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+          <p
+            class="text-[10px] text-gray-400 mt-3 font-medium uppercase tracking-widest flex items-center justify-center md:justify-start gap-1">
+            <svg class="w-3 h-3 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            Uberlândia, MG
+          </p>
+        </div>
+      </div>
+      <div
+        class="pt-8 border-t border-gray-50 text-[10px] text-gray-300 font-bold uppercase tracking-widest text-center">
+        &copy; 2026 Casa Pronta
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botão Flutuante do WhatsApp -->
+  <a id="whatsappFloatBtn" href="#" target="_blank"
+    class="fixed bottom-[30px] left-[30px] sm:left-[40px] z-50 w-[60px] h-[60px] bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_10px_30px_rgba(37,211,102,0.4)] hover:scale-110 hover:bg-[#20bd5a] transition-all duration-300 hidden">
+    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+      <path
+        d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825 0 6.938 3.112 6.938 6.937s-3.113 6.938-6.938 6.938z" />
+    </svg>
+  </a>
+
+  <!-- Botão Flutuante do Carrinho -->
+  <button onclick="window.toggleCart()" id="floatingCartBtn" class="cart-float hidden group">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+    </svg>
+    <div id="floatBadge" class="badge-count hidden">0</div>
+  </button>
+
+  <!-- Modal do Carrinho -->
+  <div id="cartModal"
+    class="hidden fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex justify-end transition-opacity">
+    <div class="absolute inset-0" onclick="window.toggleCart()"></div>
+    <div class="w-full max-w-md bg-white h-full shadow-2xl flex flex-col relative z-10 animate-[slideIn_0.3s_ease-out]">
+
+      <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <h2 class="text-xl font-black uppercase italic tracking-tighter text-slate-900 flex items-center gap-2">
+          <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+          </svg>
+          Seus Móveis
+        </h2>
+        <button onclick="window.toggleCart()" class="text-gray-400 hover:text-red-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div id="cartItemsContainer" class="flex-grow overflow-y-auto p-6 space-y-4 no-scrollbar"></div>
+
+      <!-- Checkout Form -->
+      <div class="p-6 bg-gray-50 border-t border-gray-200 overflow-y-auto max-h-[55vh] no-scrollbar">
+        <div class="mb-4">
+          <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Seus Dados <span
+              class="text-red-600">*</span></label>
+          <input type="text" id="customerName" placeholder="Nome Completo"
+            class="w-full bg-white border border-gray-200 rounded-lg py-3 px-4 text-sm font-medium focus:outline-none focus:border-black transition mb-2">
+          <input type="tel" id="customerPhone" placeholder="WhatsApp (DDD + Número)"
+            class="w-full bg-white border border-gray-200 rounded-lg py-3 px-4 text-sm font-medium focus:outline-none focus:border-black transition">
+          <p id="customerError" class="hidden text-[10px] text-red-600 font-bold mt-1 uppercase tracking-wide">Preencha
+            seu nome e contato.</p>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Endereço de Entrega
+            <span class="text-red-600">*</span></label>
+          <div class="flex gap-2 mb-2">
+            <input type="text" id="cepInput" placeholder="CEP" maxlength="8"
+              class="w-1/2 bg-white border border-gray-200 rounded-lg py-3 px-4 text-sm font-medium focus:outline-none focus:border-black transition">
+            <button onclick="window.calculateShipping()" id="btnCalcFrete"
+              class="w-1/2 bg-black text-white rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition">Calcular</button>
+          </div>
+          <p id="cepFeedback" class="text-[10px] text-gray-500 font-bold mb-2 uppercase tracking-wide hidden"></p>
+
+          <textarea id="deliveryAddress" rows="2" placeholder="Rua, Bairro, Cidade, Estado"
+            class="w-full bg-white border border-gray-200 rounded-lg py-3 px-4 text-sm font-medium focus:outline-none focus:border-black transition resize-none mb-2"></textarea>
+
+          <div class="flex gap-2">
+            <input type="text" id="deliveryNumber" placeholder="Número *"
+              class="w-1/3 bg-white border border-gray-200 rounded-lg py-3 px-4 text-sm font-medium focus:outline-none focus:border-black transition">
+            <input type="text" id="deliveryComplement" placeholder="Complemento (Opcional)"
+              class="w-2/3 bg-white border border-gray-200 rounded-lg py-3 px-4 text-sm font-medium focus:outline-none focus:border-black transition">
+          </div>
+
+          <p id="addressError" class="hidden text-[10px] text-red-600 font-bold mt-2 uppercase tracking-wide">Preencha o
+            endereço e o número da casa.</p>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Forma de
+            Pagamento (Pagamento só é feito na hora da entrega)</label>
+          <select id="paymentMethod"
+            class="w-full bg-white border border-gray-200 rounded-lg py-3 px-4 text-sm font-medium focus:outline-none focus:border-black transition appearance-none">
+            <option value="Pix">Pix (Transferência / Chave)</option>
+            <option value="Cartão de Crédito (Loja)">Cartão de Crédito (Na entrega)</option>
+            <option value="Cartão de Débito (Loja)">Cartão de Débito (Na entrega)</option>
+            <option value="Dinheiro">Dinheiro (Espécie)</option>
+          </select>
+        </div>
+
+        <div class="mb-6 border-b border-gray-200 pb-4">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Subtotal</span>
+            <span id="cartSubtotal" class="text-sm font-black text-slate-900">R$ 0,00</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Frete</span>
+            <span id="cartShippingValue" class="text-sm font-bold text-red-600">A calcular</span>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-end mb-6">
+          <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">Total Geral</span>
+          <span id="cartTotal" class="text-3xl font-black text-slate-900">R$ 0,00</span>
+        </div>
+
+        <button id="btnCheckout" onclick="window.checkout()"
+          class="w-full bg-green-600 text-white py-4 rounded-lg font-black uppercase tracking-widest hover:bg-green-700 transition flex items-center justify-center gap-2 shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="w-5 h-5" fill="currentColor">
+            <path
+              d="M16.004 3C8.82 3 3 8.82 3 16.004c0 2.82.92 5.42 2.48 7.54L4 29l5.64-1.46a12.93 12.93 0 006.36 1.64C23.18 29.18 29 23.36 29 16.18 29 8.99 23.18 3 16.004 3zm0 23.64c-2.02 0-3.9-.54-5.52-1.48l-.4-.24-3.34.86.9-3.26-.26-.42A10.6 10.6 0 015.36 16c0-5.88 4.78-10.64 10.64-10.64S26.64 10.12 26.64 16 21.88 26.64 16.004 26.64zm5.84-7.98c-.32-.16-1.9-.94-2.2-1.04-.3-.1-.52-.16-.74.16-.22.32-.86 1.04-1.06 1.26-.2.22-.38.24-.7.08-.32-.16-1.36-.5-2.6-1.6-.96-.86-1.6-1.92-1.78-2.24-.18-.32-.02-.5.14-.66.14-.14.32-.36.48-.54.16-.18.22-.32.32-.54.1-.22.06-.42-.02-.58-.08-.16-.74-1.78-1.02-2.44-.26-.64-.52-.56-.74-.56h-.64c-.22 0-.58.08-.88.42-.3.32-1.16 1.14-1.16 2.78 0 1.64 1.18 3.22 1.34 3.44.16.22 2.3 3.5 5.58 4.78.78.34 1.4.54 1.88.7.8.26 1.52.22 2.1.14.64-.1 1.9-.78 2.18-1.54.28-.76.28-1.4.2-1.54-.08-.14-.3-.22-.62-.38z" />
+          </svg>
+          Pedir pelo WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para imagem grande com Navegação -->
+  <div id="imageModal" class="hidden fixed inset-0 z-[100] bg-white/98 flex items-center justify-center p-6"
+    onclick="window.closeModal()">
+    <button
+      class="absolute top-10 right-10 text-black text-2xl font-light hover:rotate-90 transition-all duration-300 z-[110]">&times;</button>
+    <div id="modalNav"
+      class="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 sm:px-10 pointer-events-none">
+      <button onclick="window.changeModalImage(event, -1)"
+        class="carousel-btn w-12 h-12 rounded-full flex items-center justify-center shadow-lg bg-white/90">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M15 19l-7-7 7-7" stroke-width="2" />
+        </svg>
+      </button>
+      <button onclick="window.changeModalImage(event, 1)"
+        class="carousel-btn w-12 h-12 rounded-full flex items-center justify-center shadow-lg bg-white/90">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M9 5l7 7-7 7" stroke-width="2" />
+        </svg>
+      </button>
+    </div>
+    <img id="modalImg" src="" class="max-w-full max-h-[85vh] rounded-sm shadow-2xl transition-all duration-500">
+  </div>
+
+  <!-- FIREBASE SCRIPTS -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, collection, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // INSIRA AS SUAS CHAVES DO FIREBASE ABAIXO
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVf7MPwsKpYtmQHDVknhcuQND4c9zPWqI",
+      authDomain: "catalogo-ccd52.firebaseapp.com",
+      projectId: "catalogo-ccd52",
+      storageBucket: "catalogo-ccd52.firebasestorage.app",
+      messagingSenderId: "744371827481",
+      appId: "1:744371827481:web:1b9c2941dd09bbb6f38b88"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const CATEGORY_IMAGES = {
+      'sofá': 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1000',
+      'mesa': 'https://finger.ind.br/wp-content/uploads/2020/08/finger-moveis-planejados-com-qualidade-e-sofisticacao-2-1024x819.jpg',
+      'colchão': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1000',
+      'sala': 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1000',
+      'quarto': 'https://images.unsplash.com/photo-1540518614846-7eded433c457?q=80&w=1000',
+      'cozinha': 'https://tecnoartengenharia.com.br/wp-content/uploads/2020/10/cozinhaluxuosa2.jpeg'
+    };
+
+    window.allProducts = [];
+    window.cart = [];
+    window.carouselIndices = {};
+    window.modalState = { id: null, images: [], index: 0 };
+    window.shippingCost = 0;
+    window.storeSettings = { fretePorKm: 0, lat: null, lon: null, whatsapp: "" };
+
+    const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    function fixDriveUrl(url) {
+      if (!url || (!url.includes('drive.google.com') && !url.includes('http'))) return 'https://via.placeholder.com/600x600?text=Sem+Foto';
+      const parts = url.match(/[-\w]{25,}/);
+      return parts && url.includes('drive') ? `https://lh3.googleusercontent.com/u/0/d/${parts[0]}` : url;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.innerText = message;
+      toast.classList.remove('opacity-0', 'translate-y-[-20px]');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-[-20px]');
+      }, 3000);
+    }
+
+    async function loadFirebaseData() {
+      try {
+        // Load Settings (Phone, Photo, Frete)
+        const settingsRef = doc(db, 'config', 'settings');
+        onSnapshot(settingsRef, (docSnap) => {
+          if (docSnap.exists()) {
+            window.storeSettings = docSnap.data();
+            if (window.storeSettings.vendedorFoto) {
+              document.getElementById('vendedorFoto').src = fixDriveUrl(window.storeSettings.vendedorFoto);
+            }
+            if (window.storeSettings.whatsapp) {
+              const zapNum = window.storeSettings.whatsapp.replace(/\D/g, '');
+              document.getElementById('storePhoneDisplay').innerText = window.storeSettings.whatsapp;
+              document.getElementById('footerPhone').innerText = window.storeSettings.whatsapp;
+
+              // Habilitando o balão do WhatsApp com o número da loja
+              const whatsBtn = document.getElementById('whatsappFloatBtn');
+              whatsBtn.href = `https://wa.me/55${zapNum}?text=Olá!%20Gostaria%20de%20tirar%20uma%20dúvida.`;
+              whatsBtn.classList.remove('hidden');
+            }
+          }
+        });
+
+        // Load Products
+        const productsRef = collection(db, 'products');
+        onSnapshot(productsRef, (snapshot) => {
+          window.allProducts = [];
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.status && data.status !== 'Indisponível') {
+              window.allProducts.push({ id_db: doc.id, ...data });
+            }
+          });
+
+          document.getElementById('loading').classList.add('hidden');
+          window.renderCategories();
+          window.showHome();
+        }, (err) => {
+          console.error(err);
+          document.getElementById('loading').innerHTML = `<p class='text-[10px] uppercase font-bold text-red-600'>Falha na conexão com servidor.</p>`;
+        });
+
+      } catch (error) {
+        console.error("Firebase falhou", error);
+      }
+    }
+
+    window.calculateShipping = async function () {
+      const cepInput = document.getElementById('cepInput');
+      const feedback = document.getElementById('cepFeedback');
+      const btnCalc = document.getElementById('btnCalcFrete');
+      const cep = cepInput.value.replace(/\D/g, '');
+
+      if (cep.length !== 8) {
+        feedback.innerText = "CEP inválido.";
+        feedback.className = "text-[10px] text-red-600 font-bold mb-2 uppercase tracking-wide block";
+        return;
+      }
+
+      feedback.innerText = "Buscando endereço...";
+      feedback.className = "text-[10px] text-gray-500 font-bold mb-2 uppercase tracking-wide block";
+      btnCalc.innerText = "...";
+      btnCalc.disabled = true;
+
+      try {
+        const cepRes = await fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`);
+        if (!cepRes.ok) throw new Error("CEP não encontrado");
+        const cepData = await cepRes.json();
+
+        document.getElementById('deliveryAddress').value = `${cepData.street}, ${cepData.neighborhood}, ${cepData.city} - ${cepData.state}`;
+        const addressSearch = `${cepData.street}, ${cepData.city}, ${cepData.state}`;
+
+        if (!window.storeSettings || !window.storeSettings.lat || !window.storeSettings.lon || !window.storeSettings.fretePorKm) {
+          // Fallback Taxa Fixa
+          window.shippingCost = window.storeSettings.fretePorKm || 0;
+          feedback.innerText = `${cepData.city} (Taxa Padrão)`;
+          feedback.className = "text-[10px] text-green-600 font-bold mb-2 uppercase tracking-wide block";
+        } else {
+          feedback.innerText = "Calculando rota de entrega...";
+          const nominatimRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressSearch)}`);
+          const nominatimData = await nominatimRes.json();
+          if (nominatimData.length === 0) throw new Error("Coordenadas não achadas");
+
+          const clientLat = nominatimData[0].lat;
+          const clientLon = nominatimData[0].lon;
+          const osrmRes = await fetch(`https://router.project-osrm.org/route/v1/driving/${window.storeSettings.lon},${window.storeSettings.lat};${clientLon},${clientLat}?overview=false`);
+          const osrmData = await osrmRes.json();
+
+          if (osrmData.code !== 'Ok' || !osrmData.routes.length) throw new Error("Rota falhou");
+
+          const distanceKm = (osrmData.routes[0].distance / 1000).toFixed(1);
+          window.shippingCost = parseFloat(distanceKm) * window.storeSettings.fretePorKm;
+
+          feedback.innerText = `${cepData.city} (${distanceKm}km)`;
+          feedback.className = "text-[10px] text-green-600 font-bold mb-2 uppercase tracking-wide block";
+        }
+        window.updateCartUI();
+      } catch (err) {
+        feedback.innerText = "Preencha a rua manualmente.";
+        feedback.className = "text-[10px] text-orange-500 font-bold mb-2 uppercase tracking-wide block";
+        window.shippingCost = window.storeSettings.fretePorKm || 50; // Frete Padrão Móveis
+        window.updateCartUI();
+      } finally {
+        btnCalc.innerText = "Calcular";
+        btnCalc.disabled = false;
+      }
+    };
+
+    window.addToCart = function (id, btnElement) {
+      const product = window.allProducts.find(p => p.id_db === id);
+      if (!product) return;
+      const existingItem = window.cart.find(item => item._id === id);
+      if (existingItem) existingItem.qty++;
+      else window.cart.push({ _id: product.id_db, nome: product.nome, preco: parseFloat(product.preco) || 0, qty: 1, imagem: product.imagem });
+
+      window.updateCartUI();
+      showToast(`Adicionado: ${product.nome}`);
+    };
+
+    window.changeQty = function (id, delta) {
+      const item = window.cart.find(item => item._id === id);
+      if (item) {
+        item.qty += delta;
+        if (item.qty <= 0) {
+          const index = window.cart.findIndex(i => i._id === id);
+          window.cart.splice(index, 1);
+          if (window.cart.length === 0) window.shippingCost = 0;
+        }
+        window.updateCartUI();
+        window.renderCartItems();
+      }
+    };
+
+    window.updateCartUI = function () {
+      const totalQty = window.cart.reduce((acc, item) => acc + item.qty, 0);
+      const subtotal = window.cart.reduce((acc, item) => acc + (item.preco * item.qty), 0);
+      const finalTotal = subtotal + window.shippingCost;
+
+      const badges = [document.getElementById('headerCartCount'), document.getElementById('floatBadge')];
+      badges.forEach(el => {
+        el.innerText = totalQty;
+        if (totalQty > 0) el.classList.remove('hidden');
+        else el.classList.add('hidden');
+      });
+
+      const floatBtn = document.getElementById('floatingCartBtn');
+      if (totalQty > 0) floatBtn.classList.remove('hidden');
+      else floatBtn.classList.add('hidden');
+
+      document.getElementById('cartSubtotal').innerText = formatter.format(subtotal);
+      document.getElementById('cartShippingValue').innerText = window.shippingCost > 0 ? formatter.format(window.shippingCost) : 'A calcular';
+      document.getElementById('cartTotal').innerText = formatter.format(finalTotal);
+    };
+
+    window.toggleCart = function () {
+      const modal = document.getElementById('cartModal');
+      if (!modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      } else {
+        window.renderCartItems();
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+    };
+
+    window.renderCartItems = function () {
+      const container = document.getElementById('cartItemsContainer');
+      if (window.cart.length === 0) {
+        container.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-40 text-gray-300">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-center">Nenhum móvel selecionado.</p>
+                </div>`;
+        return;
+      }
+      container.innerHTML = window.cart.map(item => `
+            <div class="flex gap-4 p-3 bg-white border border-gray-100 rounded-lg shadow-sm">
+                <div class="w-16 h-16 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
+                    <img src="${fixDriveUrl(item.imagem)}" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-grow flex flex-col justify-between">
+                    <div class="flex justify-between items-start">
+                        <h4 class="text-[10px] font-bold uppercase text-slate-900 line-clamp-2">${item.nome}</h4>
+                    </div>
+                    <div class="flex justify-between items-end mt-2">
+                        <span class="text-sm font-black text-slate-900">${formatter.format(item.preco * item.qty)}</span>
+                        <div class="flex items-center bg-gray-50 rounded border border-gray-200">
+                            <button onclick="window.changeQty('${item._id}', -1)" class="px-2 py-1 text-gray-500 hover:text-red-600 transition">-</button>
+                            <span class="px-2 text-xs font-bold text-slate-900">${item.qty}</span>
+                            <button onclick="window.changeQty('${item._id}', 1)" class="px-2 py-1 text-gray-500 hover:text-green-600 transition">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    };
+
+    window.checkout = function () {
+      if (window.cart.length === 0) return;
+
+      const btn = document.getElementById('btnCheckout');
+      const nameInput = document.getElementById('customerName');
+      const phoneInput = document.getElementById('customerPhone');
+      const addressInput = document.getElementById('deliveryAddress');
+      const numberInput = document.getElementById('deliveryNumber');
+      const complementInput = document.getElementById('deliveryComplement');
+
+      let hasError = false;
+
+      // Validações simples
+      if (!nameInput.value.trim() || !phoneInput.value.trim()) {
+        document.getElementById('customerError').classList.remove('hidden');
+        hasError = true;
+      } else { document.getElementById('customerError').classList.add('hidden'); }
+
+      if (!addressInput.value.trim() || !numberInput.value.trim()) {
+        document.getElementById('addressError').classList.remove('hidden');
+        hasError = true;
+      } else { document.getElementById('addressError').classList.add('hidden'); }
+
+      if (hasError) return;
+
+      // Validações e extração de número do WhatsApp do admin
+      const adminPhoneStr = window.storeSettings.whatsapp ? window.storeSettings.whatsapp.replace(/\D/g, '') : '';
+      if (!adminPhoneStr) {
+        showToast("Loja indisponível via WhatsApp. Contate o administrador.");
+        return;
+      }
+
+      btn.innerText = "REDIRECIONANDO...";
+      btn.disabled = true;
+
+      const subtotal = window.cart.reduce((acc, item) => acc + (item.preco * item.qty), 0);
+      const total = subtotal + window.shippingCost;
+      const paymentMethod = document.getElementById('paymentMethod').value;
+
+      const complementStr = complementInput.value.trim() ? ` - ${complementInput.value.trim()}` : '';
+      const fullAddress = `${addressInput.value.trim()}, Número: ${numberInput.value.trim()}${complementStr}`;
+
+      let whatsMsg = `*NOVO PEDIDO - CASA PRONTA* \n\n`;
+      whatsMsg += ` *Cliente:* ${nameInput.value.trim()}\n`;
+      whatsMsg += ` *Contato:* ${phoneInput.value.trim()}\n\n`;
+
+      whatsMsg += ` *ITENS DO PEDIDO:*\n`;
+      window.cart.forEach(item => {
+        whatsMsg += `▫️ ${item.qty}x ${item.nome} - ${formatter.format(item.preco * item.qty)}\n`;
+      });
+
+      whatsMsg += `\n*Frete:* ${formatter.format(window.shippingCost)}\n`;
+      whatsMsg += ` *Total a Pagar:* ${formatter.format(total)}\n`;
+      whatsMsg += ` *Forma de Pagamento:* ${paymentMethod}\n\n`;
+
+      whatsMsg += `*Endereço de Entrega:*\n${fullAddress}\n`;
+
+      // 🔥 CORREÇÃO FINAL (ESSENCIAL)
+      const numero = "553497890863"; // coloque seu número aqui (DDI + DDD + número)
+      const url = `https://wa.me/${numero}?text=${encodeURIComponent(whatsMsg)}`;
+
+      // 🚀 Abrir WhatsApp
+      window.open(url, "_blank");
+
+      // Formata e redireciona (abrir nova guia do WhatsApp)
+      const whatsLink = `https://wa.me/55${adminPhoneStr}?text=${encodeURIComponent(whatsMsg)}`;
+      window.open(whatsLink, '_blank');
+
+      showToast("Redirecionado com sucesso!");
+
+      // Limpar carrinho e inputs após redirecionar
+      window.cart = [];
+      window.shippingCost = 0;
+      nameInput.value = '';
+      phoneInput.value = '';
+      addressInput.value = '';
+      numberInput.value = '';
+      complementInput.value = '';
+      document.getElementById('cepInput').value = '';
+      document.getElementById('cepFeedback').classList.add('hidden');
+
+      window.updateCartUI();
+      window.toggleCart();
+
+      // Restaura o botão
+      btn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="w-5 h-5" fill="currentColor">
+              <path d="M16.004 3C8.82 3 3 8.82 3 16.004c0 2.82.92 5.42 2.48 7.54L4 29l5.64-1.46a12.93 12.93 0 006.36 1.64C23.18 29.18 29 23.36 29 16.18 29 8.99 23.18 3 16.004 3zm0 23.64c-2.02 0-3.9-.54-5.52-1.48l-.4-.24-3.34.86.9-3.26-.26-.42A10.6 10.6 0 015.36 16c0-5.88 4.78-10.64 10.64-10.64S26.64 10.12 26.64 16 21.88 26.64 16.004 26.64zm5.84-7.98c-.32-.16-1.9-.94-2.2-1.04-.3-.1-.52-.16-.74.16-.22.32-.86 1.04-1.06 1.26-.2.22-.38.24-.7.08-.32-.16-1.36-.5-2.6-1.6-.96-.86-1.6-1.92-1.78-2.24-.18-.32-.02-.5.14-.66.14-.14.32-.36.48-.54.16-.18.22-.32.32-.54.1-.22.06-.42-.02-.58-.08-.16-.74-1.78-1.02-2.44-.26-.64-.52-.56-.74-.56h-.64c-.22 0-.58.08-.88.42-.3.32-1.16 1.14-1.16 2.78 0 1.64 1.18 3.22 1.34 3.44.16.22 2.3 3.5 5.58 4.78.78.34 1.4.54 1.88.7.8.26 1.52.22 2.1.14.64-.1 1.9-.78 2.18-1.54.28-.76.28-1.4.2-1.54-.08-.14-.3-.22-.62-.38z"/>
+          </svg>
+          Pedir pelo WhatsApp
+      `;
+      btn.disabled = false;
+    };
+
+    window.renderCategories = function () {
+      const categories = [...new Set(window.allProducts.map(p => p.categoria))];
+      const container = document.getElementById('categoryGrid');
+
+      container.innerHTML = categories.map(cat => {
+        const image = CATEGORY_IMAGES[cat.toLowerCase()] || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1000';
+        return `
+          <div onclick="window.selectCategory('${cat}')" class="category-card group">
+            <img src="${image}" alt="${cat}">
+            <div class="category-overlay absolute inset-0 flex flex-col justify-end p-8 text-white">
+              <h3 class="text-xl font-bold uppercase italic tracking-wider">${cat}</h3>
+              <div class="w-0 group-hover:w-12 h-[2px] bg-red-600 transition-all duration-500 mt-2"></div>
+            </div>
+          </div>`;
+      }).join('');
+    };
+
+    window.showHome = function () {
+      document.getElementById('homeView').classList.remove('hidden');
+      document.getElementById('heroBanner').classList.remove('hidden');
+      document.getElementById('catalogView').classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.selectCategory = function (category) {
+      document.getElementById('currentCategoryTitle').innerText = category;
+      document.getElementById('homeView').classList.add('hidden');
+      document.getElementById('heroBanner').classList.add('hidden');
+      document.getElementById('catalogView').classList.remove('hidden');
+      window.renderProducts('', category);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.renderProducts = function (search = '', category = 'Todos') {
+      const grid = document.getElementById('productGrid');
+      const empty = document.getElementById('emptyState');
+      const filtered = window.allProducts.filter(p => {
+        const mSearch = p.nome.toLowerCase().includes(search.toLowerCase());
+        const mCat = category === 'Todos' || p.categoria === category;
+        return mSearch && mCat;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      grid.innerHTML = filtered.map(p => {
+        const isEsgotado = p.status.toLowerCase() === 'esgotado';
+        const precoNum = parseFloat(p.preco) || 0;
+
+        const images = [p.imagem, p.extra1, p.extra2, p.extra3]
+          .filter(img => img && img.toString().trim() !== "")
+          .map(fixDriveUrl);
+
+        window.carouselIndices[p.id_db] = window.carouselIndices[p.id_db] || 0;
+
+        return `
+          <div class="product-card rounded-sm overflow-hidden flex flex-col h-full">
+            <div class="relative aspect-[4/5] overflow-hidden bg-white group/carousel">
+              ${isEsgotado ? `<div class="absolute inset-0 z-20 bg-white/60 backdrop-blur-[1px] flex items-center justify-center"><span class="bg-black text-white px-3 py-1 text-xs font-bold uppercase">Esgotado</span></div>` : ''}
+              
+              <img id="img-display-${p.id_db}" 
+                   src="${images[window.carouselIndices[p.id_db]]}" 
+                   onclick="window.openModal('${p.id_db}', ${JSON.stringify(images).replace(/"/g, '&quot;')})"
+                   class="img-fit cursor-zoom-in group-hover/carousel:scale-105 transition duration-700 ${isEsgotado ? 'grayscale opacity-40' : ''}">
+              
+              ${images.length > 1 ? `
+                <div class="absolute inset-0 flex items-center justify-between px-2 opacity-0 group-hover/carousel:opacity-100 transition-opacity pointer-events-none z-10">
+                  <button onclick="window.changeImage(event, '${p.id_db}', -1, ${JSON.stringify(images).replace(/"/g, '&quot;')})" class="carousel-btn w-8 h-8 rounded-full flex items-center justify-center shadow-md">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2.5"/></svg>
+                  </button>
+                  <button onclick="window.changeImage(event, '${p.id_db}', 1, ${JSON.stringify(images).replace(/"/g, '&quot;')})" class="carousel-btn w-8 h-8 rounded-full flex items-center justify-center shadow-md">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2.5"/></svg>
+                  </button>
+                </div>
+                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 pointer-events-none z-10">
+                    ${images.map((_, i) => `<div class="w-1.5 h-1.5 rounded-full bg-slate-300 dot-${p.id_db} ${i === window.carouselIndices[p.id_db] ? 'bg-red-600 scale-125' : ''}"></div>`).join('')}
+                </div>
+              ` : ''}
+              <div class="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-slate-900 shadow-sm z-10">
+                 ${category !== 'Todos' ? category : p.categoria}
+              </div>
+            </div>
+
+            <div class="p-6 flex flex-col flex-grow">
+              <h3 class="font-bold text-xs text-slate-900 uppercase tracking-wider mb-2 leading-tight">${p.nome}</h3>
+              <p class="text-[11px] text-gray-400 mb-6 font-medium uppercase leading-relaxed line-clamp-2">${p.descricao || 'Verifique as medidas na consultoria.'}</p>
+              
+              <div class="mt-auto border-t border-dashed border-gray-200 pt-4 flex items-center justify-between gap-3">
+                <div class="flex flex-col">
+                  <span class="text-[10px] text-gray-400 font-bold uppercase">Valor</span>
+                  <span class="text-lg font-black text-slate-900">${formatter.format(precoNum)}</span>
+                  <span class="text-[9px] text-red-600 font-bold mt-1 uppercase tracking-tighter">${p.parcela ? p.parcela : "À vista ou Cartão"}</span>
+                </div>
+                
+                ${isEsgotado ?
+            `<button disabled class="flex-grow bg-gray-100 text-gray-400 py-3 text-[9px] font-bold uppercase tracking-[0.2em] rounded">Falta Estoque</button>` :
+            `<button onclick="window.addToCart('${p.id_db}', this)" class="flex-grow btn-action py-3 flex items-center justify-center text-[9px] font-bold uppercase tracking-[0.2em] shadow-sm rounded-md">
+                    Adicionar
+                   </button>`
+          }
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    };
+
+    window.updateCarouselUI = function (id, index, images) {
+      const imgElement = document.getElementById(`img-display-${id}`);
+      if (imgElement) imgElement.src = images[index];
+
+      const dots = document.querySelectorAll(`.dot-${id}`);
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          dot.classList.add('bg-red-600', 'scale-125');
+          dot.classList.remove('bg-slate-300');
+        } else {
+          dot.classList.remove('bg-red-600', 'scale-125');
+          dot.classList.add('bg-slate-300');
+        }
+      });
+    };
+
+    window.changeImage = function (e, id, step, images) {
+      if (e) e.stopPropagation();
+      let current = window.carouselIndices[id] || 0;
+      current += step;
+
+      if (current >= images.length) current = 0;
+      if (current < 0) current = images.length - 1;
+
+      window.carouselIndices[id] = current;
+      window.updateCarouselUI(id, current, images);
+    };
+
+    window.scrollToContent = function () {
+      const el = document.getElementById('anchor');
+      window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
+    };
+
+    window.handleGlobalSearch = function (val) {
+      if (val.length > 0) {
+        document.getElementById('currentCategoryTitle').innerText = "Resultados da Busca";
+        document.getElementById('homeView').classList.add('hidden');
+        document.getElementById('heroBanner').classList.add('hidden');
+        document.getElementById('catalogView').classList.remove('hidden');
+        window.renderProducts(val, 'Todos');
+      } else if (document.getElementById('catalogView').classList.contains('hidden') === false) {
+        window.showHome();
+      }
+    };
+
+    window.openModal = function (id, images) {
+      window.modalState = { id: id, images: images, index: window.carouselIndices[id] || 0 };
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImg');
+      const modalNav = document.getElementById('modalNav');
+
+      modalImg.src = images[window.modalState.index];
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+
+      if (images.length > 1) modalNav.classList.remove('hidden');
+      else modalNav.classList.add('hidden');
+    };
+
+    window.changeModalImage = function (e, step) {
+      if (e) e.stopPropagation();
+
+      let newIndex = window.modalState.index + step;
+      if (newIndex >= window.modalState.images.length) newIndex = 0;
+      if (newIndex < 0) newIndex = window.modalState.images.length - 1;
+
+      window.modalState.index = newIndex;
+      document.getElementById('modalImg').src = window.modalState.images[newIndex];
+
+      window.carouselIndices[window.modalState.id] = newIndex;
+      window.updateCarouselUI(window.modalState.id, newIndex, window.modalState.images);
+    };
+
+    window.closeModal = function () {
+      document.getElementById('imageModal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    };
+
+    // Load do app inteiro
+    loadFirebaseData();
+  </script>
+</body>
+
+</html>

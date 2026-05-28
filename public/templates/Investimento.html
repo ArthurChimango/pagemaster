@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silva Investimentos | Inteligência e Gestão Patrimonial</title>
+
+    <!-- Frameworks e Fontes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600%7CRaleway:300,400,500,600,700,800"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --emerald: #0D9488;
+            --gold: #D4AF37;
+            --dark: #0f172a;
+            --whatsapp-green: #25D366;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            background-color: #f8fafc;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 700;
+        }
+
+        .text-gold {
+            color: var(--gold);
+        }
+
+        .bg-gold {
+            background-color: var(--gold);
+        }
+
+        .smooth-transition {
+            transition: all 0.3s ease;
+        }
+
+        /* Ticker de Mercado */
+        .ticker-wrapper {
+            background: #020617;
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 10px 0;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .ticker-content {
+            display: inline-block;
+            animation: ticker 40s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% {
+                transform: translateX(50%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Hero Section */
+        #inicio {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.85)),
+                url('https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        .light-beam {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(212, 175, 55, 0.12) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .txt-rotate>.wrap {
+            border-right: 0.08em solid var(--gold);
+        }
+
+        /* Melhoria nos Sliders */
+        input[type=range] {
+            accent-color: var(--gold);
+            cursor: pointer;
+        }
+
+        /* Navbar Glass */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Correção no Formulário (Estilo Moderno e Sem Bugs de Label) */
+        .form-input {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-input:focus {
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Gráfico Circular Dinâmico */
+        .chart-svg {
+            transform: rotate(-90deg);
+        }
+
+        .chart-bg {
+            fill: none;
+            stroke: #e2e8f0;
+            stroke-width: 3.8;
+        }
+
+        .chart-progress {
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 3.8;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.6s ease;
+        }
+
+        .profile-btn.active {
+            background-color: var(--gold);
+            color: white;
+            border-color: var(--gold);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Ticker de Mercado -->
+    <div class="ticker-wrapper fixed top-0 w-full z-[70]">
+        <div
+            class="ticker-content flex space-x-12 text-[11px] font-bold text-white uppercase tracking-widest items-center">
+            <span><span class="text-gold">IBOVESPA</span> 128.450 <span class="text-green-400 ml-1"><i
+                        class="fas fa-caret-up"></i> 0.45%</span></span>
+            <span><span class="text-gold">S&P 500</span> 5.123 <span class="text-green-400 ml-1"><i
+                        class="fas fa-caret-up"></i> 0.12%</span></span>
+            <span><span class="text-gold">DÓLAR</span> R$ 4,92 <span class="text-red-400 ml-1"><i
+                        class="fas fa-caret-down"></i> 0.31%</span></span>
+            <span><span class="text-gold">BITCOIN</span> US$ 62.410 <span class="text-green-400 ml-1"><i
+                        class="fas fa-caret-up"></i> 1.25%</span></span>
+            <span><span class="text-gold">IFIX</span> 3.342 <span class="text-green-400 ml-1"><i
+                        class="fas fa-caret-up"></i> 0.05%</span></span>
+            <span><span class="text-gold">PETR4</span> R$ 40,12 <span class="text-green-400 ml-1"><i
+                        class="fas fa-caret-up"></i> 0.8%</span></span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header id="navbar" class="fixed w-full z-[60] top-[42px] py-4 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <a href="#inicio" class="text-2xl font-extrabold tracking-tighter logo-text text-white">
+                SILVA<span class="text-gold">INVEST</span>
+            </a>
+
+            <nav class="hidden lg:flex items-center space-x-8 font-medium">
+                <a href="#inicio" class="nav-link text-white hover:text-gold smooth-transition text-sm">Início</a>
+                <a href="#simulador" class="nav-link text-white hover:text-gold smooth-transition text-sm">Simulador</a>
+                <a href="#perfil" class="nav-link text-white hover:text-gold smooth-transition text-sm">Perfis</a>
+                <a href="#contato"
+                    class="bg-gold text-white px-8 py-2.5 rounded-full hover:shadow-xl hover:scale-105 smooth-transition text-sm">Agendar
+                    Diagnóstico</a>
+            </nav>
+
+            <button class="lg:hidden text-white text-2xl"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio"
+        class="relative min-h-screen flex items-center justify-center text-center overflow-hidden pt-24">
+        <div class="light-beam"></div>
+
+        <div class="relative z-10 px-6 max-w-4xl">
+            <div
+                class="inline-block bg-white/10 backdrop-blur-md border border-white/20 text-white px-5 py-1.5 rounded-full text-[10px] font-bold tracking-[0.3em] uppercase mb-8">
+                Inteligência Financeira Certificada
+            </div>
+            <h1 class="text-5xl md:text-8xl font-extrabold text-white mb-8 uppercase tracking-tighter leading-tight">
+                GESTÃO <br>
+                <span class="text-gold txt-rotate" data-period="2000"
+                    data-rotate='[ "PATRIMONIAL", "ESTRATÉGICA", "REVOLUCIONÁRIA" ]'></span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 mb-12 font-light max-w-2xl mx-auto leading-relaxed">
+                Proteja e multiplique seu capital com estratégias de nível institucional adaptadas para o investidor
+                individual.
+            </p>
+            <div class="flex flex-wrap justify-center gap-6">
+                <a href="#simulador"
+                    class="px-12 py-4 bg-gold text-white font-bold rounded-full shadow-lg hover:shadow-gold/40 hover:-translate-y-1 smooth-transition">Testar
+                    Simulador</a>
+                <a href="#contato"
+                    class="px-12 py-4 border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-dark hover:-translate-y-1 smooth-transition">Consultoria
+                    Gratuita</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simulador Interativo Corrigido -->
+    <section id="simulador" class="py-24 bg-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+                <div>
+                    <div class="mb-12">
+                        <span class="text-gold font-bold text-xs uppercase tracking-widest">Ferramenta Exclusiva</span>
+                        <h2 class="text-4xl font-extrabold text-slate-900 mt-2">Poder do Tempo</h2>
+                        <p class="text-slate-500 mt-4 max-w-md">Visualize a projeção do seu patrimônio com base em
+                            aportes consistentes e juros compostos.</p>
+                    </div>
+
+                    <div class="space-y-10 bg-slate-50 p-10 rounded-[40px] border border-slate-100 shadow-inner">
+                        <div class="group">
+                            <div class="flex justify-between mb-4">
+                                <label class="font-bold text-slate-700">Aporte Inicial</label>
+                                <span
+                                    class="bg-white px-4 py-1 rounded-lg shadow-sm text-gold font-bold border border-slate-200"
+                                    id="val-inicial">R$ 10.000</span>
+                            </div>
+                            <input type="range" id="range-inicial" min="1000" max="500000" step="1000" value="10000"
+                                class="w-full">
+                        </div>
+                        <div class="group">
+                            <div class="flex justify-between mb-4">
+                                <label class="font-bold text-slate-700">Aporte Mensal</label>
+                                <span
+                                    class="bg-white px-4 py-1 rounded-lg shadow-sm text-gold font-bold border border-slate-200"
+                                    id="val-mensal">R$ 1.000</span>
+                            </div>
+                            <input type="range" id="range-mensal" min="100" max="20000" step="100" value="1000"
+                                class="w-full">
+                        </div>
+                        <div class="group">
+                            <div class="flex justify-between mb-4">
+                                <label class="font-bold text-slate-700">Prazo de Investimento</label>
+                                <span
+                                    class="bg-white px-4 py-1 rounded-lg shadow-sm text-gold font-bold border border-slate-200"
+                                    id="val-anos">10 Anos</span>
+                            </div>
+                            <input type="range" id="range-anos" min="1" max="30" step="1" value="10" class="w-full">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card de Resultado Corrigido -->
+                <div class="lg:sticky lg:top-32">
+                    <div
+                        class="bg-slate-900 text-white p-12 rounded-[50px] shadow-2xl relative overflow-hidden border-b-[10px] border-gold">
+                        <div class="relative z-10">
+                            <i class="fas fa-chart-pie text-gold text-4xl mb-6 opacity-50"></i>
+                            <h4 class="text-slate-400 uppercase tracking-widest text-[10px] font-bold mb-2">Patrimônio
+                                Bruto Estimado</h4>
+                            <div class="text-4xl md:text-6xl font-black text-white mb-6" id="total-resultado">R$ 0,00
+                            </div>
+
+                            <!-- Legenda Informativa Refatorada -->
+                            <div class="bg-white/5 border border-white/10 rounded-3xl p-6 mt-8">
+                                <h5 class="text-gold font-bold text-xs uppercase mb-3 flex items-center">
+                                    <i class="fas fa-info-circle mr-2"></i> Premissas da Simulação
+                                </h5>
+                                <p class="text-slate-400 text-xs leading-relaxed">
+                                    Cálculo baseado em uma rentabilidade média de <span
+                                        class="text-white font-bold">10,5% ao ano</span>.
+                                    Este valor reflete uma carteira equilibrada entre ativos de Renda Fixa e Renda
+                                    Variável.
+                                    <br><br>
+                                    <span class="italic text-[9px]">*Valores não garantidos. Sujeito a variações de
+                                        mercado.</span>
+                                </p>
+                            </div>
+
+                            <a href="#contato"
+                                class="mt-8 w-full flex items-center justify-center gap-3 bg-gold text-white py-4 rounded-2xl font-bold hover:scale-[1.02] smooth-transition group">
+                                Baixar Plano Detalhado
+                                <i class="fas fa-arrow-right group-hover:translate-x-1 smooth-transition"></i>
+                            </a>
+                        </div>
+
+                        <!-- Elementos Visuais de Fundo -->
+                        <div class="absolute -top-12 -right-12 w-64 h-64 bg-gold/5 rounded-full blur-3xl"></div>
+                        <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-gold/10 rounded-full blur-2xl"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Perfil de Risco Interativo -->
+    <section id="perfil" class="py-24 bg-slate-50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black text-slate-900 uppercase">Sugestão de Alocação</h2>
+                <div class="w-20 h-1.5 bg-gold mx-auto mt-6 rounded-full"></div>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
+                <button onclick="setProfile('cons')" id="btn-cons"
+                    class="profile-btn px-10 py-3 rounded-2xl border-2 border-slate-200 font-bold smooth-transition active">Conservador</button>
+                <button onclick="setProfile('mod')" id="btn-mod"
+                    class="profile-btn px-10 py-3 rounded-2xl border-2 border-slate-200 font-bold smooth-transition">Moderado</button>
+                <button onclick="setProfile('sof')" id="btn-sof"
+                    class="profile-btn px-10 py-3 rounded-2xl border-2 border-slate-200 font-bold smooth-transition">Arrojado</button>
+            </div>
+
+            <div
+                class="bg-white p-8 md:p-12 rounded-[40px] shadow-xl border border-slate-100 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                <div class="md:col-span-4 flex justify-center relative">
+                    <svg viewBox="0 0 36 36" class="w-64 h-64 chart-svg">
+                        <circle class="chart-bg" cx="18" cy="18" r="15.915" />
+                        <circle id="chart-progress-el" class="chart-progress" cx="18" cy="18" r="15.915"
+                            stroke-dasharray="80, 100" />
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase">Renda Fixa</span>
+                        <span id="chart-percent" class="text-3xl font-black text-slate-900">80%</span>
+                    </div>
+                </div>
+
+                <div class="md:col-span-8">
+                    <h3 class="text-3xl font-bold mb-4 text-slate-800" id="profile-title">Perfil Conservador</h3>
+                    <p class="text-slate-500 text-lg leading-relaxed mb-8" id="profile-text">Foco em segurança máxima.
+                        Ideal para construção de reserva de emergência ou investidores que preferem volatilidade mínima.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                            <div class="text-gold font-black text-2xl mb-1" id="stat-pos-1">80%</div>
+                            <div class="text-[10px] uppercase font-bold text-slate-400">Pós-Fixados</div>
+                        </div>
+                        <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                            <div class="text-slate-800 font-black text-2xl mb-1" id="stat-pos-2">15%</div>
+                            <div class="text-[10px] uppercase font-bold text-slate-400">Multimercados</div>
+                        </div>
+                        <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                            <div class="text-slate-800 font-black text-2xl mb-1" id="stat-pos-3">5%</div>
+                            <div class="text-[10px] uppercase font-bold text-slate-400">Ações (FIIs)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulário Corrigido (Moderno e Limpo) -->
+    <section id="contato" class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="bg-slate-900 p-10 md:p-16 rounded-[50px] shadow-2xl relative overflow-hidden">
+                <div class="text-center mb-16 relative z-10">
+                    <h2 class="text-4xl font-extrabold text-white">Pronto para o Próximo Nível?</h2>
+                    <p class="text-slate-400 mt-4">Preencha os dados e receba uma proposta de alocação personalizada.
+                    </p>
+                </div>
+
+                <form id="contactForm" class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                    <div>
+                        <label class="form-label">Nome Completo</label>
+                        <input type="text" id="name" class="form-input" placeholder="Seu nome" required>
+                    </div>
+                    <div>
+                        <label class="form-label">WhatsApp Corporativo</label>
+                        <input type="text" id="phone" class="form-input" placeholder="(00) 00000-0000" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="form-label">E-mail para Diagnóstico</label>
+                        <input type="email" id="email" class="form-input" placeholder="email@empresa.com" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="form-label">Valor aproximado para investimento</label>
+                        <select id="invest-range" class="form-input text-slate-400">
+                            <option value="">Selecione uma faixa...</option>
+                            <option value="1">Até R$ 100 mil</option>
+                            <option value="2">R$ 100 mil a R$ 500 mil</option>
+                            <option value="3">R$ 500 mil a R$ 2 Milhões</option>
+                            <option value="4">Acima de R$ 2 Milhões</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2 text-center mt-6">
+                        <button type="submit"
+                            class="w-full md:w-auto bg-gold text-white px-20 py-5 rounded-2xl font-bold text-lg hover:shadow-[0_15px_30px_rgba(212,175,55,0.4)] hover:scale-105 smooth-transition">
+                            Agendar Call de 15 Minutos
+                        </button>
+                    </div>
+                </form>
+                <div id="formStatus"
+                    class="mt-8 hidden p-6 text-center rounded-2xl bg-white/10 text-white font-bold border border-white/20">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Simplificado -->
+    <footer class="bg-slate-950 text-slate-500 py-20 text-center border-t border-slate-900">
+        <div class="text-3xl font-black text-white mb-8 uppercase tracking-widest">
+            SILVA<span class="text-gold">INVEST</span>
+        </div>
+        <div class="flex justify-center space-x-8 text-xl mb-12">
+            <a href="#" class="hover:text-gold smooth-transition"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="hover:text-gold smooth-transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="hover:text-gold smooth-transition"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p class="text-[10px] uppercase tracking-[0.4em] text-slate-600 mb-4 px-6">© 2026 Silva Investimentos |
+            Escritório Credenciado | São Paulo - SP</p>
+        <p class="text-[8px] text-slate-800 max-w-2xl mx-auto px-10">O conteúdo deste site tem caráter informativo.
+            Investir envolve riscos. Consulte sempre o Prospecto e o Lâmina de Informações Essenciais antes de aplicar.
+        </p>
+    </footer>
+
+    <!-- WhatsApp Floating Corrigido -->
+    <div class="fixed bottom-8 right-8 z-[100]">
+        <button onclick="toggleChat()"
+            class="bg-[#25D366] text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 smooth-transition relative group border-4 border-white">
+            <i class="fab fa-whatsapp text-3xl"></i>
+            <span
+                class="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full animate-bounce border-2 border-white"></span>
+        </button>
+
+        <div id="wa-chat-box"
+            class="hidden absolute bottom-20 right-0 w-[300px] bg-white rounded-[30px] shadow-2xl border border-slate-100 overflow-hidden animate-pop">
+            <div class="bg-slate-900 p-5 text-white flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span class="text-xs font-bold uppercase">Mesa de Operações</span>
+                </div>
+                <button onclick="toggleChat()" class="text-slate-400"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="p-6 bg-slate-50">
+                <div
+                    class="bg-white p-4 rounded-2xl rounded-tl-none text-xs text-slate-600 shadow-sm leading-relaxed border border-slate-100">
+                    Olá! Sou especialista em alocação da Silva Invest. Como posso ajudar com sua dúvida hoje? 📈
+                </div>
+            </div>
+            <div class="p-3 bg-white flex gap-2">
+                <input type="text" id="wa-input" placeholder="Mensagem..."
+                    class="flex-1 bg-slate-100 border-none rounded-xl px-4 py-2 text-xs outline-none">
+                <button onclick="sendWa()"
+                    class="w-10 h-10 bg-gold text-white rounded-xl flex items-center justify-center hover:bg-slate-900 smooth-transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lógica do Simulador (Matemática Financeira Real)
+        const rangeInic = document.getElementById('range-inicial');
+        const rangeMens = document.getElementById('range-mensal');
+        const rangeAnos = document.getElementById('range-anos');
+
+        function formatBRL(val) {
+            return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+        }
+
+        function calculate() {
+            const P = parseFloat(rangeInic.value);
+            const PMT = parseFloat(rangeMens.value);
+            const anos = parseInt(rangeAnos.value);
+            const n = anos * 12;
+            const i = 0.00835; // ~10.5% ao ano (mensalizado)
+
+            // Fórmula: P(1+i)^n + PMT * [((1+i)^n - 1) / i]
+            const total = P * Math.pow(1 + i, n) + PMT * ((Math.pow(1 + i, n) - 1) / i);
+
+            document.getElementById('val-inicial').innerText = formatBRL(P);
+            document.getElementById('val-mensal').innerText = formatBRL(PMT);
+            document.getElementById('val-anos').innerText = `${anos} Anos`;
+            document.getElementById('total-resultado').innerText = formatBRL(total);
+        }
+
+        [rangeInic, rangeMens, rangeAnos].forEach(el => el.addEventListener('input', calculate));
+
+        // Lógica dos Perfis de Investimento
+        const pProfiles = {
+            cons: { title: "Perfil Conservador", text: "Foco em liquidez imediata e proteção. Alocação em Tesouro Selic, CDBs de grandes bancos e fundos DI.", pos1: "80%", pos2: "15%", pos3: "5%", dash: "80, 100" },
+            mod: { title: "Perfil Moderado", text: "Equilíbrio entre renda fixa e dividendos. Alocação em Fundos Imobiliários e Ações de valor.", pos1: "50%", pos2: "30%", pos3: "20%", dash: "50, 100" },
+            sof: { title: "Perfil Arrojado", text: "Exposição tática ao mercado global e small caps. Foco em crescimento agressivo no longo prazo.", pos1: "20%", pos2: "40%", pos3: "40%", dash: "20, 100" }
+        };
+
+        function setProfile(p) {
+            const d = pProfiles[p];
+            document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${p}`).classList.add('active');
+
+            document.getElementById('profile-title').innerText = d.title;
+            document.getElementById('profile-text').innerText = d.text;
+            document.getElementById('stat-pos-1').innerText = d.pos1;
+            document.getElementById('stat-pos-2').innerText = d.pos2;
+            document.getElementById('stat-pos-3').innerText = d.pos3;
+            document.getElementById('chart-percent').innerText = d.pos1;
+            document.getElementById('chart-progress-el').style.strokeDasharray = d.dash;
+        }
+
+        // Mouse Light Effect
+        const hero = document.querySelector('#inicio');
+        const beam = document.querySelector('.light-beam');
+        hero.addEventListener('mousemove', e => {
+            const rect = hero.getBoundingClientRect();
+            beam.style.setProperty('--x', `${((e.clientX - rect.left) / rect.width) * 100}%`);
+            beam.style.setProperty('--y', `${((e.clientY - rect.top) / rect.height) * 100}%`);
+        });
+
+        // TxtRotate Engine
+        var TxtRotate = function (el, toRotate, period) {
+            this.toRotate = toRotate; this.el = el; this.loopNum = 0;
+            this.period = parseInt(period, 10) || 2000; this.txt = '';
+            this.tick(); this.isDeleting = false;
+        };
+        TxtRotate.prototype.tick = function () {
+            var i = this.loopNum % this.toRotate.length; var fullTxt = this.toRotate[i];
+            this.txt = this.isDeleting ? fullTxt.substring(0, this.txt.length - 1) : fullTxt.substring(0, this.txt.length + 1);
+            this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
+            var that = this; var delta = 200 - Math.random() * 100;
+            if (this.isDeleting) delta /= 2;
+            if (!this.isDeleting && this.txt === fullTxt) { delta = this.period; this.isDeleting = true; }
+            else if (this.isDeleting && this.txt === '') { this.isDeleting = false; this.loopNum++; delta = 500; }
+            setTimeout(function () { that.tick(); }, delta);
+        };
+
+        window.onload = function () {
+            var elements = document.getElementsByClassName('txt-rotate');
+            for (var i = 0; i < elements.length; i++) {
+                var rotate = elements[i].getAttribute('data-rotate');
+                if (rotate) new TxtRotate(elements[i], JSON.parse(rotate), elements[i].getAttribute('data-period'));
+            }
+            calculate();
+        };
+
+        // Scroll Navbar
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            const logo = document.querySelector('.logo-text');
+            const links = document.querySelectorAll('.nav-link');
+            if (window.scrollY > 50) {
+                nav.classList.add('glass-nav', 'py-3', 'top-0');
+                logo.classList.replace('text-white', 'text-slate-900');
+                links.forEach(l => l.classList.replace('text-white', 'text-slate-600'));
+            } else {
+                nav.classList.remove('glass-nav', 'py-3', 'top-0');
+                logo.classList.replace('text-slate-900', 'text-white');
+                links.forEach(l => l.classList.replace('text-slate-600', 'text-white'));
+            }
+        });
+
+        // WhatsApp Functions
+        function toggleChat() {
+            const box = document.getElementById('wa-chat-box');
+            box.classList.toggle('hidden');
+        }
+        function sendWa() {
+            const val = document.getElementById('wa-input').value;
+            window.open(`https://wa.me/5500000000000?text=${encodeURIComponent(val || "Olá, gostaria de falar com um analista.")}`, '_blank');
+        }
+
+        // Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const s = document.getElementById('formStatus');
+            s.classList.remove('hidden');
+            s.innerText = "Recebemos sua solicitação! Um de nossos analistas entrará em contato em breve.";
+            this.reset();
+        });
+    </script>
+</body>
+
+</html>

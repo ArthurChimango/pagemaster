@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silva & Associados | Advocacia de Excelência</title>
+    
+    <!-- Frameworks e Fontes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600%7CRaleway:300,400,500,600,700,800" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #C5A059;
+            --dark: #0f172a;
+            --whatsapp-green: #075e54;
+        }
+        
+        body { font-family: 'Poppins', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
+        h1, h2, h3, h4 { font-family: 'Raleway', sans-serif; font-weight: 700; }
+        
+        .bg-gold { background-color: var(--gold); }
+        .text-gold { color: var(--gold); }
+        .border-gold { border-color: var(--gold); }
+        .smooth-transition { transition: all 0.3s ease; }
+
+        /* Hero Section com Imagem Temática de Direito */
+        #inicio {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), 
+                              url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Efeito Parallax */
+            position: relative;
+        }
+
+        /* Efeito de Luz Jurídica (Feixe de luz suave) */
+        .light-beam {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(197, 160, 89, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Título Animado */
+        .txt-rotate > .wrap { border-right: 0.08em solid var(--gold); }
+
+        /* Floating Labels estilo Apoio */
+        .input-group { position: relative; margin-bottom: 2rem; }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 12px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #ddd;
+            outline: none;
+            transition: 0.3s;
+        }
+        .input-group label {
+            position: absolute;
+            left: 0;
+            top: 12px;
+            color: #999;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+        .input-group input:focus ~ label,
+        .input-group input:valid ~ label,
+        .input-group textarea:focus ~ label,
+        .input-group textarea:valid ~ label {
+            top: -15px;
+            font-size: 12px;
+            color: var(--gold);
+            font-weight: 600;
+        }
+        .input-group input:focus { border-bottom-color: var(--gold); }
+
+        /* WhatsApp Chat Style */
+        #wa-chat-box {
+            display: none;
+            transform-origin: bottom right;
+            z-index: 100;
+        }
+        .wa-header {
+            background-color: var(--whatsapp-green);
+            padding: 15px;
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        .wa-chat-body {
+            background-color: #e5ddd5;
+            padding: 20px;
+            min-height: 100px;
+        }
+        .wa-bubble-msg {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 0 15px 15px 15px;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        /* Glass effect navbar */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-heading h2 {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .section-heading h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            background: var(--gold);
+            bottom: -10px;
+            left: 25%;
+        }
+
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop { animation: popUp 0.4s ease-out forwards; }
+
+        .faq-item input:checked ~ .faq-content {
+            max-height: 300px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body class="bg-white">
+
+    <!-- Header -->
+    <header id="navbar" class="fixed w-full z-[60] py-4 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <a href="#inicio" class="text-2xl font-extrabold tracking-tighter logo-text text-white">
+                SILVA<span class="text-gold">&</span>ASSOC
+            </a>
+            
+            <nav class="hidden lg:flex items-center space-x-8 font-medium">
+                <a href="#inicio" class="nav-link text-white hover:text-gold smooth-transition text-sm">Início</a>
+                <a href="#atuacao" class="nav-link text-white hover:text-gold smooth-transition text-sm">Atuação</a>
+                <a href="#sobre" class="nav-link text-white hover:text-gold smooth-transition text-sm">Sobre mim</a>
+                <a href="#faq" class="nav-link text-white hover:text-gold smooth-transition text-sm">FAQ</a>
+                <a href="#contato" class="bg-gold text-white px-6 py-2 rounded-full hover:shadow-xl smooth-transition text-sm">Consultoria</a>
+            </nav>
+
+            <button class="lg:hidden text-white text-2xl"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Home Section -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden">
+        <div class="light-beam"></div>
+        
+        <div class="relative z-10 px-6 max-w-4xl">
+            <div class="inline-block bg-gold/20 text-gold px-4 py-1 rounded-full text-[10px] font-bold tracking-[0.3em] uppercase mb-6">Advocacia de Alta Performance</div>
+            <h1 class="text-5xl md:text-8xl font-extrabold text-white mb-6 uppercase tracking-tighter">
+                SILVA <br>
+                <span class="text-gold txt-rotate" 
+                      data-period="2000" 
+                      data-rotate='[ "ADVOCACIA", "ESTRATÉGIA", "JUSTIÇA", "EXCELÊNCIA" ]'></span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 mb-12 font-light max-w-2xl mx-auto">
+                Estratégias jurídicas personalizadas para quem busca segurança e resultados sólidos em cada etapa processual.
+            </p>
+            <div class="flex flex-wrap justify-center gap-6">
+                <a href="#atuacao" class="px-10 py-4 border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-dark smooth-transition">Ver Áreas de Atuação</a>
+                <a href="#contato" class="px-10 py-4 bg-gold text-white font-bold rounded-full shadow-lg hover:shadow-gold/40 smooth-transition">Agendar Reunião</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Áreas de Atuação -->
+    <section id="atuacao" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="section-heading text-center mb-20">
+                <h2 class="text-4xl font-bold uppercase tracking-tight">Especialidades</h2>
+                <p class="text-gray-500 mt-4">Foco total na resolução eficaz de conflitos e prevenção de riscos.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="group p-10 border border-gray-100 rounded-3xl hover:border-gold hover:shadow-2xl smooth-transition">
+                    <div class="w-16 h-16 bg-gold/10 text-gold rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-gold group-hover:text-white smooth-transition">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold mb-4">Direito Civil</h4>
+                    <p class="text-gray-500 mb-6 text-sm leading-relaxed">Responsabilidade civil, contratos complexos e gestão de obrigações com rigor técnico.</p>
+                    <a href="#contato" class="text-gold font-bold text-xs uppercase tracking-widest border-b border-gold pb-1">Saber mais</a>
+                </div>
+                <div class="group p-10 border border-gray-100 rounded-3xl hover:border-gold hover:shadow-2xl smooth-transition">
+                    <div class="w-16 h-16 bg-gold/10 text-gold rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-gold group-hover:text-white smooth-transition">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold mb-4">Empresarial</h4>
+                    <p class="text-gray-500 mb-6 text-sm leading-relaxed">Consultoria para pequenos e médios negócios, garantindo conformidade e proteção jurídica.</p>
+                    <a href="#contato" class="text-gold font-bold text-xs uppercase tracking-widest border-b border-gold pb-1">Saber mais</a>
+                </div>
+                <div class="group p-10 border border-gray-100 rounded-3xl hover:border-gold hover:shadow-2xl smooth-transition">
+                    <div class="w-16 h-16 bg-gold/10 text-gold rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-gold group-hover:text-white smooth-transition">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold mb-4">Sucessões</h4>
+                    <p class="text-gray-500 mb-6 text-sm leading-relaxed">Planejamento sucessório, inventários e partilha de bens com agilidade e ética.</p>
+                    <a href="#contato" class="text-gold font-bold text-xs uppercase tracking-widest border-b border-gold pb-1">Saber mais</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Perfil Section (Focado em 1 Pessoa) -->
+    <section id="sobre" class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="relative">
+                <div class="bg-gold w-full h-full absolute top-6 left-6 rounded-3xl -z-10"></div>
+                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80" class="rounded-3xl shadow-xl w-full h-[550px] object-cover grayscale hover:grayscale-0 smooth-transition">
+                <div class="absolute -bottom-6 -right-6 bg-white p-8 rounded-2xl shadow-xl">
+                    <div class="text-4xl font-extrabold text-gold">15+</div>
+                    <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Anos de Experiência</div>
+                </div>
+            </div>
+            <div>
+                <div class="section-heading mb-8">
+                    <h2 class="text-4xl font-bold uppercase">Conheça o Especialista</h2>
+                    <h6 class="text-gold font-bold tracking-[0.2em] mt-2">Dr. Ricardo Silva</h6>
+                </div>
+                <div class="space-y-6 text-gray-600 leading-relaxed">
+                    <p class="text-lg font-medium text-gray-800">Ofereço um atendimento boutique, focado na exclusividade e no tratamento direto com cada cliente.</p>
+                    <p>Diferente de grandes escritórios, aqui cada processo é tratado como prioridade absoluta. Através de anos de prática no Direito Civil e Empresarial, desenvolvi métodos que unem o conhecimento técnico profundo com uma visão estratégica de mercado.</p>
+                    <p>Acredito que a advocacia moderna exige agilidade e transparência. Por isso, utilizo as melhores ferramentas digitais para manter meus clientes informados em tempo real sobre cada passo dos seus casos.</p>
+                    
+                    <div class="flex gap-4 pt-4">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-gold shadow-sm mb-2"><i class="fas fa-graduation-cap"></i></div>
+                            <span class="text-[10px] font-bold uppercase">Mestre USP</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-gold shadow-sm mb-2"><i class="fas fa-medal"></i></div>
+                            <span class="text-[10px] font-bold uppercase">Especialista</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="section-heading text-center mb-16">
+                <h2 class="text-4xl font-bold uppercase">Dúvidas Frequentes</h2>
+                <p class="text-gray-500 mt-4">Respostas rápidas para as suas questões iniciais.</p>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="faq-item border border-gray-100 rounded-2xl overflow-hidden">
+                    <input type="checkbox" id="faq1" class="hidden peer">
+                    <label for="faq1" class="flex justify-between items-center p-6 cursor-pointer hover:bg-gray-50 smooth-transition font-bold text-gray-800">
+                        Como é agendada a primeira consulta?
+                        <i class="fas fa-plus text-gold peer-checked:rotate-45 smooth-transition"></i>
+                    </label>
+                    <div class="faq-content max-h-0 overflow-hidden bg-gray-50 text-gray-600 smooth-transition px-6">
+                        Você pode agendar diretamente pelo WhatsApp ou preenchendo o formulário abaixo. A reunião pode ser presencial ou via videoconferência.
+                    </div>
+                </div>
+                <div class="faq-item border border-gray-100 rounded-2xl overflow-hidden">
+                    <input type="checkbox" id="faq2" class="hidden peer">
+                    <label for="faq2" class="flex justify-between items-center p-6 cursor-pointer hover:bg-gray-50 smooth-transition font-bold text-gray-800">
+                        O atendimento é feito diretamente pelo Dr. Ricardo?
+                        <i class="fas fa-plus text-gold smooth-transition"></i>
+                    </label>
+                    <div class="faq-content max-h-0 overflow-hidden bg-gray-50 text-gray-600 smooth-transition px-6">
+                        Sim. Prezo pelo atendimento personalizado, o que significa que todas as etapas do seu caso serão acompanhadas diretamente pelo titular do escritório.
+                    </div>
+                </div>
+                <div class="faq-item border border-gray-100 rounded-2xl overflow-hidden">
+                    <input type="checkbox" id="faq3" class="hidden peer">
+                    <label for="faq3" class="flex justify-between items-center p-6 cursor-pointer hover:bg-gray-50 smooth-transition font-bold text-gray-800">
+                        Atua em outras regiões além de Uberlândia?
+                        <i class="fas fa-plus text-gold smooth-transition"></i>
+                    </label>
+                    <div class="faq-content max-h-0 overflow-hidden bg-gray-50 text-gray-600 smooth-transition px-6">
+                        Sim, graças ao processo digital, realizo atendimentos e acompanho causas em todo o território nacional.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contato -->
+    <section id="contato" class="py-24 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="bg-white p-12 rounded-[40px] shadow-2xl relative overflow-hidden">
+                <div class="section-heading text-center mb-16">
+                    <h2 class="text-4xl font-bold uppercase">Entre em Contacto</h2>
+                    <p class="text-gray-500 mt-4">Receba uma análise preliminar do seu caso em até 24 horas.</p>
+                </div>
+                
+                <form id="contactForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-12">
+                    <div class="input-group">
+                        <input type="text" id="name" required>
+                        <label for="name">Seu Nome*</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="phone" required>
+                        <label for="phone">Telemóvel / WhatsApp*</label>
+                    </div>
+                    <div class="input-group md:col-span-2">
+                        <input type="email" id="email" required>
+                        <label for="email">E-mail para retorno*</label>
+                    </div>
+                    <div class="input-group md:col-span-2">
+                        <textarea id="message" rows="4" required></textarea>
+                        <label for="message">Descreva brevemente a sua necessidade jurídica*</label>
+                    </div>
+                    <div class="md:col-span-2 text-center">
+                        <button type="submit" class="bg-gold text-white px-16 py-4 rounded-full font-bold text-lg hover:shadow-[0_10px_30px_rgba(197,160,89,0.4)] hover:scale-105 smooth-transition">
+                            Enviar Mensagem
+                        </button>
+                    </div>
+                </form>
+                <div id="formStatus" class="mt-8 hidden p-4 text-center rounded-2xl"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-500 py-16 text-center">
+        <div class="text-3xl font-extrabold text-white mb-6 uppercase">
+            SILVA<span class="text-gold">&</span>ASSOC
+        </div>
+        <p class="text-[10px] uppercase tracking-[0.3em] mb-8">Compromisso com a Verdade e com o Direito</p>
+        <div class="flex justify-center space-x-6 text-xl mb-12">
+            <a href="#" class="hover:text-gold smooth-transition"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="hover:text-gold smooth-transition"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p class="text-[9px] uppercase tracking-widest">© 2026 Silva Advogados | OAB/SP 000.000 | Uberlândia - MG</p>
+    </footer>
+
+    <!-- WhatsApp Area -->
+    <div class="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
+        <div id="wa-chat-box" class="mb-4 w-[320px] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+            <div class="wa-header">
+                <div class="flex justify-between items-center mb-1">
+                    <h3 class="font-bold text-sm uppercase tracking-wider">Advocacia Direta</h3>
+                    <button onclick="toggleChat()" class="text-white/60 hover:text-white"><i class="fas fa-times"></i></button>
+                </div>
+                <p class="text-[10px] text-white/80">Fale diretamente com o especialista</p>
+            </div>
+            <div class="wa-chat-body">
+                <div class="flex gap-2">
+                    <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white"><i class="fas fa-scale-balanced text-[10px]"></i></div>
+                    <div class="wa-bubble-msg">
+                        Olá! Como posso auxiliar o seu caso jurídico hoje? 👋
+                    </div>
+                </div>
+            </div>
+            <div class="p-3 bg-white border-t flex gap-2">
+                <input type="text" id="wa-input" placeholder="Escreva sua dúvida..." class="flex-1 bg-gray-100 border-none rounded-full px-4 py-2 text-sm outline-none">
+                <button onclick="sendWa()" class="w-10 h-10 bg-[#128c7e] text-white rounded-full flex items-center justify-center hover:bg-gold smooth-transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        <div class="relative">
+            <button onclick="toggleChat()" class="bg-[#25d366] text-white w-20 h-20 rounded-full flex items-center justify-center shadow-[0_10px_40px_rgba(37,211,102,0.4)] hover:scale-110 smooth-transition relative group">
+                <i class="fab fa-whatsapp text-4xl"></i>
+                <span class="absolute -top-1 -right-1 h-6 w-6 bg-red-500 border-4 border-white rounded-full animate-bounce"></span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Efeito de Luz Dinâmica na Secção Hero
+        const hero = document.querySelector('#inicio');
+        const lightBeam = document.querySelector('.light-beam');
+        
+        hero.addEventListener('mousemove', e => {
+            const rect = hero.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            lightBeam.style.setProperty('--x', `${x}%`);
+            lightBeam.style.setProperty('--y', `${y}%`);
+        });
+
+        // Typing Rotate
+        var TxtRotate = function(el, toRotate, period) {
+            this.toRotate = toRotate; this.el = el; this.loopNum = 0;
+            this.period = parseInt(period, 10) || 2000; this.txt = '';
+            this.tick(); this.isDeleting = false;
+        };
+        TxtRotate.prototype.tick = function() {
+            var i = this.loopNum % this.toRotate.length; var fullTxt = this.toRotate[i];
+            if (this.isDeleting) { this.txt = fullTxt.substring(0, this.txt.length - 1); } 
+            else { this.txt = fullTxt.substring(0, this.txt.length + 1); }
+            this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+            var that = this; var delta = 200 - Math.random() * 100;
+            if (this.isDeleting) delta /= 2;
+            if (!this.isDeleting && this.txt === fullTxt) { delta = this.period; this.isDeleting = true; } 
+            else if (this.isDeleting && this.txt === '') { this.isDeleting = false; this.loopNum++; delta = 500; }
+            setTimeout(function() { that.tick(); }, delta);
+        };
+
+        window.onload = function() {
+            var elements = document.getElementsByClassName('txt-rotate');
+            for (var i=0; i<elements.length; i++) {
+                var rotate = elements[i].getAttribute('data-rotate');
+                if (rotate) new TxtRotate(elements[i], JSON.parse(rotate), elements[i].getAttribute('data-period'));
+            }
+            setTimeout(() => { toggleChat(); }, 5000);
+        };
+
+        // Scroll Navbar
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            const links = document.querySelectorAll('.nav-link, .logo-text');
+            if (window.scrollY > 80) {
+                nav.classList.add('glass-nav', 'py-3', 'shadow-sm');
+                links.forEach(el => { if(!el.classList.contains('text-gold')) el.classList.add('text-gray-800'); });
+            } else {
+                nav.classList.remove('glass-nav', 'py-3', 'shadow-sm');
+                links.forEach(el => el.classList.remove('text-gray-800'));
+            }
+        });
+
+        // WhatsApp Functions
+        function toggleChat() {
+            const box = document.getElementById('wa-chat-box');
+            box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+            if(box.style.display === 'block') box.classList.add('animate-pop');
+        }
+        function sendWa() {
+            const val = document.getElementById('wa-input').value;
+            window.open(`https://wa.me/3499778403?text=${encodeURIComponent(val || "Olá, gostaria de agendar uma consultoria.")}`, '_blank');
+        }
+
+        // Form Submit
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const s = document.getElementById('formStatus');
+            s.classList.remove('hidden');
+            s.innerText = "Sua mensagem foi enviada. O Dr. Ricardo entrará em contacto em breve.";
+            s.className = "mt-8 p-6 text-center rounded-2xl bg-green-50 text-green-700 font-bold border border-green-100";
+            this.reset();
+        });
+    </script>
+</body>
+</html>

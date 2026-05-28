@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Burger House | Delivery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ifood-red: #ea1d2c;
+      --ifood-dark: #3e3e3e;
+      --ifood-gray: #717171;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+      color: var(--ifood-dark);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .animate-slide-up {
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.2s ease-out forwards;
+    }
+
+    .app-container {
+      max-w: 480px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+    }
+
+    @keyframes pulse-logo {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+      }
+    }
+
+    .animate-pulse-logo {
+      animation: pulse-logo 1.5s ease-in-out infinite;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Toast Notification -->
+  <div id="toast"
+    class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[1000] bg-gray-900 text-white px-6 py-3 rounded-full font-medium text-sm shadow-xl transition-all duration-300 opacity-0 pointer-events-none translate-y-[-20px]">
+    Mensagem
+  </div>
+
+  <!-- Splash Screen -->
+  <div id="splashScreen"
+    class="fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500 ease-in-out bg-[#ea1d2c]">
+    <div class="animate-pulse-logo flex flex-col items-center">
+      <div class="bg-white rounded-2xl p-4 mb-4 shadow-lg">
+        <svg class="w-16 h-16 text-[#ea1d2c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+          <path d="M7 2v20"></path>
+          <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+        </svg>
+      </div>
+      <h1 class="text-white text-3xl font-extrabold tracking-tight">Burger House</h1>
+      <p id="splashText" class="text-red-200 mt-2 font-medium text-sm">Carregando cardápio...</p>
+    </div>
+  </div>
+
+  <div class="app-container pb-24">
+    <!-- Header -->
+    <div class="sticky top-0 z-40 bg-white pb-3 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+      <header class="pt-5 pb-2 px-4">
+        <div class="flex justify-between items-center mb-4">
+          <div class="flex flex-col cursor-pointer">
+            <span class="text-[11px] text-[#717171] uppercase tracking-wide font-bold">Menu Digital</span>
+            <div class="flex items-center gap-1">
+              <span class="text-[14px] font-bold text-[#3e3e3e]">Burger House</span>
+              <svg class="w-4 h-4 text-[#ea1d2c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+          <button onclick="window.toggleCart()"
+            class="relative p-2 text-[#ea1d2c] hover:bg-red-50 rounded-full transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+            </svg>
+            <span id="headerCartCount"
+              class="absolute top-0 right-0 h-4 w-4 bg-[#ea1d2c] text-white text-[10px] font-bold rounded-full flex items-center justify-center hidden border border-white">0</span>
+          </button>
+        </div>
+        <div class="relative w-full">
+          <input type="text" id="headerSearch" oninput="window.handleGlobalSearch(this.value)"
+            placeholder="Item ou categoria"
+            class="w-full bg-[#f7f7f7] border-none rounded-md py-3 px-10 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-gray-300 transition-all text-[#3e3e3e] placeholder-[#717171]">
+          <svg class="w-5 h-5 absolute left-3 top-3 text-[#ea1d2c]" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </header>
+      <div id="categoryGrid" class="flex overflow-x-auto gap-3 px-4 snap-x no-scrollbar mt-1"></div>
+    </div>
+
+    <main class="min-h-screen bg-white">
+      <div id="heroBanner" class="px-4 mt-4 mb-2">
+        <div class="w-full h-32 rounded-xl overflow-hidden relative shadow-sm">
+          <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800&auto=format&fit=crop"
+            class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex flex-col justify-center p-5">
+            <span
+              class="bg-[#ea1d2c] text-white px-2 py-0.5 text-[10px] font-bold uppercase rounded w-max mb-1">Promoção</span>
+            <h2 class="text-lg font-extrabold text-white leading-tight">Os Melhores<br>Ingredientes</h2>
+          </div>
+        </div>
+      </div>
+      <div id="catalogHeader" class="px-4 py-3 flex items-center mt-2 border-b border-[#f2f2f2]">
+        <h2 id="currentCategoryTitle" class="font-bold text-[18px] text-[#3e3e3e] capitalize">Destaques</h2>
+      </div>
+      <div id="productGrid" class="flex flex-col px-4 pb-8"></div>
+      <div id="emptyState" class="hidden text-center py-24 px-4">
+        <div class="text-5xl mb-4 opacity-50 grayscale">😕</div>
+        <p class="text-[#3e3e3e] font-bold text-base mb-1">Poxa, não encontramos.</p>
+        <button onclick="window.showHome()" class="text-[#ea1d2c] font-bold text-sm mt-4">Limpar busca</button>
+      </div>
+    </main>
+
+    <!-- CTA Carrinho -->
+    <div
+      class="fixed bottom-0 w-full max-w-[480px] z-40 p-4 pointer-events-none bg-gradient-to-t from-white via-white/90 to-transparent pt-10">
+      <button onclick="window.toggleCart()" id="floatingCartBtn"
+        class="hidden w-full bg-[#ea1d2c] text-white rounded-md p-4 flex justify-between items-center shadow-lg pointer-events-auto active:scale-[0.98] transition-transform animate-slide-up">
+        <div class="flex items-center gap-3">
+          <div id="floatBadge"
+            class="bg-white text-[#ea1d2c] w-6 h-6 rounded flex items-center justify-center text-[12px] font-bold">0
+          </div>
+          <span class="font-medium text-[15px]">Ver sacola</span>
+        </div>
+        <div class="flex items-center gap-1 font-bold text-[15px]">
+          <span id="floatingCartTotal">R$ 0,00</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- Modal Carrinho -->
+    <div id="cartModal"
+      class="hidden fixed inset-0 z-[100] bg-black/50 flex items-end justify-center transition-opacity animate-fade-in">
+      <div class="absolute inset-0" onclick="window.toggleCart()"></div>
+      <div
+        class="w-full max-w-[480px] bg-white rounded-t-2xl flex flex-col max-h-[90vh] relative z-10 animate-slide-up">
+        <div class="w-full flex justify-center pt-3 pb-1" onclick="window.toggleCart()">
+          <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
+        </div>
+        <div class="px-5 pb-3 pt-2 border-b border-[#f2f2f2] flex justify-between items-center">
+          <h2 class="text-[18px] font-bold text-[#3e3e3e]">Sacola</h2>
+          <button onclick="window.toggleCart()" class="text-[#ea1d2c] font-medium text-sm">Fechar</button>
+        </div>
+        <div id="cartItemsContainer" class="flex-grow overflow-y-auto px-5 py-2 no-scrollbar"></div>
+
+        <div
+          class="p-5 bg-white border-t border-[#f2f2f2] shadow-[0_-4px_10px_rgba(0,0,0,0.02)] overflow-y-auto max-h-[60vh] no-scrollbar">
+          <div class="mb-4">
+            <label class="block text-[12px] font-bold text-[#3e3e3e] mb-2">Como deseja receber?</label>
+            <div class="flex gap-2">
+              <button id="btnDelivery" onclick="window.setOrderType('delivery')"
+                class="flex-1 py-2.5 rounded-md font-bold text-sm border border-[#ea1d2c] bg-red-50 text-[#ea1d2c] transition-colors">Entrega</button>
+              <button id="btnDineIn" onclick="window.setOrderType('dinein')"
+                class="flex-1 py-2.5 rounded-md font-bold text-sm border border-[#f2f2f2] bg-[#f7f7f7] text-[#717171] transition-colors">Na
+                Mesa</button>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-[12px] font-bold text-[#3e3e3e] mb-2">Seus Dados</label>
+            <div class="flex gap-2">
+              <input type="text" id="customerName" placeholder="Seu Nome"
+                class="flex-1 bg-[#f7f7f7] border-none rounded-md py-3 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 text-[#3e3e3e]">
+              <input type="tel" id="customerPhone" placeholder="Seu WhatsApp"
+                class="w-36 bg-[#f7f7f7] border-none rounded-md py-3 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 text-[#3e3e3e]">
+            </div>
+            <p id="customerError" class="hidden text-[11px] text-[#ea1d2c] font-medium mt-1 ml-1">Preencha nome e
+              WhatsApp.</p>
+          </div>
+
+          <div id="deliveryGroup" class="mb-4 block">
+            <label class="block text-[12px] font-bold text-[#3e3e3e] mb-2">Endereço de Entrega</label>
+            <div class="flex gap-2 mb-2">
+              <input type="text" id="cepInput" placeholder="CEP" maxlength="8"
+                class="w-28 bg-[#f7f7f7] border-none rounded-md py-3 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 text-[#3e3e3e]">
+              <button onclick="window.calculateShipping()"
+                class="bg-gray-200 text-[#3e3e3e] px-4 rounded-md text-xs font-semibold active:bg-gray-300 transition"
+                id="btnCalcFrete">Buscar CEP</button>
+            </div>
+            <p id="cepFeedback" class="text-[11px] text-[#717171] mb-2 hidden"></p>
+            <div class="flex gap-2 mb-2">
+              <input type="text" id="deliveryAddress" placeholder="Rua, Bairro..."
+                class="flex-1 bg-[#f7f7f7] border-none rounded-md py-3 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 text-[#3e3e3e]">
+              <input type="text" id="deliveryNumber" placeholder="Nº"
+                class="w-20 bg-[#f7f7f7] border-none rounded-md py-3 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 text-[#3e3e3e]">
+            </div>
+            <input type="text" id="deliveryComplement" placeholder="Complemento / Ponto de ref. (Opcional)"
+              class="w-full bg-[#f7f7f7] border-none rounded-md py-3 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 text-[#3e3e3e]">
+            <p id="addressError" class="hidden text-[11px] text-[#ea1d2c] font-medium mt-1 ml-1">Preencha o endereço e o
+              número.</p>
+          </div>
+
+          <div id="dineInGroup" class="mb-4 hidden">
+            <label class="block text-[12px] font-bold text-[#3e3e3e] mb-2">Atendimento Presencial</label>
+            <input type="text" id="tableNumber" placeholder="Nº Mesa"
+              class="w-full bg-[#f7f7f7] border-none rounded-md py-3 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 text-[#3e3e3e]">
+            <p id="dineInError" class="hidden text-[11px] text-[#ea1d2c] font-medium mt-1 ml-1">Preencha a mesa.</p>
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-[12px] font-bold text-[#3e3e3e] mb-2">Observações (Opcional)</label>
+            <textarea id="orderNotes" rows="2" placeholder="Ex: Tirar cebola, alergia..."
+              class="w-full bg-[#f7f7f7] border-none rounded-md py-3 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 text-[#3e3e3e] resize-none"></textarea>
+          </div>
+
+          <div class="mb-5 relative">
+            <label class="block text-[12px] font-bold text-[#3e3e3e] mb-2">Pagamento</label>
+            <select id="paymentMethod"
+              class="w-full bg-[#f7f7f7] border-none rounded-md py-3 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300 appearance-none text-[#3e3e3e]">
+              <option value="Pix">Pix</option>
+              <option value="Dinheiro">Dinheiro</option>
+              <option value="Cartão de Crédito">Cartão de Crédito</option>
+              <option value="Cartão de Débito">Cartão de Débito</option>
+            </select>
+            <svg class="w-4 h-4 absolute right-3 top-9 text-[#717171] pointer-events-none" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+
+          <div class="mb-5">
+            <div class="flex justify-between items-center mb-1 text-sm text-[#717171]"><span>Subtotal</span><span
+                id="cartSubtotal">R$ 0,00</span></div>
+            <div class="flex justify-between items-center mb-3 text-sm text-[#717171] border-b border-[#f2f2f2] pb-3">
+              <span>Taxa de entrega</span><span id="cartShippingValue" class="text-[#ea1d2c] font-medium">A
+                calcular</span></div>
+            <div class="flex justify-between items-end"><span
+                class="text-[16px] font-bold text-[#3e3e3e]">Total</span><span id="cartTotal"
+                class="text-[18px] font-bold text-[#3e3e3e]">R$ 0,00</span></div>
+          </div>
+
+          <button id="btnCheckout" onclick="window.checkout()"
+            class="w-full bg-[#ea1d2c] text-white py-3.5 rounded-md font-medium text-[15px] active:scale-[0.98] transition-transform flex justify-center items-center gap-2">
+            Finalizar Pedido
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="productModal"
+      class="hidden fixed inset-0 z-[110] bg-black/50 flex items-end justify-center transition-opacity animate-fade-in">
+      <div class="absolute inset-0" onclick="window.closeProductModal()"></div>
+      <div
+        class="w-full max-w-[480px] bg-white rounded-t-2xl flex flex-col max-h-[90vh] relative z-10 animate-slide-up overflow-hidden">
+        <button onclick="window.closeProductModal()"
+          class="absolute top-4 right-4 bg-white/80 backdrop-blur text-[#3e3e3e] w-8 h-8 rounded-full flex items-center justify-center z-20 shadow-sm active:scale-95 border border-[#f2f2f2]">✕</button>
+        <div class="w-full h-56 relative bg-gray-100 flex-shrink-0"><img id="pm-image" src=""
+            class="w-full h-full object-cover"></div>
+        <div class="px-5 pb-5 pt-4 flex flex-col flex-grow overflow-y-auto no-scrollbar">
+          <h2 id="pm-title" class="text-[20px] font-bold text-[#3e3e3e] leading-tight mb-2">Nome</h2>
+          <p id="pm-desc" class="text-[14px] text-[#717171] leading-relaxed mb-4">Desc</p>
+          <span id="pm-price" class="text-[18px] font-medium text-[#3e3e3e] mb-4">R$ 0,00</span>
+        </div>
+        <div class="p-4 border-t border-[#f2f2f2] bg-white">
+          <button id="pm-add-btn"
+            class="w-full bg-[#ea1d2c] text-white py-3.5 rounded-md font-medium text-[15px] active:scale-[0.98] transition-transform">Adicionar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, collection, doc, addDoc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // INSIRA AS SUAS CHAVES DO FIREBASE ABAIXO
+    const firebaseConfig = {
+      apiKey: "AIzaSyBg5emQM575F5gfcFQKt6X0ZoBGD_fldQw",
+      authDomain: "cardapio-21ba3.firebaseapp.com",
+      projectId: "cardapio-21ba3",
+      storageBucket: "cardapio-21ba3.firebasestorage.app",
+      messagingSenderId: "469778522659",
+      appId: "1:469778522659:web:7f9240042327ad133f8796"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.allProducts = [];
+    window.cart = [];
+    window.activeCategory = 'Todos';
+    window.shippingCost = 0;
+    window.orderType = 'delivery';
+    window.storeSettings = { fretePorKm: 2.00, lat: null, lon: null };
+
+    const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    const CATEGORY_PICS = {
+      'lanches': 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=150&auto=format&fit=crop',
+      'hamburguer': 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=150&auto=format&fit=crop',
+      'combos': 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?q=80&w=150&auto=format&fit=crop',
+      'bebidas': 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=150&auto=format&fit=crop',
+      'porções': 'https://images.unsplash.com/photo-1576107232684-1279f390859f?q=80&w=150&auto=format&fit=crop',
+      'sobremesas': 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?q=80&w=150&auto=format&fit=crop',
+      'default': 'https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?q=80&w=150&auto=format&fit=crop'
+    };
+
+    function fixDriveUrl(url) {
+      if (!url || (!url.includes('drive.google.com') && !url.includes('http'))) return 'https://via.placeholder.com/300x300?text=Sem+Foto';
+      const parts = url.match(/[-\w]{25,}/);
+      return parts && url.includes('drive') ? `https://lh3.googleusercontent.com/u/0/d/${parts[0]}` : url;
+    }
+
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.innerText = message;
+      toast.classList.remove('opacity-0', 'translate-y-[-20px]', 'bg-gray-900', 'bg-red-600');
+      toast.classList.add('opacity-100', 'translate-y-0', isError ? 'bg-red-600' : 'bg-gray-900');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-[-20px]');
+      }, 3000);
+    }
+
+    async function initializeSystem() {
+      try {
+        // Config de frete
+        const settingsRef = doc(db, 'config', 'settings');
+        onSnapshot(settingsRef, (docSnap) => {
+          if (docSnap.exists()) window.storeSettings = docSnap.data();
+        }, (err) => console.error("Erro Settings:", err));
+
+        // Produtos
+        const productsRef = collection(db, 'products');
+        onSnapshot(productsRef, (snapshot) => {
+          window.allProducts = [];
+          snapshot.forEach((doc) => {
+            window.allProducts.push({ id_db: doc.id, _id: doc.id, ...doc.data() });
+          });
+
+          document.getElementById('splashText').innerText = "Cardápio pronto!";
+          setTimeout(() => document.getElementById('splashScreen').classList.add('hidden'), 500);
+          window.renderCategories();
+          window.renderProducts();
+        }, (err) => {
+          console.error("Erro ao carregar os produtos:", err);
+          document.getElementById('splashText').innerText = "Falha ao carregar. Verifique o console (F12).";
+          setTimeout(() => document.getElementById('splashScreen').classList.add('hidden'), 2000);
+        });
+      } catch (error) {
+        console.error("Erro na inicialização:", error);
+        document.getElementById('splashText').innerText = "Erro ao conectar.";
+      }
+    }
+
+    window.setOrderType = function (type) {
+      window.orderType = type;
+      const btnDelivery = document.getElementById('btnDelivery');
+      const btnDineIn = document.getElementById('btnDineIn');
+
+      if (type === 'delivery') {
+        btnDelivery.className = "flex-1 py-2.5 rounded-md font-bold text-sm border border-[#ea1d2c] bg-red-50 text-[#ea1d2c] transition-colors";
+        btnDineIn.className = "flex-1 py-2.5 rounded-md font-bold text-sm border border-[#f2f2f2] bg-[#f7f7f7] text-[#717171] transition-colors";
+        document.getElementById('deliveryGroup').classList.remove('hidden');
+        document.getElementById('dineInGroup').classList.add('hidden');
+      } else {
+        btnDineIn.className = "flex-1 py-2.5 rounded-md font-bold text-sm border border-[#ea1d2c] bg-red-50 text-[#ea1d2c] transition-colors";
+        btnDelivery.className = "flex-1 py-2.5 rounded-md font-bold text-sm border border-[#f2f2f2] bg-[#f7f7f7] text-[#717171] transition-colors";
+        document.getElementById('deliveryGroup').classList.add('hidden');
+        document.getElementById('dineInGroup').classList.remove('hidden');
+        window.shippingCost = 0;
+      }
+      window.updateCartUI();
+    };
+
+    window.openProductModal = function (id) {
+      const p = window.allProducts.find(x => x._id === id);
+      if (!p) return;
+      document.getElementById('pm-image').src = fixDriveUrl(p.imagem);
+      document.getElementById('pm-title').innerText = p.nome;
+      document.getElementById('pm-price').innerText = formatter.format(p.preco || 0);
+      document.getElementById('pm-desc').innerText = p.descricao || 'Sem descrição.';
+      const btn = document.getElementById('pm-add-btn');
+      btn.innerText = `Adicionar ${formatter.format(p.preco || 0)}`;
+      btn.onclick = function () {
+        window.addToCart(p._id, this);
+        setTimeout(() => window.closeProductModal(), 300);
+      };
+      document.getElementById('productModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeProductModal = function () {
+      document.getElementById('productModal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    };
+
+    // INTEGRAÇÃO REAL DE FRETE (BRASILAPI + NOMINATIM OSM + OSRM)
+    window.calculateShipping = async function () {
+      const cepInput = document.getElementById('cepInput');
+      const feedback = document.getElementById('cepFeedback');
+      const btnCalc = document.getElementById('btnCalcFrete');
+      const cep = cepInput.value.replace(/\D/g, '');
+
+      if (cep.length !== 8) {
+        feedback.innerText = "CEP inválido.";
+        feedback.className = "text-[11px] text-[#ea1d2c] font-medium mb-2 block";
+        return;
+      }
+
+      feedback.innerText = "Buscando endereço...";
+      feedback.className = "text-[11px] text-[#717171] mb-2 block";
+      btnCalc.innerText = "...";
+      btnCalc.disabled = true;
+
+      try {
+        // 1. Busca Endereço na BrasilAPI (Evita erros de CORS do ViaCEP)
+        const cepRes = await fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`);
+
+        if (!cepRes.ok) {
+          feedback.innerText = "CEP não encontrado.";
+          feedback.className = "text-[11px] text-[#ea1d2c] font-medium mb-2 block";
+          btnCalc.innerText = "Buscar CEP";
+          btnCalc.disabled = false;
+          return;
+        }
+
+        const cepData = await cepRes.json();
+
+        document.getElementById('deliveryAddress').value = `${cepData.street}, ${cepData.neighborhood}`;
+        const addressSearch = `${cepData.street}, ${cepData.city}, ${cepData.state}`;
+
+        // Verifica se a loja cadastrou as coordenadas no Admin
+        if (!window.storeSettings || !window.storeSettings.lat || !window.storeSettings.lon) {
+          // Fallback: Usa apenas o valor base (não calcula KM)
+          window.shippingCost = window.storeSettings.fretePorKm || 0;
+          feedback.innerText = `${cepData.city}/${cepData.state} (Taxa Padrão)`;
+          feedback.className = "text-[11px] text-[#25D366] font-bold mb-2 block";
+        } else {
+          feedback.innerText = "Traçando rota...";
+
+          // 2. Busca Coordenadas do Cliente via OpenStreetMap (Nominatim)
+          const nominatimRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressSearch)}`);
+          const nominatimData = await nominatimRes.json();
+
+          if (nominatimData.length === 0) {
+            throw new Error("Coordenadas do endereço não encontradas.");
+          }
+
+          const clientLat = nominatimData[0].lat;
+          const clientLon = nominatimData[0].lon;
+          const storeLat = window.storeSettings.lat;
+          const storeLon = window.storeSettings.lon;
+
+          // 3. Calcula Distância de Rota via OSRM (Open Source Routing Machine)
+          const osrmRes = await fetch(`https://router.project-osrm.org/route/v1/driving/${storeLon},${storeLat};${clientLon},${clientLat}?overview=false`);
+          const osrmData = await osrmRes.json();
+
+          if (osrmData.code !== 'Ok' || !osrmData.routes || osrmData.routes.length === 0) {
+            throw new Error("Não foi possível traçar a rota.");
+          }
+
+          // OSRM retorna a distância em metros. Divide por 1000 para KM
+          const distanceKm = (osrmData.routes[0].distance / 1000).toFixed(1);
+          const freteRate = window.storeSettings.fretePorKm || 2;
+
+          window.shippingCost = parseFloat(distanceKm) * freteRate;
+
+          feedback.innerText = `${cepData.city}/${cepData.state} (${distanceKm}km)`;
+          feedback.className = "text-[11px] text-[#25D366] font-bold mb-2 block";
+        }
+
+        window.updateCartUI();
+      } catch (err) {
+        console.error("Erro no cálculo do frete via mapa:", err);
+        // Sistema de Segurança (Fallback): Se a API gratuita estiver fora do ar, cobra o frete padrão da loja
+        feedback.innerText = "Usando taxa padrão (Rota indisponível).";
+        feedback.className = "text-[11px] text-orange-500 font-bold mb-2 block";
+        window.shippingCost = window.storeSettings.fretePorKm || 5;
+        window.updateCartUI();
+      } finally {
+        btnCalc.innerText = "Buscar CEP";
+        btnCalc.disabled = false;
+      }
+    };
+
+    window.addToCart = function (id, btnElement) {
+      const product = window.allProducts.find(p => p._id === id);
+      if (!product) return;
+      const existingItem = window.cart.find(item => item._id === id);
+      if (existingItem) existingItem.qty++;
+      else window.cart.push({ _id: product._id, nome: product.nome, preco: parseFloat(product.preco) || 0, qty: 1, imagem: product.imagem });
+
+      window.updateCartUI();
+
+      if (btnElement) {
+        const originalContent = btnElement.innerHTML;
+        btnElement.innerHTML = `Adicionado!`;
+        btnElement.classList.replace('bg-[#ea1d2c]', 'bg-green-600');
+        setTimeout(() => {
+          btnElement.innerHTML = originalContent;
+          btnElement.classList.replace('bg-green-600', 'bg-[#ea1d2c]');
+        }, 800);
+      }
+    };
+
+    window.changeQty = function (id, delta) {
+      const item = window.cart.find(item => item._id === id);
+      if (item) {
+        item.qty += delta;
+        if (item.qty <= 0) {
+          const index = window.cart.findIndex(i => i._id === id);
+          window.cart.splice(index, 1);
+          if (window.cart.length === 0) window.shippingCost = 0;
+        }
+        window.updateCartUI();
+        window.renderCartItems();
+      }
+    };
+
+    window.updateCartUI = function () {
+      const totalQty = window.cart.reduce((acc, item) => acc + item.qty, 0);
+      const subtotal = window.cart.reduce((acc, item) => acc + (item.preco * item.qty), 0);
+      const appliedShipping = window.orderType === 'delivery' ? window.shippingCost : 0;
+      const finalTotal = subtotal + appliedShipping;
+
+      document.getElementById('headerCartCount').innerText = totalQty;
+      document.getElementById('headerCartCount').style.display = totalQty > 0 ? 'flex' : 'none';
+
+      const floatBtn = document.getElementById('floatingCartBtn');
+      if (totalQty > 0) {
+        floatBtn.classList.remove('hidden');
+        document.getElementById('floatBadge').innerText = totalQty;
+        document.getElementById('floatingCartTotal').innerText = formatter.format(finalTotal);
+      } else {
+        floatBtn.classList.add('hidden');
+      }
+
+      document.getElementById('cartSubtotal').innerText = formatter.format(subtotal);
+      document.getElementById('cartShippingValue').innerText = window.orderType === 'delivery' ? (window.shippingCost > 0 ? formatter.format(window.shippingCost) : 'A calcular') : 'Grátis (Na Mesa)';
+      document.getElementById('cartTotal').innerText = formatter.format(finalTotal);
+    };
+
+    window.toggleCart = function () {
+      const modal = document.getElementById('cartModal');
+      if (!modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      } else {
+        window.renderCartItems();
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+    };
+
+    window.renderCartItems = function () {
+      const container = document.getElementById('cartItemsContainer');
+      if (window.cart.length === 0) {
+        container.innerHTML = `<div class="flex flex-col items-center justify-center py-10 text-[#717171]"><p class="text-[14px]">Sua sacola está vazia</p></div>`;
+        return;
+      }
+      container.innerHTML = window.cart.map(item => `
+            <div class="flex justify-between items-start py-4 border-b border-[#f2f2f2] last:border-0">
+                <div class="flex flex-col"><h4 class="text-[14px] text-[#3e3e3e] font-medium">${item.nome}</h4><span class="text-[14px] text-[#717171] mt-1">${formatter.format(item.preco * item.qty)}</span></div>
+                <div class="flex items-center gap-3 border border-[#f2f2f2] rounded-md px-2 py-1">
+                    <button onclick="window.changeQty('${item._id}', -1)" class="text-[#ea1d2c] font-bold px-1 active:scale-90">&minus;</button>
+                    <span class="text-[14px] font-medium text-[#3e3e3e] w-4 text-center">${item.qty}</span>
+                    <button onclick="window.changeQty('${item._id}', 1)" class="text-[#ea1d2c] font-bold px-1 active:scale-90">&#43;</button>
+                </div>
+            </div>`).join('');
+    };
+
+    window.checkout = async function () {
+      if (window.cart.length === 0) return;
+      const btn = document.getElementById('btnCheckout');
+
+      const nameInput = document.getElementById('customerName');
+      const phoneInput = document.getElementById('customerPhone');
+      if (!nameInput.value.trim() || !phoneInput.value.trim()) {
+        document.getElementById('customerError').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('customerError').classList.add('hidden');
+
+      let addressText = "";
+      let dineInText = "";
+
+      if (window.orderType === 'delivery') {
+        const addressInput = document.getElementById('deliveryAddress');
+        const numberInput = document.getElementById('deliveryNumber');
+        if (!addressInput.value.trim() || !numberInput.value.trim()) {
+          document.getElementById('addressError').classList.remove('hidden');
+          return;
+        }
+        document.getElementById('addressError').classList.add('hidden');
+        const comp = document.getElementById('deliveryComplement').value.trim();
+        addressText = `${addressInput.value.trim()}, Nº ${numberInput.value.trim()}${comp ? ' - ' + comp : ''}`;
+      } else {
+        const tableInput = document.getElementById('tableNumber');
+        if (!tableInput.value.trim()) {
+          document.getElementById('dineInError').classList.remove('hidden');
+          return;
+        }
+        document.getElementById('dineInError').classList.add('hidden');
+        dineInText = `Mesa: ${tableInput.value.trim()}`;
+      }
+
+      btn.innerText = "Enviando...";
+      btn.disabled = true;
+
+      const orderData = {
+        customer: nameInput.value.trim(),
+        phone: phoneInput.value.trim(),
+        type: window.orderType,
+        address: addressText,
+        dineInDetails: dineInText,
+        notes: document.getElementById('orderNotes').value.trim(),
+        payment: document.getElementById('paymentMethod').value,
+        items: window.cart,
+        subtotal: window.cart.reduce((acc, item) => acc + (item.preco * item.qty), 0),
+        shipping: window.orderType === 'delivery' ? window.shippingCost : 0,
+        status: 'Pendente',
+        createdAt: Date.now()
+      };
+      orderData.total = orderData.subtotal + orderData.shipping;
+
+      try {
+        await addDoc(collection(db, 'orders'), orderData);
+
+        showToast("Pedido recebido com sucesso!");
+        window.cart = [];
+        window.shippingCost = 0;
+        window.updateCartUI();
+        window.toggleCart();
+      } catch (e) {
+        console.error(e);
+        showToast("Erro ao enviar pedido. Tente novamente.", true);
+      } finally {
+        btn.innerText = "Finalizar Pedido";
+        btn.disabled = false;
+      }
+    };
+
+    window.renderCategories = function () {
+      const activeProds = window.allProducts.filter(p => p.status.toLowerCase() !== 'indisponível' && p.status.toLowerCase() !== 'oculto');
+      const categories = [...new Set(activeProds.map(p => p.categoria))];
+      const container = document.getElementById('categoryGrid');
+
+      container.innerHTML = categories.map((cat) => {
+        const key = cat.toLowerCase().trim();
+        const img = CATEGORY_PICS[key] || CATEGORY_PICS['default'];
+        const isActive = window.activeCategory === cat;
+        const textStyle = isActive ? 'text-[#3e3e3e] font-bold' : 'text-[#717171]';
+
+        return `<div onclick="window.selectCategory('${cat}')" class="flex flex-col items-center gap-2 snap-start cursor-pointer min-w-[70px]">
+            <div class="w-[68px] h-[68px] rounded-xl overflow-hidden bg-[#f7f7f7] border ${isActive ? 'border-[#ea1d2c]' : 'border-transparent'}">
+                <img src="${img}" class="w-full h-full object-cover">
+            </div><span class="text-[12px] ${textStyle} truncate w-full text-center">${cat}</span>
+          </div>`;
+      }).join('');
+    };
+
+    window.showHome = function () {
+      document.getElementById('headerSearch').value = '';
+      window.activeCategory = 'Todos';
+      window.renderCategories();
+      document.getElementById('heroBanner').classList.remove('hidden');
+      document.getElementById('currentCategoryTitle').innerText = 'Destaques';
+      window.renderProducts('', 'Todos');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.selectCategory = function (category) {
+      window.activeCategory = category;
+      window.renderCategories();
+      document.getElementById('currentCategoryTitle').innerText = category;
+      document.getElementById('heroBanner').classList.add('hidden');
+      window.renderProducts('', category);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.renderProducts = function (search = '', category = 'Todos') {
+      const grid = document.getElementById('productGrid');
+      const empty = document.getElementById('emptyState');
+
+      const filtered = window.allProducts.filter(p => {
+        if (p.status.toLowerCase() === 'indisponível' || p.status.toLowerCase() === 'oculto') return false;
+        const mSearch = p.nome.toLowerCase().includes(search.toLowerCase());
+        const mCat = category === 'Todos' || p.categoria === category;
+        return mSearch && mCat;
+      });
+
+      if (filtered.length === 0) { grid.innerHTML = ''; empty.classList.remove('hidden'); return; }
+
+      empty.classList.add('hidden');
+      grid.innerHTML = filtered.map(p => {
+        const isEsgotado = p.status.toLowerCase() === 'esgotado';
+        const precoNum = parseFloat(p.preco) || 0;
+        return `<div onclick="${!isEsgotado ? `window.openProductModal('${p._id}')` : ''}" class="flex py-4 border-b border-[#f2f2f2] cursor-pointer ${isEsgotado ? 'opacity-50 grayscale' : ''}">
+            <div class="flex-1 pr-3 flex flex-col justify-center">
+                <h3 class="text-[15px] text-[#3e3e3e] font-medium leading-tight mb-1">${p.nome}</h3>
+                <p class="text-[13px] text-[#717171] line-clamp-2 leading-snug">${p.descricao || 'Sem descrição.'}</p>
+                <span class="text-[15px] font-medium text-[#3e3e3e] mt-2">${formatter.format(precoNum)}</span>
+            </div>
+            <div class="w-[100px] h-[100px] flex-shrink-0 relative rounded-lg overflow-hidden border border-[#f2f2f2]">
+                <img src="${fixDriveUrl(p.imagem)}" class="w-full h-full object-cover">
+                ${isEsgotado ? `<div class="absolute inset-0 bg-white/70 flex items-center justify-center"><span class="bg-[#3e3e3e] text-white text-[9px] font-bold px-2 py-1 rounded uppercase">Esgotado</span></div>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+    };
+
+    window.handleGlobalSearch = function (val) {
+      if (val.length > 0) {
+        window.activeCategory = '';
+        window.renderCategories();
+        document.getElementById('currentCategoryTitle').innerText = `Busca: "${val}"`;
+        document.getElementById('heroBanner').classList.add('hidden');
+        window.renderProducts(val, 'Todos');
+      } else { window.showHome(); }
+    };
+
+    // Inicializa a aplicação
+    initializeSystem();
+
+  </script>
+</body>
+
+</html>

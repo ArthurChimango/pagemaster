@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Preços | PageMaster Interno</title>
+
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            accent: '#0ea5e9', // Azul Claro (Sky Blue)
+                            bg: '#f8fafc',     // Fundo principal
+                            card: '#ffffff',   // Fundo de Cards
+                            text: '#0f172a',   // Texto principal
+                            border: '#e2e8f0', // Bordas sutis
+                            muted: '#64748b',  // Textos secundários
+                            success: '#10b981' // Verde para o Desconto
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            appearance: none;
+            background-color: #ffffff;
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.15em;
+            height: 1.15em;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.15em;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        input[type="radio"] {
+            border-radius: 50%;
+        }
+
+        input[type="radio"]::before,
+        input[type="checkbox"]::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em #ffffff;
+            background-color: transform;
+            transform-origin: center;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+
+        input[type="radio"]::before {
+            border-radius: 50%;
+            clip-path: none;
+        }
+
+        input[type="radio"]:checked::before,
+        input[type="checkbox"]:checked::before {
+            transform: scale(1);
+        }
+
+        input[type="radio"]:checked,
+        input[type="checkbox"]:checked {
+            background-color: #0ea5e9;
+            border-color: #0ea5e9;
+        }
+
+        input[type="checkbox"]:disabled {
+            cursor: not-allowed;
+            border-color: #0ea5e9;
+            background-color: #0ea5e9;
+            opacity: 0.8;
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+        }
+
+        .ds-panel {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen p-4 md:p-8">
+
+    <header class="max-w-7xl mx-auto mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <div class="font-bold text-3xl tracking-tight text-brand-text flex items-center gap-2">
+                <svg class="w-8 h-8 text-brand-accent" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L15 9h7l-5.5 4.5 2 7.5L12 16.5 5.5 21l2-7.5L2 9h7z" />
+                </svg>
+                <span>PageMaster <span class="font-light text-brand-muted text-xl ml-2">| Portal do
+                        Consultor</span></span>
+            </div>
+            <p class="text-sm text-brand-muted mt-2 ml-10">Simulador Inteligente de Orçamentos</p>
+        </div>
+        <div
+            class="bg-red-50 border border-red-200 text-red-600 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full flex items-center gap-2">
+            <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+            Acesso Interno
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <div class="lg:col-span-8 space-y-6">
+
+            <section class="ds-panel rounded-[2rem] p-6 md:p-8">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-3 text-brand-text">
+                    <span class="text-brand-accent">01.</span> Identificação do Lead
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs text-brand-muted uppercase tracking-widest mb-2 font-medium">Nome do
+                            Cliente</label>
+                        <input type="text" id="clientName" placeholder="Ex: Clínica Sorriso"
+                            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-brand-text focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all placeholder-slate-400">
+                    </div>
+                    <div>
+                        <label
+                            class="block text-xs text-brand-muted uppercase tracking-widest mb-2 font-medium">Nicho</label>
+                        <input type="text" id="clientNiche" placeholder="Ex: Odontologia"
+                            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-brand-text focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all placeholder-slate-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-brand-muted uppercase tracking-widest mb-2 font-medium">Porte
+                            da Empresa</label>
+                        <select id="companySize" onchange="calculate()"
+                            class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-brand-text focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all appearance-none cursor-pointer">
+                            <option value="pequena">Micro / Pequena</option>
+                            <option value="media">Média Empresa</option>
+                            <option value="grande">Grande Empresa</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="ds-panel rounded-[2rem] p-6 md:p-8">
+                <div class="flex justify-between items-end mb-6">
+                    <h2 class="text-xl font-bold flex items-center gap-3 text-brand-text">
+                        <span class="text-brand-accent">02.</span> Projetos e Sistemas
+                    </h2>
+                    <span class="text-xs bg-brand-accent/10 text-brand-accent font-bold px-3 py-1 rounded-full">MÚLTIPLA
+                        ESCOLHA</span>
+                </div>
+
+                <p class="text-sm text-brand-muted mb-4">Ao selecionar mais de 1 projeto, aplicamos um desconto
+                    automático de 10% (Combo).</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                    <label class="cursor-pointer group">
+                        <div
+                            class="border border-brand-border rounded-2xl p-5 hover:border-brand-accent hover:shadow-md transition-all bg-white flex items-start gap-4">
+                            <div class="mt-1"><input type="checkbox" name="projectType" value="lp_basica"
+                                    onchange="calculate()"></div>
+                            <div>
+                                <h3
+                                    class="font-semibold text-brand-text group-hover:text-brand-accent transition-colors">
+                                    Landing Page: Básico</h3>
+                                <p class="text-sm text-brand-muted mt-1">Presença Digital / Cartão de Visita.</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer group">
+                        <div
+                            class="border border-brand-border rounded-2xl p-5 hover:border-brand-accent hover:shadow-md transition-all bg-white flex items-start gap-4 relative overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 bg-brand-accent text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl tracking-wider">
+                                MAIS VENDIDO</div>
+                            <div class="mt-1"><input type="checkbox" name="projectType" value="lp_pro"
+                                    onchange="calculate()"></div>
+                            <div>
+                                <h3
+                                    class="font-semibold text-brand-text group-hover:text-brand-accent transition-colors">
+                                    Landing Page: Pro</h3>
+                                <p class="text-sm text-brand-muted mt-1">Máquina de Vendas para anúncios.</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer group">
+                        <div
+                            class="border border-brand-border rounded-2xl p-5 hover:border-brand-accent hover:shadow-md transition-all bg-white flex items-start gap-4">
+                            <div class="mt-1"><input type="checkbox" name="projectType" value="lp_premium"
+                                    onchange="calculate()"></div>
+                            <div>
+                                <h3
+                                    class="font-semibold text-brand-text group-hover:text-brand-accent transition-colors">
+                                    Ecossistema Premium</h3>
+                                <p class="text-sm text-brand-muted mt-1">Site multi-página, focado em líderes.</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer group">
+                        <div
+                            class="border border-brand-border rounded-2xl p-5 hover:border-brand-accent hover:shadow-md transition-all bg-white flex items-start gap-4">
+                            <div class="mt-1"><input type="checkbox" name="projectType" value="sys_delivery"
+                                    onchange="calculate()"></div>
+                            <div>
+                                <h3
+                                    class="font-semibold text-brand-text group-hover:text-brand-accent transition-colors">
+                                    Delivery / Alimentação</h3>
+                                <p class="text-sm text-brand-muted mt-1">Cardápio digital com pedidos via WhatsApp.</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer group">
+                        <div
+                            class="border border-brand-border rounded-2xl p-5 hover:border-brand-accent hover:shadow-md transition-all bg-white flex items-start gap-4">
+                            <div class="mt-1"><input type="checkbox" name="projectType" value="sys_agenda"
+                                    onchange="calculate()"></div>
+                            <div>
+                                <h3
+                                    class="font-semibold text-brand-text group-hover:text-brand-accent transition-colors">
+                                    Agendamento Automático</h3>
+                                <p class="text-sm text-brand-muted mt-1">Agenda para clínicas, barbearias, etc.</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer group">
+                        <div
+                            class="border border-brand-border rounded-2xl p-5 hover:border-brand-accent hover:shadow-md transition-all bg-white flex items-start gap-4">
+                            <div class="mt-1"><input type="checkbox" name="projectType" value="sys_catalogo"
+                                    onchange="calculate()"></div>
+                            <div>
+                                <h3
+                                    class="font-semibold text-brand-text group-hover:text-brand-accent transition-colors">
+                                    Catálogo / Varejo</h3>
+                                <p class="text-sm text-brand-muted mt-1">Montra virtual para produtos variados.</p>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </section>
+
+            <section class="ds-panel rounded-[2rem] p-6 md:p-8">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-3 text-brand-text">
+                    <span class="text-brand-accent">03.</span> Integrações e Adicionais
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-8">
+
+                    <label class="flex items-center gap-4 cursor-pointer group transition-all duration-300">
+                        <input type="checkbox" name="addon" value="dominio" onchange="calculate()">
+                        <span
+                            class="addon-label text-slate-600 group-hover:text-brand-accent transition-colors text-sm font-medium">Domínio
+                            (1 Ano) <br><span
+                                class="text-xs text-brand-muted group-hover:text-brand-muted font-normal">*Hospedagem
+                                não cobramos</span></span>
+                    </label>
+
+                    <label class="flex items-center gap-4 cursor-pointer group transition-all duration-300">
+                        <input type="checkbox" name="addon" value="copywriting" onchange="calculate()">
+                        <span
+                            class="addon-label text-slate-600 group-hover:text-brand-accent transition-colors text-sm font-medium">Copywriting
+                            Profissional</span>
+                    </label>
+
+                    <label class="flex items-center gap-4 cursor-pointer group transition-all duration-300">
+                        <input type="checkbox" name="addon" value="pixel" onchange="calculate()">
+                        <span
+                            class="addon-label text-slate-600 group-hover:text-brand-accent transition-colors text-sm font-medium">Instalação
+                            de Pixel (Meta/Google)</span>
+                    </label>
+
+                    <label class="flex items-center gap-4 cursor-pointer group transition-all duration-300">
+                        <input type="checkbox" name="addon" value="crm" onchange="calculate()">
+                        <span
+                            class="addon-label text-slate-600 group-hover:text-brand-accent transition-colors text-sm font-medium">Integração
+                            CRM / Automação</span>
+                    </label>
+
+                    <label class="flex items-center gap-4 cursor-pointer group transition-all duration-300">
+                        <input type="checkbox" name="addon" value="idioma_extra" onchange="calculate()">
+                        <span
+                            class="addon-label text-slate-600 group-hover:text-brand-accent transition-colors text-sm font-medium">Idioma
+                            Adicional (Ex: PT + EN)</span>
+                    </label>
+
+                    <label class="flex items-center gap-4 cursor-pointer group transition-all duration-300">
+                        <input type="checkbox" name="addon" value="urgencia" onchange="calculate()">
+                        <span
+                            class="text-brand-text group-hover:text-brand-accent font-semibold text-sm transition-colors border-b border-brand-border group-hover:border-brand-accent border-dashed pb-0.5">Taxa
+                            de Urgência (Prioridade)</span>
+                    </label>
+                </div>
+            </section>
+
+        </div>
+
+        <div class="lg:col-span-4">
+            <div class="sticky top-8 ds-panel rounded-[2rem] p-6 md:p-8 flex flex-col h-full md:h-auto min-h-[450px]">
+
+                <h3
+                    class="text-sm font-bold text-brand-accent uppercase tracking-widest mb-6 border-b border-brand-border pb-4">
+                    // Resumo Comercial</h3>
+
+                <div class="flex-grow">
+                    <ul id="summaryList" class="space-y-4 mb-8 text-sm text-slate-700 font-medium">
+                        <li class="text-brand-muted italic font-normal">Selecione ao menos um projeto para iniciar o
+                            orçamento...</li>
+                    </ul>
+                </div>
+
+                <div class="mt-auto border-t border-brand-border pt-6">
+                    <p class="text-xs text-brand-muted uppercase tracking-widest mb-2 font-semibold">Investimento
+                        Estimado</p>
+                    <div class="text-4xl md:text-5xl font-bold text-brand-text mb-2 flex items-start gap-1">
+                        <span class="text-xl text-brand-accent mt-1">R$</span>
+                        <span id="totalPrice" class="tracking-tight">0,00</span>
+                    </div>
+                    <p class="text-xs text-brand-muted font-normal mb-6">*Este valor é uma simulação e pode ser
+                        negociado.</p>
+
+                    <button onclick="copyToClipboard()" id="copyBtn"
+                        class="w-full bg-brand-accent text-white font-bold py-4 rounded-full transition-all hover:opacity-90 hover:shadow-lg flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3">
+                            </path>
+                        </svg>
+                        Copiar Proposta
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // =========================================================
+        // DADOS E PREÇOS DO SISTEMA (ATUALIZADOS)
+        // =========================================================
+        const TABELA_PRECOS = {
+            projetos: {
+                lp_basica: { nome: "Landing Page: Básico", preco: 250 },
+                lp_pro: { nome: "Landing Page: Pro", preco: 450 },
+                lp_premium: { nome: "Ecossistema Premium", preco: 850 },
+                sys_delivery: { nome: "Sistema Web: Delivery/Alimentação", preco: 900 },
+                sys_agenda: { nome: "Sistema Web: Agendamento", preco: 800 },
+                sys_catalogo: { nome: "Sistema Web: Catálogo Inteligente", preco: 900 }
+            },
+            adicionais: {
+                dominio: { nome: "Registro de Domínio (1 Ano)", preco: 60 },
+                copywriting: { nome: "Copywriting Profissional", preco: 50 },
+                pixel: { nome: "Configuração de Pixel/Rastreio", preco: 90 },
+                crm: { nome: "Integração CRM / Automação", preco: 150 },
+                idioma_extra: { nome: "Idioma Adicional", preco: 100 }
+            },
+            taxas: {
+                urgencia_fixa: 200, // Valor fixo de taxa de urgência
+                desconto_combo: 0.10, // 10% de desconto para múltiplos projetos
+                // Aumentos baseados no porte da empresa (MARKUP OCULTO)
+                multiplicadores_tamanho: {
+                    pequena: 0,    // + 0%
+                    media: 0.15,   // + 15%
+                    grande: 0.25   // + 25%
+                }
+            },
+            inclusos: {
+                lp_basica: [],
+                lp_pro: ['copywriting', 'pixel'],
+                lp_premium: ['copywriting', 'pixel', 'crm'],
+                sys_delivery: [],
+                sys_agenda: [],
+                sys_catalogo: []
+            }
+        };
+        // =========================================================
+
+        let currentTotal = 0;
+        let selectedItemsForCopy = [];
+
+        function formatCurrency(value) {
+            return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function calculate() {
+            let rawProjectsPrice = 0;
+            let addonsPrice = 0;
+            let comboDiscountValue = 0;
+
+            let includedAddons = new Set();
+            selectedItemsForCopy = [];
+
+            const summaryList = document.getElementById('summaryList');
+            summaryList.innerHTML = '';
+
+            const projectCheckboxes = document.querySelectorAll('input[name="projectType"]:checked');
+            const companySizeSelect = document.getElementById('companySize');
+            const companySize = companySizeSelect.value;
+
+            // Fator de multiplicador secreto com base no tamanho da empresa
+            const sizeMultiplier = TABELA_PRECOS.taxas.multiplicadores_tamanho[companySize];
+
+            // 1. Processar Projetos Selecionados
+            if (projectCheckboxes.length > 0) {
+                summaryList.innerHTML += `<div class="mb-2 text-[10px] uppercase tracking-widest text-brand-muted font-bold">Projetos:</div>`;
+
+                projectCheckboxes.forEach(cb => {
+                    const projKey = cb.value;
+                    const proj = TABELA_PRECOS.projetos[projKey];
+
+                    // Embutindo o markup invisivelmente direto no preço do projeto
+                    const precoComMarkup = proj.preco * (1 + sizeMultiplier);
+                    rawProjectsPrice += precoComMarkup;
+
+                    if (TABELA_PRECOS.inclusos[projKey]) {
+                        TABELA_PRECOS.inclusos[projKey].forEach(item => includedAddons.add(item));
+                    }
+
+                    summaryList.innerHTML += `<li class="flex justify-between items-start text-brand-text mb-2">
+                        <span>${proj.nome}</span>
+                        <span class="text-brand-text whitespace-nowrap ml-4">R$ ${formatCurrency(precoComMarkup)}</span>
+                    </li>`;
+
+                    selectedItemsForCopy.push(`🔹 *${proj.nome}*`);
+                });
+
+                // Aplica Lógica de Desconto de Combo (10% sobre o total dos projetos já ajustados)
+                if (projectCheckboxes.length > 1) {
+                    comboDiscountValue = rawProjectsPrice * TABELA_PRECOS.taxas.desconto_combo;
+
+                    summaryList.innerHTML += `<li class="flex justify-between items-start text-brand-success mb-2 bg-brand-success/10 p-2 rounded-lg mt-2">
+                        <span class="font-bold flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+                            Desconto Combo (10%)
+                        </span>
+                        <span class="font-bold whitespace-nowrap ml-4">- R$ ${formatCurrency(comboDiscountValue)}</span>
+                    </li>`;
+
+                    selectedItemsForCopy.push(`🎁 *Desconto Combo Múltiplos Projetos (-10%)*`);
+                }
+
+            } else {
+                summaryList.innerHTML = '<li class="text-brand-muted italic font-normal">Selecione ao menos um projeto para iniciar...</li>';
+            }
+
+            // 2. Controlar UI das Checkboxes dos Adicionais (Bloquear os que já estão inclusos)
+            document.querySelectorAll('input[name="addon"]').forEach(checkbox => {
+                const addonKey = checkbox.value;
+                const parentLabel = checkbox.parentElement;
+                const spanText = parentLabel.querySelector('.addon-label');
+
+                if (addonKey !== 'urgencia') {
+                    if (includedAddons.has(addonKey)) {
+                        checkbox.checked = true;
+                        checkbox.disabled = true;
+                        parentLabel.style.pointerEvents = 'none';
+                        parentLabel.style.opacity = '0.7';
+
+                        if (spanText) {
+                            if (!spanText.dataset.original) spanText.dataset.original = spanText.innerHTML;
+                            spanText.innerHTML = `${TABELA_PRECOS.adicionais[addonKey].nome} <br><span class="text-brand-accent font-bold text-xs mt-1 inline-block bg-brand-accent/10 px-2 py-0.5 rounded-md">(Incluso nos Projetos)</span>`;
+                        }
+                    } else {
+                        if (checkbox.disabled) { checkbox.checked = false; }
+                        checkbox.disabled = false;
+                        parentLabel.style.pointerEvents = 'auto';
+                        parentLabel.style.opacity = '1';
+
+                        if (spanText && spanText.dataset.original) {
+                            spanText.innerHTML = spanText.dataset.original;
+                        }
+                    }
+                }
+            });
+
+            // 3. Somar Adicionais Selecionados
+            const addonCheckboxes = document.querySelectorAll('input[name="addon"]:checked');
+            let hasUrgencia = false;
+            let hasPrintedAddonHeader = false;
+
+            addonCheckboxes.forEach(checkbox => {
+                const addonKey = checkbox.value;
+
+                if (addonKey === 'urgencia') {
+                    hasUrgencia = true;
+                } else {
+                    if (!hasPrintedAddonHeader && projectCheckboxes.length > 0) {
+                        summaryList.innerHTML += `<div class="mt-6 mb-3 text-[10px] uppercase tracking-widest text-brand-muted font-bold">Adicionais:</div>`;
+                        hasPrintedAddonHeader = true;
+                    }
+
+                    const addon = TABELA_PRECOS.adicionais[addonKey];
+                    const isIncluded = includedAddons.has(addonKey);
+
+                    if (!isIncluded) {
+                        addonsPrice += addon.preco;
+                        summaryList.innerHTML += `<li class="flex justify-between items-start mb-2 font-normal">
+                            <span class="text-slate-600">+ ${addon.nome}</span>
+                            <span class="text-brand-text font-medium text-xs mt-0.5 whitespace-nowrap ml-4">R$ ${formatCurrency(addon.preco)}</span>
+                        </li>`;
+                        selectedItemsForCopy.push(`🔸 + ${addon.nome}`);
+                    } else {
+                        summaryList.innerHTML += `<li class="flex justify-between items-start mb-2 font-normal">
+                            <span class="text-slate-400 line-through decoration-brand-muted/50">+ ${addon.nome}</span>
+                            <span class="text-brand-accent font-bold text-[10px] uppercase mt-0.5 whitespace-nowrap ml-4 bg-brand-accent/10 px-2 py-0.5 rounded-full">Incluso</span>
+                        </li>`;
+                        selectedItemsForCopy.push(`✅ + ${addon.nome} *(Incluso no Pacote)*`);
+                    }
+                }
+            });
+
+            // 4. Fechar Total e Taxa de Urgência Fixa
+            let subtotal = (rawProjectsPrice - comboDiscountValue) + addonsPrice;
+            currentTotal = subtotal;
+
+            if (hasUrgencia && projectCheckboxes.length > 0) {
+                const urgenciaPrice = TABELA_PRECOS.taxas.urgencia_fixa;
+                currentTotal += urgenciaPrice;
+
+                summaryList.innerHTML += `<li class="flex justify-between items-start mt-4 pt-4 border-t border-brand-border font-medium">
+                    <span class="text-red-600">⚡ Taxa de Urgência (Prioridade)</span>
+                    <span class="text-red-600 text-xs mt-0.5 whitespace-nowrap ml-4">+ R$ ${formatCurrency(urgenciaPrice)}</span>
+                </li>`;
+
+                selectedItemsForCopy.push(`⚡ *Taxa de Urgência (Furar Fila)*`);
+            }
+
+            if (projectCheckboxes.length === 0) currentTotal = 0;
+            document.getElementById('totalPrice').innerText = formatCurrency(currentTotal);
+
+            const copyBtn = document.getElementById('copyBtn');
+            copyBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg> Copiar Proposta`;
+            copyBtn.className = 'w-full bg-brand-accent text-white font-bold py-4 rounded-full transition-all hover:opacity-90 hover:shadow-lg flex items-center justify-center gap-2';
+        }
+
+        function copyToClipboard() {
+            if (currentTotal === 0) {
+                alert("Selecione pelo menos um projeto para gerar a proposta.");
+                return;
+            }
+
+            const clientName = document.getElementById('clientName').value.trim() || "Cliente";
+            const clientNiche = document.getElementById('clientNiche').value.trim() ? ` (${document.getElementById('clientNiche').value.trim()})` : "";
+
+            let message = `Olá, *${clientName}*${clientNiche}!\n\n`;
+            message += `Aqui está a estimativa para o desenvolvimento da sua estrutura com a *PageMaster* 🚀\n\n`;
+            message += `*ESCOPO DO PROJETO:*\n`;
+            message += selectedItemsForCopy.join('\n');
+            message += `\n\n`;
+            message += `📊 *Investimento Estimado:* R$ ${formatCurrency(currentTotal)}\n`;
+            message += `\n_Lembrando que este é um orçamento base estimado. Vamos agendar uma reunião rápida para fechar os detalhes finais?_`;
+
+            const tempTextArea = document.createElement("textarea");
+            tempTextArea.value = message;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempTextArea);
+
+            const copyBtn = document.getElementById('copyBtn');
+            copyBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Proposta Copiada!`;
+            copyBtn.className = 'w-full bg-brand-success text-white font-bold py-4 rounded-full transition-all shadow-lg flex items-center justify-center gap-2';
+
+            setTimeout(() => {
+                calculate();
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>

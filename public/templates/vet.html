@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Amigo Fiel | Medicina Veterinária de Excelência</title>
+    
+    <!-- Frameworks e Fontes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --pet-green: #52B788;
+            --pet-dark: #2D6A4F;
+            --soft-sky: #F0F7F4;
+        }
+
+        body { font-family: 'Quicksand', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
+        h1, h2, h3, h4 { font-family: 'Fredoka', sans-serif; }
+        
+        .bg-pet-green { background-color: var(--pet-green); }
+        .text-pet-green { color: var(--pet-green); }
+        .border-pet-green { border-color: var(--pet-green); }
+        .smooth-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* --- FUNCIONALIDADE 1: Hero Parallax e Texto --- */
+        #inicio {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(240, 247, 244, 0.9)), 
+                              url('https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        /* Título Animado */
+        .txt-rotate > .wrap { border-right: 0.1em solid var(--pet-green); padding-right: 5px; }
+
+        /* --- ANIMAÇÃO DE PATINHAS (NOVO) --- */
+        .paw-anim-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1; /* Fica atrás do texto (z-10) */
+        }
+
+        .walking-paw {
+            position: absolute;
+            font-size: 40px;
+            color: var(--pet-green);
+            opacity: 0;
+            transform: rotate(25deg);
+        }
+
+        /* Animação de aparecimento sequencial */
+        @keyframes walk-fade {
+            0% { opacity: 0; transform: scale(0.8) rotate(25deg); }
+            20% { opacity: 0.25; transform: scale(1) rotate(25deg); } /* Opacidade suave */
+            40% { opacity: 0; transform: scale(0.8) rotate(25deg); }
+            100% { opacity: 0; }
+        }
+
+        .walking-paw { animation: walk-fade 4s infinite; }
+
+        /* Posicionamento das Patas (Caminho Diagonal) */
+        .paw-1 { bottom: 10%; left: 5%; animation-delay: 0s; }
+        .paw-2 { bottom: 22%; left: 12%; animation-delay: 0.5s; }
+        .paw-3 { bottom: 12%; left: 20%; animation-delay: 1s; }
+        .paw-4 { bottom: 25%; left: 28%; animation-delay: 1.5s; }
+        .paw-5 { bottom: 15%; left: 36%; animation-delay: 2s; }
+        .paw-6 { bottom: 28%; left: 44%; animation-delay: 2.5s; }
+        .paw-7 { bottom: 18%; left: 52%; animation-delay: 3s; }
+        .paw-8 { bottom: 30%; left: 60%; animation-delay: 3.5s; }
+        .paw-9 { bottom: 20%; left: 68%; animation-delay: 4s; }
+        .paw-10 { bottom: 32%; left: 76%; animation-delay: 4.5s; }
+
+        /* --- FUNCIONALIDADE 2: Floating Labels --- */
+        .input-group { position: relative; margin-bottom: 2rem; }
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%;
+            padding: 12px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #ddd;
+            outline: none;
+            transition: 0.3s;
+            font-family: 'Quicksand', sans-serif;
+        }
+        .input-group label {
+            position: absolute;
+            left: 0;
+            top: 12px;
+            color: #999;
+            pointer-events: none;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+        .input-group input:focus ~ label,
+        .input-group input:valid ~ label,
+        .input-group textarea:focus ~ label,
+        .input-group textarea:valid ~ label,
+        .input-group select:focus ~ label,
+        .input-group select:valid ~ label {
+            top: -15px;
+            font-size: 12px;
+            color: var(--pet-green);
+            font-weight: 700;
+        }
+        .input-group input:focus, .input-group textarea:focus, .input-group select:focus { 
+            border-bottom-color: var(--pet-green); 
+        }
+
+        /* --- FUNCIONALIDADE 3: Chat Box Avançado --- */
+        #wa-chat-box {
+            display: none;
+            transform-origin: bottom right;
+            z-index: 100;
+        }
+        .wa-header {
+            background-color: var(--pet-green);
+            padding: 15px;
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        .wa-chat-body {
+            background-color: #e5ddd5;
+            padding: 20px;
+            min-height: 120px;
+            background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+        }
+        .wa-bubble-msg {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 0 15px 15px 15px;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            color: #4a4a4a;
+        }
+
+        /* Navbar Glass Effect */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- FUNCIONALIDADE 4: FAQ Sanfona --- */
+        .faq-item input:checked ~ .faq-content {
+            max-height: 300px;
+            padding: 20px 24px;
+        }
+        
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop { animation: popUp 0.4s ease-out forwards; }
+
+        /* Padrão de Patinhas (Decorativo Fundo Geral) */
+        .paw-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M20 10c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-12 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6 8c3.3 0 6-2.7 6-6s-2.7-6-6-6-6 2.7-6 6 2.7 6 6 6z' fill='%2352B788' fill-opacity='0.08'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-[#F0F7F4] text-gray-800 paw-pattern">
+
+    <!-- Header Dinâmico -->
+    <header id="navbar" class="fixed w-full z-[60] py-6 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-paw text-pet-green text-3xl"></i>
+                <a href="#inicio" class="text-2xl font-bold tracking-tight text-gray-800 uppercase logo-text">
+                    Amigo<span class="text-pet-green">Fiel</span>
+                </a>
+            </div>
+            
+            <nav class="hidden lg:flex items-center space-x-8 font-bold text-sm tracking-wide">
+                <a href="#inicio" class="nav-link text-gray-600 hover:text-pet-green smooth-transition">INÍCIO</a>
+                <a href="#servicos" class="nav-link text-gray-600 hover:text-pet-green smooth-transition">SERVIÇOS</a>
+                <a href="#sobre" class="nav-link text-gray-600 hover:text-pet-green smooth-transition">A CLÍNICA</a>
+                <a href="#faq" class="nav-link text-gray-600 hover:text-pet-green smooth-transition">FAQ</a>
+                <a href="#contato" class="bg-pet-green text-white px-6 py-2.5 rounded-full hover:shadow-xl hover:-translate-y-0.5 smooth-transition shadow-lg shadow-green-200">AGENDAR</a>
+            </nav>
+
+            <button class="lg:hidden text-gray-600 text-2xl"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Hero Section com Animação de Patinhas -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden pt-20">
+        
+        <!-- CONTAINER DA ANIMAÇÃO DAS PATINHAS -->
+        <div class="paw-anim-container">
+            <i class="fas fa-paw walking-paw paw-1"></i>
+            <i class="fas fa-paw walking-paw paw-2"></i>
+            <i class="fas fa-paw walking-paw paw-3"></i>
+            <i class="fas fa-paw walking-paw paw-4"></i>
+            <i class="fas fa-paw walking-paw paw-5"></i>
+            <i class="fas fa-paw walking-paw paw-6"></i>
+            <i class="fas fa-paw walking-paw paw-7"></i>
+            <i class="fas fa-paw walking-paw paw-8"></i>
+            <i class="fas fa-paw walking-paw paw-9"></i>
+            <i class="fas fa-paw walking-paw paw-10"></i>
+        </div>
+        
+        <div class="relative z-10 px-6 max-w-5xl">
+            <div class="inline-block bg-green-100 text-pet-green px-4 py-1.5 rounded-full text-[11px] font-bold tracking-[0.2em] uppercase mb-6 shadow-sm">
+                <i class="fas fa-heart mr-2"></i>Medicina com Amor
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold text-gray-800 mb-6 leading-tight">
+                Seu melhor amigo merece <br>
+                <span class="text-pet-green txt-rotate" 
+                      data-period="2000" 
+                      data-rotate='[ "CARINHO", "PROTEÇÃO", "SAÚDE", "CONFORTO" ]'></span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-600 mb-12 font-medium max-w-2xl mx-auto leading-relaxed">
+                Tecnologia de ponta e atendimento humanizado. Porque para nós, o seu pet é parte da família.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#contato" class="px-10 py-4 bg-pet-green text-white font-bold rounded-full shadow-lg shadow-green-200 hover:shadow-green-300 hover:-translate-y-1 smooth-transition uppercase tracking-wider text-sm">
+                    Agendar Consulta
+                </a>
+                <a href="#servicos" class="px-10 py-4 bg-white text-gray-700 border-2 border-gray-100 font-bold rounded-full hover:border-pet-green hover:text-pet-green smooth-transition uppercase tracking-wider text-sm">
+                    Ver Especialidades
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cards Flutuantes -->
+    <div class="relative z-20 -mt-16 max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white shadow-xl p-8 rounded-3xl border-b-4 border-pet-green hover:-translate-y-2 smooth-transition flex items-center gap-4">
+                <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center text-pet-green text-2xl flex-shrink-0">
+                    <i class="fas fa-stethoscope"></i>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold text-gray-800">Clínica Geral</h4>
+                    <p class="text-gray-500 text-sm">Check-ups e vacinas</p>
+                </div>
+            </div>
+            <div class="bg-white shadow-xl p-8 rounded-3xl border-b-4 border-orange-300 hover:-translate-y-2 smooth-transition flex items-center gap-4">
+                <div class="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-400 text-2xl flex-shrink-0">
+                    <i class="fas fa-microscope"></i>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold text-gray-800">Laboratório</h4>
+                    <p class="text-gray-500 text-sm">Exames na hora</p>
+                </div>
+            </div>
+            <div class="bg-white shadow-xl p-8 rounded-3xl border-b-4 border-blue-300 hover:-translate-y-2 smooth-transition flex items-center gap-4">
+                <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-400 text-2xl flex-shrink-0">
+                    <i class="fas fa-cut"></i>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold text-gray-800">Cirurgias</h4>
+                    <p class="text-gray-500 text-sm">Centro cirúrgico moderno</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Serviços -->
+    <section id="servicos" class="py-24">
+        <div class="max-w-7xl mx-auto px-6 text-center mb-16">
+            <h2 class="text-pet-green uppercase tracking-widest font-bold mb-3 text-sm">O que fazemos</h2>
+            <h3 class="text-4xl font-bold text-gray-800">Especialidades Veterinárias</h3>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Card 1 -->
+            <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-xl smooth-transition group text-center border border-gray-100">
+                <div class="w-20 h-20 mx-auto bg-green-50 rounded-full flex items-center justify-center text-pet-green text-3xl mb-6 group-hover:scale-110 smooth-transition">
+                    <i class="fas fa-bone"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3">Ortopedia</h4>
+                <p class="text-gray-500 text-sm leading-relaxed">Tratamento de fraturas e displasias com especialistas.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-xl smooth-transition group text-center border border-gray-100">
+                <div class="w-20 h-20 mx-auto bg-green-50 rounded-full flex items-center justify-center text-pet-green text-3xl mb-6 group-hover:scale-110 smooth-transition">
+                    <i class="fas fa-tooth"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3">Odontologia</h4>
+                <p class="text-gray-500 text-sm leading-relaxed">Limpeza de tártaro e cirurgias orais.</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-xl smooth-transition group text-center border border-gray-100">
+                <div class="w-20 h-20 mx-auto bg-green-50 rounded-full flex items-center justify-center text-pet-green text-3xl mb-6 group-hover:scale-110 smooth-transition">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3">Cardiologia</h4>
+                <p class="text-gray-500 text-sm leading-relaxed">Exames cardíacos completos (Ecocardiograma e ECG).</p>
+            </div>
+            <!-- Card 4 -->
+            <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-xl smooth-transition group text-center border border-gray-100">
+                <div class="w-20 h-20 mx-auto bg-green-50 rounded-full flex items-center justify-center text-pet-green text-3xl mb-6 group-hover:scale-110 smooth-transition">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3">Oftalmologia</h4>
+                <p class="text-gray-500 text-sm leading-relaxed">Diagnóstico e tratamento de doenças oculares.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre -->
+    <section id="sobre" class="py-24 bg-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-green-50 skew-x-12 opacity-50"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div class="relative">
+                <div class="bg-pet-green w-full h-full absolute top-6 left-6 rounded-[3rem] -z-10 opacity-20"></div>
+                <img src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="rounded-[3rem] shadow-2xl w-full h-[550px] object-cover hover:scale-[1.02] smooth-transition">
+                
+                <div class="absolute -bottom-6 -right-6 bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+                    <div class="text-4xl font-bold text-pet-green">10+</div>
+                    <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Anos de Amor</div>
+                </div>
+            </div>
+            <div>
+                <div class="mb-8">
+                    <h2 class="text-pet-green uppercase tracking-widest font-bold text-sm mb-2">Quem Somos</h2>
+                    <h3 class="text-4xl font-bold text-gray-900">Dra. Carolina Mendes</h3>
+                </div>
+                <div class="space-y-6 text-gray-600 leading-relaxed text-lg">
+                    <p>Fundei a Amigo Fiel com um propósito simples: tratar cada paciente como se fosse meu próprio filho de quatro patas.</p>
+                    <p>Nossa estrutura foi desenhada para reduzir o estresse dos animais, com salas separadas para cães e gatos, feromônios ambientais e uma equipe treinada em comportamento animal.</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 pt-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-pet-green text-xl"></i>
+                            <span class="font-bold text-gray-800">Atendimento 24h</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-pet-green text-xl"></i>
+                            <span class="font-bold text-gray-800">Internação Monitorada</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-pet-green text-xl"></i>
+                            <span class="font-bold text-gray-800">Raio-X Digital</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-pet-green text-xl"></i>
+                            <span class="font-bold text-gray-800">Vacinas Importadas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 bg-[#F0F7F4]">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-pet-green uppercase tracking-widest font-bold mb-3 text-sm">Dúvidas Comuns</h2>
+                <h3 class="text-4xl font-bold text-gray-800">Perguntas Frequentes</h3>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="faq-item bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md smooth-transition">
+                    <input type="checkbox" id="faq1" class="hidden peer">
+                    <label for="faq1" class="flex justify-between items-center p-6 cursor-pointer font-bold text-gray-700">
+                        Vocês atendem emergências fora do horário?
+                        <i class="fas fa-plus text-pet-green peer-checked:rotate-45 smooth-transition"></i>
+                    </label>
+                    <div class="faq-content max-h-0 overflow-hidden bg-gray-50 text-gray-600 smooth-transition">
+                        Sim! Temos veterinário plantonista 24 horas para casos de emergência e internação. Basta tocar a campainha noturna.
+                    </div>
+                </div>
+                <div class="faq-item bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md smooth-transition">
+                    <input type="checkbox" id="faq2" class="hidden peer">
+                    <label for="faq2" class="flex justify-between items-center p-6 cursor-pointer font-bold text-gray-700">
+                        Quais formas de pagamento são aceitas?
+                        <i class="fas fa-plus text-pet-green smooth-transition"></i>
+                    </label>
+                    <div class="faq-content max-h-0 overflow-hidden bg-gray-50 text-gray-600 smooth-transition">
+                        Aceitamos cartões de crédito/débito, PIX, dinheiro e também trabalhamos com alguns planos de saúde pet (consulte a recepção).
+                    </div>
+                </div>
+                <div class="faq-item bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md smooth-transition">
+                    <input type="checkbox" id="faq3" class="hidden peer">
+                    <label for="faq3" class="flex justify-between items-center p-6 cursor-pointer font-bold text-gray-700">
+                        É necessário agendar para vacinas?
+                        <i class="fas fa-plus text-pet-green smooth-transition"></i>
+                    </label>
+                    <div class="faq-content max-h-0 overflow-hidden bg-gray-50 text-gray-600 smooth-transition">
+                        Recomendamos o agendamento para evitar filas e reduzir o estresse do animal, mas também atendemos por ordem de chegada.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contato com Floating Labels -->
+    <section id="contato" class="py-24 bg-white relative">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="bg-white p-10 md:p-16 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 relative overflow-hidden">
+                
+                <!-- Decoração -->
+                <i class="fas fa-paw absolute -top-10 -right-10 text-9xl text-pet-green opacity-5 rotate-12"></i>
+
+                <div class="text-center mb-12 relative z-10">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">Agende uma Consulta</h2>
+                    <p class="text-gray-500">Preencha o formulário e nossa recepção entrará em contato via WhatsApp.</p>
+                </div>
+                
+                <form id="contactForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 relative z-10">
+                    <div class="input-group">
+                        <input type="text" id="tutorName" required>
+                        <label for="tutorName">Seu Nome (Tutor)</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="petName" required>
+                        <label for="petName">Nome do Pet</label>
+                    </div>
+                    <div class="input-group">
+                        <select id="serviceType" required class="text-gray-700">
+                            <option value="" disabled selected></option>
+                            <option value="Consulta">Consulta Clínica</option>
+                            <option value="Vacinação">Vacinação</option>
+                            <option value="Exames">Exames Laboratoriais</option>
+                            <option value="Cirurgia">Cirurgia/Castração</option>
+                        </select>
+                        <label for="serviceType">Tipo de Serviço</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="phone" required>
+                        <label for="phone">WhatsApp para Contato</label>
+                    </div>
+                    
+                    <div class="md:col-span-2 text-center mt-6">
+                        <button type="submit" class="bg-pet-green text-white px-16 py-4 rounded-full font-bold text-lg hover:shadow-lg hover:shadow-green-200 hover:scale-105 smooth-transition uppercase tracking-widest">
+                            <i class="fab fa-whatsapp mr-2"></i> Enviar Solicitação
+                        </button>
+                    </div>
+                </form>
+                <div id="formStatus" class="mt-8 hidden p-4 text-center rounded-2xl"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-400 py-16 text-center border-t-8 border-pet-green">
+        <div class="flex justify-center items-center gap-2 mb-6 text-white text-3xl font-bold uppercase">
+            <i class="fas fa-paw text-pet-green"></i> Amigo<span class="text-pet-green">Fiel</span>
+        </div>
+        <p class="text-[10px] uppercase tracking-[0.3em] mb-8">Amor em cada detalhe, excelência em cada cuidado</p>
+        
+        <div class="flex justify-center space-x-8 text-2xl mb-12">
+            <a href="#" class="hover:text-pet-green smooth-transition hover:-translate-y-1"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="hover:text-pet-green smooth-transition hover:-translate-y-1"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="hover:text-pet-green smooth-transition hover:-translate-y-1"><i class="fab fa-youtube"></i></a>
+        </div>
+        
+        <div class="text-sm space-y-2">
+            <p>Rua dos Pets, 123 - Bairro Jardim</p>
+            <p>(11) 99999-9999 | contato@amigofiel.com.br</p>
+        </div>
+        
+        <p class="text-[10px] uppercase tracking-widest mt-10 opacity-50">© 2026 Clínica Veterinária Amigo Fiel | CRMV-SP 000.000</p>
+    </footer>
+
+    <!-- Widget WhatsApp -->
+    <div class="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
+        <div id="wa-chat-box" class="mb-4 w-[320px] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+            <div class="wa-header flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-sm uppercase tracking-wider">Recepção Online</h3>
+                    <p class="text-[10px] text-white/90">Geralmente responde em minutos</p>
+                </div>
+                <button onclick="toggleChat()" class="text-white/80 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="wa-chat-body">
+                <div class="flex gap-2">
+                    <div class="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-pet-green overflow-hidden">
+                        <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Atendente" class="w-full h-full object-cover">
+                    </div>
+                    <div class="wa-bubble-msg">
+                        Olá! Tudo bem? 🐾 <br>Como podemos ajudar seu pet hoje?
+                    </div>
+                </div>
+            </div>
+            <div class="p-3 bg-white border-t flex gap-2">
+                <input type="text" id="wa-input" placeholder="Digite sua dúvida..." class="flex-1 bg-gray-100 border-none rounded-full px-4 py-2 text-sm outline-none font-sans">
+                <button onclick="sendWa()" class="w-10 h-10 bg-[#128c7e] text-white rounded-full flex items-center justify-center hover:bg-pet-green smooth-transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="relative">
+            <button onclick="toggleChat()" class="bg-[#25d366] text-white w-16 h-16 rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(37,211,102,0.4)] hover:scale-110 smooth-transition relative group z-50">
+                <i class="fab fa-whatsapp text-3xl"></i>
+                <span class="absolute -top-1 -right-1 h-5 w-5 bg-red-500 border-2 border-white rounded-full animate-bounce"></span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Lógica do Texto Digitado (Typing Effect)
+        var TxtRotate = function(el, toRotate, period) {
+            this.toRotate = toRotate; this.el = el; this.loopNum = 0;
+            this.period = parseInt(period, 10) || 2000; this.txt = '';
+            this.tick(); this.isDeleting = false;
+        };
+        TxtRotate.prototype.tick = function() {
+            var i = this.loopNum % this.toRotate.length; var fullTxt = this.toRotate[i];
+            if (this.isDeleting) { this.txt = fullTxt.substring(0, this.txt.length - 1); } 
+            else { this.txt = fullTxt.substring(0, this.txt.length + 1); }
+            this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+            var that = this; var delta = 200 - Math.random() * 100;
+            if (this.isDeleting) delta /= 2;
+            if (!this.isDeleting && this.txt === fullTxt) { delta = this.period; this.isDeleting = true; } 
+            else if (this.isDeleting && this.txt === '') { this.isDeleting = false; this.loopNum++; delta = 500; }
+            setTimeout(function() { that.tick(); }, delta);
+        };
+
+        // 2. Inicialização
+        window.onload = function() {
+            // Inicia Texto Digitado
+            var elements = document.getElementsByClassName('txt-rotate');
+            for (var i=0; i<elements.length; i++) {
+                var rotate = elements[i].getAttribute('data-rotate');
+                if (rotate) new TxtRotate(elements[i], JSON.parse(rotate), elements[i].getAttribute('data-period'));
+            }
+            // Abre o chat automaticamente após 5 segundos
+            setTimeout(() => { toggleChat(); }, 5000);
+        };
+
+        // 3. Navbar Glass Effect ao rolar
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('glass-nav', 'py-3');
+            } else {
+                nav.classList.remove('glass-nav', 'py-3');
+            }
+        });
+
+        // 4. Lógica do WhatsApp Chat Widget
+        function toggleChat() {
+            const box = document.getElementById('wa-chat-box');
+            box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+            if(box.style.display === 'block') box.classList.add('animate-pop');
+        }
+        function sendWa() {
+            const val = document.getElementById('wa-input').value;
+            const phone = "5534999778403"; // Coloque o número da clínica aqui
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(val || "Olá, gostaria de informações sobre a clínica.")}`, '_blank');
+        }
+
+        // 5. Formulário Principal com Redirecionamento
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const tutor = document.getElementById('tutorName').value;
+            const pet = document.getElementById('petName').value;
+            const servico = document.getElementById('serviceType').value;
+            
+            const text = `Olá! Me chamo *${tutor}*.\nGostaria de agendar *${servico}* para o meu pet *${pet}*.`;
+            
+            const phone = "5534999778403"; 
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+            
+            // Feedback visual
+            const s = document.getElementById('formStatus');
+            s.classList.remove('hidden');
+            s.innerHTML = '<i class="fab fa-whatsapp text-2xl mb-2"></i><br>Redirecionando para o WhatsApp...';
+            s.className = "mt-8 p-6 text-center rounded-2xl bg-green-50 text-pet-green font-bold border border-green-100 animate-pulse";
+            
+            this.reset();
+        });
+    </script>
+</body>
+</html>

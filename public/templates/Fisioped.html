@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crescer & Agir | Fisioterapia Pediátrica Especializada</title>
+    
+    <!-- ========================================== -->
+    <!-- ÁREA DE RASTREAMENTO (Tráfego Pago)        -->
+    <!-- ========================================== -->
+
+    <!-- 1. Coloque aqui o código do Google Analytics 4 (GA4) -->
+    <!-- Exemplo:
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> 
+    -->
+
+    <!-- 2. Coloque aqui o código do Pixel do Meta/Facebook -->
+    <!-- <script> ... </script> -->
+
+    <!-- ========================================== -->
+    <!-- FIM DA ÁREA DE RASTREAMENTO                -->
+    <!-- ========================================== -->
+    
+    <!-- Frameworks e Fontes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --brand-blue: #3B82F6;   /* Azul Principal */
+            --brand-orange: #FB923C; /* Laranja Destaque */
+            --soft-bg: #F8F9FA;      /* Creme Suave */
+        }
+
+        body { font-family: 'Montserrat', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
+        h1, h2, h3, h4 { font-family: 'Fredoka', sans-serif; }
+        
+        .text-brand-blue { color: var(--brand-blue); }
+        .bg-brand-blue { background-color: var(--brand-blue); }
+        .text-brand-orange { color: var(--brand-orange); }
+        .bg-brand-orange { background-color: var(--brand-orange); }
+        
+        .smooth-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* --- FUNCIONALIDADE 1: Hero Parallax e Texto --- */
+        #inicio {
+            background-image: linear-gradient(rgba(240, 249, 255, 0.9), rgba(255, 255, 255, 0.85)), 
+                              url('https://estaticos.animaeducacao.com.br/medias/fisioterapia_pediatrica_-_Imagem_-_Fisioterapia_Pedi%C3%A1trica_vale_a_pena_seguir_ca_EPnfO1l.webp');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Efeito Parallax */
+            position: relative;
+        }
+
+        /* Título Animado */
+        .txt-rotate > .wrap { border-right: 0.1em solid var(--brand-orange); padding-right: 5px; }
+
+        /* --- ANIMAÇÃO DE FUNDO (Adaptado para Tema Infantil) --- */
+        .kids-anim-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .floating-icon {
+            position: absolute;
+            font-size: 30px;
+            opacity: 0;
+        }
+
+        /* Animação de flutuação e fade */
+        @keyframes float-fade {
+            0% { opacity: 0; transform: translateY(20px) scale(0.5) rotate(0deg); }
+            20% { opacity: 0.3; transform: translateY(0px) scale(1) rotate(20deg); }
+            80% { opacity: 0; transform: translateY(-50px) scale(0.8) rotate(40deg); }
+            100% { opacity: 0; }
+        }
+
+        .floating-icon { animation: float-fade 6s infinite ease-in-out; }
+
+        /* Ícones Variados */
+        .icon-1 { top: 20%; left: 10%; animation-delay: 0s; color: #FF9F1C; } /* Estrela */
+        .icon-2 { top: 60%; left: 15%; animation-delay: 1s; color: #2EC4B6; } /* Coração */
+        .icon-3 { top: 30%; left: 80%; animation-delay: 2s; color: #FFBF69; } /* Bola */
+        .icon-4 { top: 75%; left: 70%; animation-delay: 3s; color: #CBF3F0; } /* Nuvem */
+        .icon-5 { top: 15%; left: 50%; animation-delay: 4s; color: #FF9F1C; }
+        .icon-6 { top: 80%; left: 40%; animation-delay: 1.5s; color: #2EC4B6; }
+        .icon-7 { top: 40%; left: 25%; animation-delay: 2.5s; color: #FFBF69; }
+        .icon-8 { top: 50%; left: 90%; animation-delay: 0.5s; color: #CBF3F0; }
+
+        /* --- FUNCIONALIDADE 2: Floating Labels (Formulário Moderno) --- */
+        .input-group { position: relative; margin-bottom: 2rem; }
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%;
+            padding: 12px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #ddd;
+            outline: none;
+            transition: 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            color: #4b5563;
+        }
+        .input-group label {
+            position: absolute;
+            left: 0;
+            top: 12px;
+            color: #9ca3af;
+            pointer-events: none;
+            transition: 0.3s;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .input-group input:focus ~ label,
+        .input-group input:valid ~ label,
+        .input-group textarea:focus ~ label,
+        .input-group textarea:valid ~ label,
+        .input-group select:focus ~ label,
+        .input-group select:valid ~ label {
+            top: -15px;
+            font-size: 11px;
+            color: var(--brand-blue);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .input-group input:focus, .input-group textarea:focus, .input-group select:focus { 
+            border-bottom-color: var(--brand-blue); 
+        }
+
+        /* --- FUNCIONALIDADE 3: Chat Box Avançado --- */
+        #wa-chat-box {
+            display: none;
+            transform-origin: bottom right;
+            z-index: 100;
+        }
+        .wa-header {
+            background-color: var(--brand-blue);
+            padding: 15px;
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        .wa-chat-body {
+            background-color: #e5ddd5;
+            padding: 20px;
+            min-height: 120px;
+            background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+        }
+        .wa-bubble-msg {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 0 15px 15px 15px;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            color: #4a4a4a;
+            line-height: 1.4;
+        }
+
+        /* Navbar Glass Effect */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- FUNCIONALIDADE 4: FAQ Sanfona --- */
+        .faq-item input:checked ~ .faq-content {
+            max-height: 300px;
+            padding: 20px 24px;
+        }
+        
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop { animation: popUp 0.4s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-[#F8F9FA] text-gray-800">
+
+    <!-- Header Dinâmico -->
+    <header id="navbar" class="fixed w-full z-[60] py-6 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div class="flex-shrink-0 flex items-center gap-2">
+                <i class="fas fa-shapes text-brand-orange text-2xl"></i>
+                <span class="text-2xl font-bold tracking-tight text-brand-blue">CRESCER<span class="text-brand-orange">&</span>AGIR</span>
+            </div>
+            
+            <nav class="hidden lg:flex items-center space-x-6 font-bold text-sm tracking-wide">
+                <a href="#inicio" class="nav-link text-gray-600 hover:text-brand-blue smooth-transition">INÍCIO</a>
+                <a href="#servicos" class="nav-link text-gray-600 hover:text-brand-blue smooth-transition">ESPECIALIDADES</a>
+                <a href="#depoimentos" class="nav-link text-gray-600 hover:text-brand-blue smooth-transition">DEPOIMENTOS</a>
+                <a href="#sobre" class="nav-link text-gray-600 hover:text-brand-blue smooth-transition">A CLÍNICA</a>
+                <a href="#faq" class="nav-link text-gray-600 hover:text-brand-blue smooth-transition">FAQ</a>
+                <a href="#contato" class="bg-brand-orange text-white px-6 py-2.5 rounded-full hover:shadow-xl hover:bg-orange-500 smooth-transition shadow-lg shadow-orange-100">AGENDAR</a>
+            </nav>
+
+            <button class="lg:hidden text-gray-600 text-2xl"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Hero Section com Parallax e Texto Digitado -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden pt-20">
+        
+        <!-- Animação de Fundo -->
+        <div class="kids-anim-container">
+            <i class="fas fa-star floating-icon icon-1"></i>
+            <i class="fas fa-heart floating-icon icon-2"></i>
+            <i class="fas fa-circle floating-icon icon-3 text-[10px]"></i>
+            <i class="fas fa-cloud floating-icon icon-4"></i>
+            <i class="fas fa-star floating-icon icon-5"></i>
+            <i class="fas fa-heart floating-icon icon-6"></i>
+            <i class="fas fa-smile floating-icon icon-7"></i>
+            <i class="fas fa-star floating-icon icon-8"></i>
+        </div>
+        
+        <div class="relative z-10 px-6 max-w-5xl">
+            <div class="inline-block bg-blue-50 text-brand-blue px-4 py-1.5 rounded-full text-[11px] font-bold tracking-[0.2em] uppercase mb-6 shadow-sm">
+                <i class="fas fa-child mr-2"></i>Cuidado Especializado
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+                Ajudando seu filho a <br>conquistar cada
+                <span class="text-brand-orange txt-rotate" 
+                      data-period="2000" 
+                      data-rotate='[ "NOVO PASSO", "MOVIMENTO", "SORRISO", "CONQUISTA" ]'></span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-600 mb-12 font-medium max-w-2xl mx-auto leading-relaxed">
+                Fisioterapia baseada em evidências com um olhar humanizado e lúdico. Transformamos terapia em brincadeira e evolução.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#contato" class="px-10 py-4 bg-brand-blue text-white font-bold rounded-full shadow-lg shadow-blue-200 hover:shadow-blue-300 hover:-translate-y-1 smooth-transition uppercase tracking-wider text-sm">
+                    Agendar Avaliação
+                </a>
+                <a href="#servicos" class="px-10 py-4 bg-white text-gray-700 border-2 border-gray-100 font-bold rounded-full hover:border-brand-orange hover:text-brand-orange smooth-transition uppercase tracking-wider text-sm">
+                    Conhecer Terapias
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cards Flutuantes (Expertise) -->
+    <div class="relative z-20 -mt-16 max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white shadow-xl p-8 rounded-3xl border-b-4 border-blue-400 hover:-translate-y-2 smooth-transition flex flex-col items-center text-center">
+                <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center text-blue-400 text-3xl mb-4">
+                    <i class="fas fa-baby-carriage"></i>
+                </div>
+                <h4 class="text-xl font-bold text-gray-800 mb-2">Intervenção Precoce</h4>
+                <p class="text-gray-500 text-sm">Estímulo motor essencial para bebês nos primeiros meses de vida.</p>
+            </div>
+            <div class="bg-white shadow-xl p-8 rounded-3xl border-b-4 border-orange-400 hover:-translate-y-2 smooth-transition flex flex-col items-center text-center">
+                <div class="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center text-orange-400 text-3xl mb-4">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h4 class="text-xl font-bold text-gray-800 mb-2">Neurofuncional</h4>
+                <p class="text-gray-500 text-sm">Reabilitação para PC, Síndrome de Down e atrasos motores.</p>
+            </div>
+            <div class="bg-white shadow-xl p-8 rounded-3xl border-b-4 border-green-400 hover:-translate-y-2 smooth-transition flex flex-col items-center text-center">
+                <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center text-green-400 text-3xl mb-4">
+                    <i class="fas fa-lungs"></i>
+                </div>
+                <h4 class="text-xl font-bold text-gray-800 mb-2">Respiratória</h4>
+                <p class="text-gray-500 text-sm">Tratamento de bronquiolites e higiene brônquica infantil.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Serviços -->
+    <section id="servicos" class="py-24">
+        <div class="max-w-7xl mx-auto px-6 text-center mb-16">
+            <h2 class="text-brand-blue uppercase tracking-widest font-bold mb-3 text-sm">Nossa Abordagem</h2>
+            <h3 class="text-4xl font-bold text-gray-800">Especialidades Terapêuticas</h3>
+            <div class="w-20 h-1 bg-brand-orange mx-auto mt-6 rounded-full"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
+            <!-- Card 1 -->
+            <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-2xl smooth-transition group">
+                <div class="relative overflow-hidden rounded-2xl mb-6 aspect-video">
+                    <img src="https://happy.com.br/wp-content/uploads/2023/12/atraso-no-desenvolvimento-infantil.jpeg" alt="[Estimulação Motora]" class="w-full h-full object-cover group-hover:scale-110 smooth-transition">
+                    <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent smooth-transition"></div>
+                </div>
+                <h4 class="text-2xl font-bold mb-3 text-gray-800 group-hover:text-brand-blue smooth-transition">Atraso Motor</h4>
+                <p class="text-gray-600 mb-6 text-sm leading-relaxed">Para crianças que demoram a sustentar a cabeça, rolar, sentar ou andar. Utilizamos o brincar como ferramenta terapêutica.</p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-2xl smooth-transition group">
+                <div class="relative overflow-hidden rounded-2xl mb-6 aspect-video">
+                    <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="[Fisioterapia Neuro]" class="w-full h-full object-cover group-hover:scale-110 smooth-transition">
+                    <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent smooth-transition"></div>
+                </div>
+                <h4 class="text-2xl font-bold mb-3 text-gray-800 group-hover:text-brand-blue smooth-transition">Neuropediatria</h4>
+                <p class="text-gray-600 mb-6 text-sm leading-relaxed">Protocolos intensivos (TheraSuit, Bobath) para ganho de força e funcionalidade em condições neurológicas.</p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-2xl smooth-transition group">
+                <div class="relative overflow-hidden rounded-2xl mb-6 aspect-video">
+                    <img src="https://blog.sabin.com.br/wp-content/uploads/2022/07/quais-as-principais-doencas-respiratorias.jpeg" alt="[Saúde Respiratória]" class="w-full h-full object-cover group-hover:scale-110 smooth-transition">
+                    <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent smooth-transition"></div>
+                </div>
+                <h4 class="text-2xl font-bold mb-3 text-gray-800 group-hover:text-brand-blue smooth-transition">Respiratória</h4>
+                <p class="text-gray-600 mb-6 text-sm leading-relaxed">Técnicas de desobstrução sem choro traumático, focando no conforto e na melhora da capacidade pulmonar.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Depoimentos dos Pais (NOVA SEÇÃO) -->
+    <section id="depoimentos" class="py-24 bg-blue-50/50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-brand-blue uppercase tracking-widest font-bold mb-3 text-sm">Histórias Reais</h2>
+                <h3 class="text-4xl font-bold text-gray-800">O Que as Famílias Dizem</h3>
+                <p class="mt-4 text-gray-500 max-w-2xl mx-auto">Nada nos deixa mais felizes do que ver a evolução dos nossos pequenos heróis. Confira alguns depoimentos.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Depoimento 1 -->
+                <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-lg smooth-transition relative">
+                    <i class="fas fa-quote-right absolute top-8 right-8 text-4xl text-blue-100"></i>
+                    <div class="flex items-center gap-2 text-yellow-400 text-sm mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 italic mb-6 leading-relaxed">
+                        "A Dra. Mariana é um anjo! O Pedro tinha muito medo de fisioterapia, mas com ela tudo virou brincadeira. A evolução motora dele em 3 meses foi incrível."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Mãe" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-gray-800 text-sm">Carla Mendes</h5>
+                            <p class="text-xs text-brand-blue font-bold uppercase">Mãe do Pedro (4 anos)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Depoimento 2 -->
+                <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-lg smooth-transition relative">
+                    <i class="fas fa-quote-right absolute top-8 right-8 text-4xl text-orange-100"></i>
+                    <div class="flex items-center gap-2 text-yellow-400 text-sm mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 italic mb-6 leading-relaxed">
+                        "Chegamos com o diagnóstico de atraso motor e muitas incertezas. Hoje a Sofia já está sentando sozinha! Agradeço pelo carinho e competência."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Pai" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-gray-800 text-sm">Roberto Silva</h5>
+                            <p class="text-xs text-brand-orange font-bold uppercase">Pai da Sofia (10 meses)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Depoimento 3 -->
+                <div class="bg-white p-8 rounded-[2rem] shadow-sm hover:shadow-lg smooth-transition relative">
+                    <i class="fas fa-quote-right absolute top-8 right-8 text-4xl text-green-100"></i>
+                    <div class="flex items-center gap-2 text-yellow-400 text-sm mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 italic mb-6 leading-relaxed">
+                        "O atendimento respiratório foi essencial durante o inverno. A técnica sem choro funciona mesmo, meu filho ficou super tranquilo durante a sessão."
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Mãe" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-gray-800 text-sm">Fernanda Lima</h5>
+                            <p class="text-xs text-green-500 font-bold uppercase">Mãe do Lucas (2 anos)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="text-center mt-12">
+                <a href="#contato" class="inline-flex items-center gap-2 text-gray-500 hover:text-brand-blue smooth-transition font-bold text-sm uppercase tracking-widest border-b border-transparent hover:border-brand-blue pb-1">
+                    <i class="far fa-comment-alt"></i> Deixe também o seu depoimento
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre -->
+    <section id="sobre" class="py-24 bg-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-blue-50 skew-x-12 opacity-50"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div class="relative">
+                <div class="absolute -top-10 -left-10 w-40 h-40 bg-orange-100 rounded-full blur-3xl opacity-60"></div>
+                <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                     class="rounded-[3rem] shadow-2xl w-full h-[550px] object-cover hover:scale-[1.02] smooth-transition relative z-10">
+                
+                <div class="absolute -bottom-6 -right-6 bg-white p-8 rounded-3xl shadow-xl border border-gray-100 z-20">
+                    <div class="text-4xl font-bold text-brand-orange">10+</div>
+                    <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Anos de Dedicação</div>
+                </div>
+            </div>
+            <div>
+                <div class="mb-8">
+                    <h2 class="text-brand-blue uppercase tracking-widest font-bold text-sm mb-2">Quem Somos</h2>
+                    <h3 class="text-4xl font-bold text-gray-900">Dra. Mariana Silva</h3>
+                </div>
+                <div class="space-y-6 text-gray-600 leading-relaxed text-lg">
+                    <p>Especialista em Fisioterapia Neurofuncional Pediátrica, dedico minha carreira a transformar a vida de famílias através do movimento, sempre respeitando o tempo e a individualidade de cada criança.</p>
+                    <p>Acredito que o consultório deve ser uma extensão do brincar. Aqui, rolos viram montanhas, bolas viram planetas e cada exercício é uma nova aventura.</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 pt-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-brand-blue text-xl"></i>
+                            <span class="font-bold text-gray-800">Conceito Bobath</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-brand-blue text-xl"></i>
+                            <span class="font-bold text-gray-800">Integração Sensorial</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-brand-blue text-xl"></i>
+                            <span class="font-bold text-gray-800">PediaSuit</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-brand-blue text-xl"></i>
+                            <span class="font-bold text-gray-800">Bandagem Terapêutica</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 bg-[#F8F9FA]">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-brand-blue uppercase tracking-widest font-bold mb-3 text-sm">Tira-Dúvidas</h2>
+                <h3 class="text-4xl font-bold text-gray-800">Perguntas Frequentes</h3>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="faq-item bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md smooth-transition">
+                    <input type="checkbox" id="faq1" class="hidden peer">
+                    <label for="faq1" class="flex justify-between items-center p-6 cursor-pointer font-bold text-gray-700 hover:text-brand-blue smooth-transition">
+                        A partir de que idade meu filho pode fazer fisioterapia?
+                        <i class="fas fa-plus text-brand-orange peer-checked:rotate-45 smooth-transition"></i>
+                    </label>
+                    <div class="faq-content max-h-0 overflow-hidden bg-blue-50/50 text-gray-600 smooth-transition">
+                        Desde recém-nascido! A intervenção precoce é fundamental para bebês prematuros ou com risco de atraso no desenvolvimento.
+                    </div>
+                </div>
+                <div class="faq-item bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md smooth-transition">
+                    <input type="checkbox" id="faq2" class="hidden peer">
+                    <label for="faq2" class="flex justify-between items-center p-6 cursor-pointer font-bold text-gray-700 hover:text-brand-blue smooth-transition">
+                        Vocês aceitam convênio médico?
+                        <i class="fas fa-plus text-brand-orange smooth-transition"></i>
+                    </label>
+                    <div class="faq-content max-h-0 overflow-hidden bg-blue-50/50 text-gray-600 smooth-transition">
+                        Trabalhamos com sistema de reembolso. Emitimos recibo e relatório detalhado para que você possa solicitar o reembolso junto ao seu plano de saúde.
+                    </div>
+                </div>
+                <div class="faq-item bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md smooth-transition">
+                    <input type="checkbox" id="faq3" class="hidden peer">
+                    <label for="faq3" class="flex justify-between items-center p-6 cursor-pointer font-bold text-gray-700 hover:text-brand-blue smooth-transition">
+                        Como é feita a avaliação?
+                        <i class="fas fa-plus text-brand-orange smooth-transition"></i>
+                    </label>
+                    <div class="faq-content max-h-0 overflow-hidden bg-blue-50/50 text-gray-600 smooth-transition">
+                        A avaliação dura cerca de 1 hora. Analisamos o histórico da criança, realizamos testes motores específicos e conversamos com a família para traçar o melhor plano terapêutico.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contato com Floating Labels -->
+    <section id="contato" class="py-24 bg-white relative">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="bg-white p-10 md:p-16 rounded-[3rem] shadow-[0_20px_50px_rgba(59,130,246,0.1)] border border-gray-100 relative overflow-hidden">
+                
+                <!-- Decoração -->
+                <i class="fas fa-rocket absolute -top-6 -right-6 text-9xl text-brand-blue opacity-5 rotate-12"></i>
+
+                <div class="text-center mb-12 relative z-10">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">Agende uma Avaliação</h2>
+                    <p class="text-gray-500">Preencha os dados abaixo para iniciarmos essa jornada juntos.</p>
+                </div>
+                
+                <form id="contactForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 relative z-10">
+                    <div class="input-group">
+                        <input type="text" id="tutorName" required>
+                        <label for="tutorName">Nome do Responsável</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="childName" required>
+                        <label for="childName">Nome da Criança</label>
+                    </div>
+                    <div class="input-group">
+                        <select id="serviceType" required class="text-gray-700">
+                            <option value="" disabled selected></option>
+                            <option value="Intervenção Precoce">Intervenção Precoce (Bebês)</option>
+                            <option value="Fisioterapia Neuro">Fisioterapia Neurológica</option>
+                            <option value="Fisioterapia Respiratória">Fisioterapia Respiratória</option>
+                            <option value="Avaliação Motora">Avaliação do Desenvolvimento</option>
+                        </select>
+                        <label for="serviceType">Motivo da Consulta</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="phone" required>
+                        <label for="phone">WhatsApp para Contato</label>
+                    </div>
+                    <div class="input-group md:col-span-2">
+                        <textarea id="message" rows="2" required></textarea>
+                        <label for="message">Breve relato sobre a criança</label>
+                    </div>
+                    
+                    <div class="md:col-span-2 text-center mt-6">
+                        <button type="submit" class="bg-green-500 text-white px-16 py-4 rounded-full font-bold text-lg hover:shadow-lg hover:bg-green-600 hover:scale-105 smooth-transition uppercase tracking-widest flex items-center justify-center mx-auto gap-3">
+                            <i class="fab fa-whatsapp text-2xl"></i> Enviar Solicitação
+                        </button>
+                    </div>
+                </form>
+                <div id="formStatus" class="mt-8 hidden p-4 text-center rounded-2xl"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-400 py-16 text-center border-t-8 border-brand-blue">
+        <div class="flex justify-center items-center gap-2 mb-6 text-white text-3xl font-bold uppercase">
+            Crescer<span class="text-brand-orange">&</span>Agir
+        </div>
+        <p class="text-[10px] uppercase tracking-[0.3em] mb-8">Amor, Ciência e Movimento</p>
+        
+        <div class="flex justify-center space-x-8 text-2xl mb-12">
+            <a href="#" class="hover:text-brand-blue smooth-transition hover:-translate-y-1"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="hover:text-brand-blue smooth-transition hover:-translate-y-1"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="hover:text-brand-blue smooth-transition hover:-translate-y-1"><i class="fab fa-youtube"></i></a>
+        </div>
+        
+        <div class="text-sm space-y-2">
+            <p>Rua das Flores, 123 - Pinheiros, SP</p>
+            <p>(34) 9 9977-8403 | contato@crescereagir.com.br</p>
+        </div>
+        
+        <p class="text-[10px] uppercase tracking-widest mt-10 opacity-50">© 2026 Crescer & Agir Fisioterapia | CREFITO 000.000</p>
+    </footer>
+
+    <!-- Widget WhatsApp Avançado -->
+    <div class="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
+        <div id="wa-chat-box" class="mb-4 w-[320px] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+            <div class="wa-header flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-sm uppercase tracking-wider">Atendimento Online</h3>
+                    <p class="text-[10px] text-white/90">Respondemos rapidinho! :)</p>
+                </div>
+                <button onclick="toggleChat()" class="text-white/80 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="wa-chat-body">
+                <div class="flex gap-2">
+                    <div class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-brand-blue overflow-hidden p-1">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3574/3574069.png" alt="Atendente" class="w-full h-full object-cover">
+                    </div>
+                    <div class="wa-bubble-msg">
+                        Olá família! 🧸<br>Como podemos ajudar o desenvolvimento do seu pequeno hoje?
+                    </div>
+                </div>
+            </div>
+            <div class="p-3 bg-white border-t flex gap-2">
+                <input type="text" id="wa-input" placeholder="Escreva sua dúvida..." class="flex-1 bg-gray-100 border-none rounded-full px-4 py-2 text-sm outline-none font-sans">
+                <button onclick="sendWa()" class="w-10 h-10 bg-[#128c7e] text-white rounded-full flex items-center justify-center hover:bg-brand-blue smooth-transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="relative">
+            <button onclick="toggleChat()" class="bg-[#25d366] text-white w-16 h-16 rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(37,211,102,0.4)] hover:scale-110 smooth-transition relative group z-50">
+                <i class="fab fa-whatsapp text-3xl"></i>
+                <span class="absolute -top-1 -right-1 h-5 w-5 bg-brand-orange border-2 border-white rounded-full animate-bounce"></span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Lógica do Texto Digitado (Typing Effect)
+        var TxtRotate = function(el, toRotate, period) {
+            this.toRotate = toRotate; this.el = el; this.loopNum = 0;
+            this.period = parseInt(period, 10) || 2000; this.txt = '';
+            this.tick(); this.isDeleting = false;
+        };
+        TxtRotate.prototype.tick = function() {
+            var i = this.loopNum % this.toRotate.length; var fullTxt = this.toRotate[i];
+            if (this.isDeleting) { this.txt = fullTxt.substring(0, this.txt.length - 1); } 
+            else { this.txt = fullTxt.substring(0, this.txt.length + 1); }
+            this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+            var that = this; var delta = 200 - Math.random() * 100;
+            if (this.isDeleting) delta /= 2;
+            if (!this.isDeleting && this.txt === fullTxt) { delta = this.period; this.isDeleting = true; } 
+            else if (this.isDeleting && this.txt === '') { this.isDeleting = false; this.loopNum++; delta = 500; }
+            setTimeout(function() { that.tick(); }, delta);
+        };
+
+        // 2. Inicialização
+        window.onload = function() {
+            // Inicia Texto Digitado
+            var elements = document.getElementsByClassName('txt-rotate');
+            for (var i=0; i<elements.length; i++) {
+                var rotate = elements[i].getAttribute('data-rotate');
+                if (rotate) new TxtRotate(elements[i], JSON.parse(rotate), elements[i].getAttribute('data-period'));
+            }
+            // Abre o chat automaticamente após 5 segundos
+            setTimeout(() => { toggleChat(); }, 5000);
+        };
+
+        // 3. Navbar Glass Effect ao rolar
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('glass-nav', 'py-3');
+            } else {
+                nav.classList.remove('glass-nav', 'py-3');
+            }
+        });
+
+        // 4. Lógica do WhatsApp Chat Widget
+        function toggleChat() {
+            const box = document.getElementById('wa-chat-box');
+            box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+            if(box.style.display === 'block') box.classList.add('animate-pop');
+        }
+        function sendWa() {
+            const val = document.getElementById('wa-input').value;
+            const phone = "3499778403"; 
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(val || "Olá, gostaria de informações sobre a fisio.")}`, '_blank');
+        }
+
+        // 5. Formulário Principal com Integração Google Sheets
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // --- CONFIGURAÇÃO ---
+            // COLE AQUI A URL DO SEU GOOGLE APPS SCRIPT:
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyUcp1P6E33HtsTr_Zy0ugcK2CKiDn5BgJSJEOpIbDmVxeDvuFrpdboSvdkJbuXomeEIw/exec';
+            // --------------------
+
+            // Captura os dados
+            const tutor = document.getElementById('tutorName').value;
+            const child = document.getElementById('childName').value;
+            const service = document.getElementById('serviceType').value;
+            const phone = document.getElementById('phone').value;
+            const message = document.getElementById('message').value;
+            
+            // UI: Feedback de carregamento (evita cliques duplos)
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            submitBtn.disabled = true;
+
+            // Dados para a planilha
+            const formData = {
+                tutor: tutor,
+                child: child,
+                service: service,
+                phone: phone,
+                message: message
+            };
+
+            // Link do WhatsApp
+            const text = `Olá! Me chamo *${tutor}*.\nGostaria de agendar *${service}* para meu filho(a) *${child}*.\n\nDetalhes: ${message}`;
+            const whatsappNumber = "3499778403"; 
+            const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+
+            // Envia para a Planilha e depois abre o WhatsApp
+            // Usamos 'no-cors' para evitar erros de bloqueio de navegador, 
+            // mas isso significa que não saberemos se deu erro no script (mas os dados chegam).
+            fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(() => {
+                // Sucesso (ou envio sem retorno de erro)
+                console.log('Dados enviados para a planilha');
+            })
+            .catch(error => {
+                console.error('Erro ao salvar, mas abrindo WhatsApp...', error);
+            })
+            .finally(() => {
+                // Abre o WhatsApp sempre (mesmo se a planilha falhar)
+                window.open(waLink, '_blank');
+                
+                // Feedback visual na página
+                const s = document.getElementById('formStatus');
+                s.classList.remove('hidden');
+                s.innerHTML = '<i class="fab fa-whatsapp text-2xl mb-2"></i><br>Redirecionando para o WhatsApp...';
+                s.className = "mt-8 p-6 text-center rounded-2xl bg-green-50 text-green-700 font-bold border border-green-100 animate-pulse";
+                
+                // Reseta o botão
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+                document.getElementById('contactForm').reset();
+            });
+        });
+    </script>
+</body>
+</html>
