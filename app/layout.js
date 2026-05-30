@@ -10,6 +10,11 @@ const inter = Inter({
 export const metadata = {
   title: "PageMaster | Criação de Sites, Sistemas Web e Landing Pages em Uberlândia",
   description: "Desenvolvimento de sites profissionais, landing pages de alta conversão e sistemas sob medida em Uberlândia. Cardápios digitais, agendamentos online e mais.",
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
   robots: {
     index: true,
     follow: true,
