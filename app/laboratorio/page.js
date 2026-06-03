@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 export default function Laboratorio() {
   const [isManualOpen, setIsManualOpen] = useState(false);
+  const [device, setDevice] = useState('desktop');
   const [colors, setColors] = useState({
     primaria: '#2962FF',
     secundaria: '#0F172A',
@@ -17,6 +18,69 @@ export default function Laboratorio() {
     animacao: 'static'
   });
   const [clientData, setClientData] = useState({ nome: '', empresa: '' });
+  
+  const [previewTexts, setPreviewTexts] = useState({
+    titleCentral: "O Seu Novo Website Premium.",
+    descCentral: "Esta é a área onde o cliente foca toda a atenção na sua grande promessa de vendas.",
+    btnCentral: "Contactar Equipe",
+    titleDual: "Solução Avançada.",
+    descDual: "Texto direto à esquerda com imagem à direita, gerando equilíbrio.",
+    btnDual: "Ver Mais",
+    titleSplit: "Visão Dividida.",
+    descSplit: "Contraste perfeito entre texto forte e imagem.",
+    btnSplit: "Explorar",
+    titleImersivo: "Imersão Total.",
+    descImersivo: "A imagem toma conta de todo o ecrã, gerando grande impacto visual.",
+    btnImersivo: "Aceder"
+  });
+
+  const presets = [
+    {
+      name: "Corporate Blue",
+      primaria: "#2962FF",
+      secundaria: "#0F172A",
+      base: "#F8FAFC",
+      fonte: "font-sans",
+      forma: "standard"
+    },
+    {
+      name: "Luxury Gold",
+      primaria: "#D4AF37",
+      secundaria: "#1C1C1C",
+      base: "#FAFAF9",
+      fonte: "font-serif",
+      forma: "standard"
+    },
+    {
+      name: "Neon Startup",
+      primaria: "#10B981",
+      secundaria: "#0F172A",
+      base: "#0B0F19",
+      fonte: "font-outfit",
+      forma: "pill"
+    },
+    {
+      name: "Minimalist Black",
+      primaria: "#000000",
+      secundaria: "#111111",
+      base: "#FFFFFF",
+      fonte: "font-sans",
+      forma: "square"
+    }
+  ];
+
+  const applyPreset = (preset) => {
+    setColors({
+      primaria: preset.primaria,
+      secundaria: preset.secundaria,
+      base: preset.base
+    });
+    setSimState(prev => ({
+      ...prev,
+      fonte: preset.fonte,
+      forma: preset.forma
+    }));
+  };
 
   const toggleManual = () => {
     setIsManualOpen(!isManualOpen);
@@ -34,18 +98,30 @@ export default function Laboratorio() {
   const getBtnClass = (baseClass) => {
     let shapeClass = '';
     if (simState.forma === 'pill') shapeClass = 'rounded-full';
-    else if (simState.forma === 'standard') shapeClass = 'rounded-xl';
+    else if (simState.forma === 'standard' || simState.forma === 'ghost') shapeClass = 'rounded-xl';
     else if (simState.forma === 'square') shapeClass = 'rounded-none';
     
+    return `${baseClass} ${shapeClass} transition-all duration-300`;
+  };
+
+  const getBtnStyle = () => {
     if (simState.forma === 'ghost') {
-      return `${baseClass} border-2 bg-transparent text-brand-primary border-brand-primary`;
+      return {
+        borderColor: colors.primaria,
+        color: colors.primaria,
+        borderWidth: '2px',
+        backgroundColor: 'transparent',
+      };
     }
-    return `${baseClass} ${shapeClass}`;
+    return {
+      backgroundColor: colors.primaria,
+      color: '#ffffff',
+    };
   };
 
   const getAnimClass = () => {
     if (simState.animacao === 'float') return 'sim-animate-float';
-    if (simState.animacao === 'fade') return 'animate-pulse'; // Simple Tailwind placeholder for fade
+    if (simState.animacao === 'fade') return 'animate-pulse';
     return '';
   };
 
@@ -55,7 +131,7 @@ export default function Laboratorio() {
       alert('Por favor, preencha o seu nome e empresa.');
       return;
     }
-    const configs = `*PLANTA DO PROJETO - PAGEMASTER*\n\n*Cliente:* ${clientData.nome}\n*Empresa:* ${clientData.empresa}\n\n*Design System:*\n- Cor Primária: ${colors.primaria}\n- Cor Secundária: ${colors.secundaria}\n- Cor de Base: ${colors.base}\n\n*Arquitetura:*\n- Tipografia: ${simState.fonte}\n- Formato de Botão: ${simState.forma}\n- Layout Hero: ${simState.hero}\n- Animações: ${simState.animacao}\n\nGostaria de iniciar o desenvolvimento com esta planta.`;
+    const configs = `*PLANTA DO PROJETO - PAGEMASTER*\n\n*Cliente:* ${clientData.nome}\n*Empresa:* ${clientData.empresa}\n\n*Design System:*\n- Cor Primária: ${colors.primaria}\n- Cor Secundária: ${colors.secundaria}\n- Cor de Base: ${colors.base}\n\n*Arquitetura:*\n- Tipografia: ${simState.fonte}\n- Formato de Botão: ${simState.forma}\n- Layout Hero: ${simState.hero}\n- Animações: ${simState.animacao}\n\n*Textos Customizados (Central):*\n- Título: ${previewTexts.titleCentral}\n- Descrição: ${previewTexts.descCentral}\n\nGostaria de iniciar o desenvolvimento com esta planta.`;
     const encoded = encodeURIComponent(configs);
     window.open(`https://wa.me/553499778403?text=${encoded}`, '_blank');
   };
@@ -122,7 +198,36 @@ export default function Laboratorio() {
         {/* ========================================== */}
         {/* COLUNA ESQUERDA: OPÇÕES DE CONFIGURAÇÃO    */}
         {/* ========================================== */}
-        <div className="lg:w-7/12 space-y-20 pb-20">
+        <div className="lg:w-7/12 space-y-16 pb-20">
+
+            {/* PRESETS DE STYLES */}
+            <div className="bg-brand-surface border border-brand-border p-8 rounded-[2rem] shadow-sm">
+                <div className="flex items-center gap-4 mb-4 border-b border-brand-border pb-3">
+                    <svg className="w-6 h-6 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                    </svg>
+                    <h2 className="text-xl font-bold text-brand-secondary">Temas Sugeridos (Presets)</h2>
+                </div>
+                <p className="text-xs text-brand-muted mb-6">Escolha um estilo pronto para aplicar cores e tipografias selecionadas instantaneamente:</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {presets.map((preset) => (
+                        <button
+                            key={preset.name}
+                            type="button"
+                            onClick={() => applyPreset(preset)}
+                            className="flex flex-col items-center gap-2 p-3 rounded-xl border border-brand-border bg-brand-background hover:border-brand-primary/50 hover:bg-white hover:shadow-soft transition-all duration-300"
+                        >
+                            <div className="flex gap-1.5">
+                                <span className="w-4 h-4 rounded-full border border-gray-200 shadow-sm" style={{ backgroundColor: preset.primaria }} />
+                                <span className="w-4 h-4 rounded-full border border-gray-200 shadow-sm" style={{ backgroundColor: preset.secundaria }} />
+                                <span className="w-4 h-4 rounded-full border border-gray-200 shadow-sm" style={{ backgroundColor: preset.base }} />
+                            </div>
+                            <span className="text-[11px] font-bold text-brand-secondary text-center leading-none">{preset.name}</span>
+                        </button>
+                    ))}
+                </div>
+            </div>
 
             {/* PASSO 1: CORES */}
             <div>
@@ -186,41 +291,41 @@ export default function Laboratorio() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-4 text-center shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-4 text-center shadow-sm relative ${simState.fonte === "font-sans" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, fonte: "font-sans"})}>
-                        <div className={`check-icon absolute top-2 right-2 text-brand-primary`}><svg className="w-4 h-4"
+                        <div className={`check-icon absolute top-2 right-2 text-brand-primary ${simState.fonte === "font-sans" ? "" : "hidden"}`}><svg className="w-4 h-4"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <h3 className="text-3xl font-extrabold text-brand-secondary mb-1 font-sans">Aa</h3>
                         <p className="text-xs font-bold text-brand-primary font-sans">Moderna</p>
                     </div>
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-4 text-center shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-4 text-center shadow-sm relative ${simState.fonte === "font-serif" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, fonte: "font-serif"})}>
-                        <div className={`check-icon absolute top-2 right-2 text-brand-primary`}><svg className="w-4 h-4"
+                        <div className={`check-icon absolute top-2 right-2 text-brand-primary ${simState.fonte === "font-serif" ? "" : "hidden"}`}><svg className="w-4 h-4"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <h3 className="text-3xl font-bold text-brand-secondary mb-1 font-serif">Aa</h3>
                         <p className="text-xs font-bold text-brand-primary font-serif">Clássica</p>
                     </div>
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-4 text-center shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-4 text-center shadow-sm relative ${simState.fonte === "font-outfit" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, fonte: "font-outfit"})}>
-                        <div className={`check-icon absolute top-2 right-2 text-brand-primary`}><svg className="w-4 h-4"
+                        <div className={`check-icon absolute top-2 right-2 text-brand-primary ${simState.fonte === "font-outfit" ? "" : "hidden"}`}><svg className="w-4 h-4"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <h3 className="text-3xl font-bold text-brand-secondary mb-1 font-outfit">Aa</h3>
                         <p className="text-xs font-bold text-brand-primary font-outfit">Amigável</p>
                     </div>
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-4 text-center shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-4 text-center shadow-sm relative ${simState.fonte === "font-bebas" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, fonte: "font-bebas"})}>
-                        <div className={`check-icon absolute top-2 right-2 text-brand-primary`}><svg className="w-4 h-4"
+                        <div className={`check-icon absolute top-2 right-2 text-brand-primary ${simState.fonte === "font-bebas" ? "" : "hidden"}`}><svg className="w-4 h-4"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <h3 className="text-4xl text-brand-secondary mb-1 font-bebas leading-none">AA</h3>
@@ -239,41 +344,41 @@ export default function Laboratorio() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-5 relative shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-5 relative shadow-sm ${simState.forma === "pill" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, forma: "pill"})}>
-                        <div className={`check-icon absolute top-3 right-3 text-brand-primary`}><svg className="w-5 h-5"
+                        <div className={`check-icon absolute top-3 right-3 text-brand-primary ${simState.forma === "pill" ? "" : "hidden"}`}><svg className="w-5 h-5"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <div className="w-full h-10 bg-blue-100 rounded-full mb-3"></div>
                         <h3 className="text-sm font-bold text-brand-secondary">Pílula (Arredondado)</h3>
                     </div>
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-5 relative shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-5 relative shadow-sm ${simState.forma === "standard" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, forma: "standard"})}>
-                        <div className={`check-icon absolute top-3 right-3 text-brand-primary`}><svg className="w-5 h-5"
+                        <div className={`check-icon absolute top-3 right-3 text-brand-primary ${simState.forma === "standard" ? "" : "hidden"}`}><svg className="w-5 h-5"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <div className="w-full h-10 bg-blue-100 rounded-xl mb-3"></div>
                         <h3 className="text-sm font-bold text-brand-secondary">Standard (Curvo)</h3>
                     </div>
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-5 relative shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-5 relative shadow-sm ${simState.forma === "square" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, forma: "square"})}>
-                        <div className={`check-icon absolute top-3 right-3 text-brand-primary`}><svg className="w-5 h-5"
+                        <div className={`check-icon absolute top-3 right-3 text-brand-primary ${simState.forma === "square" ? "" : "hidden"}`}><svg className="w-5 h-5"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <div className="w-full h-10 bg-blue-100 rounded-none mb-3"></div>
                         <h3 className="text-sm font-bold text-brand-secondary">Reto (Bruto)</h3>
                     </div>
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-5 relative shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-5 relative shadow-sm ${simState.forma === "ghost" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, forma: "ghost"})}>
-                        <div className={`check-icon absolute top-3 right-3 text-brand-primary`}><svg className="w-5 h-5"
+                        <div className={`check-icon absolute top-3 right-3 text-brand-primary ${simState.forma === "ghost" ? "" : "hidden"}`}><svg className="w-5 h-5"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <div className="w-full h-10 bg-transparent border-2 border-brand-primary/40 rounded-xl mb-3"></div>
@@ -292,11 +397,11 @@ export default function Laboratorio() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-4 relative flex gap-4 items-center shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-4 relative flex gap-4 items-center shadow-sm ${simState.hero === "central" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, hero: "central"})}>
-                        <div className={`check-icon absolute top-2 right-2 text-brand-primary`}><svg className="w-5 h-5"
+                        <div className={`check-icon absolute top-2 right-2 text-brand-primary ${simState.hero === "central" ? "" : "hidden"}`}><svg className="w-5 h-5"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <div
@@ -311,11 +416,11 @@ export default function Laboratorio() {
                         </div>
                     </div>
 
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-4 relative flex gap-4 items-center shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-4 relative flex gap-4 items-center shadow-sm ${simState.hero === "dual" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, hero: "dual"})}>
-                        <div className={`check-icon absolute top-2 right-2 text-brand-primary`}><svg className="w-5 h-5"
+                        <div className={`check-icon absolute top-2 right-2 text-brand-primary ${simState.hero === "dual" ? "" : "hidden"}`}><svg className="w-5 h-5"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <div
@@ -332,11 +437,11 @@ export default function Laboratorio() {
                         </div>
                     </div>
 
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-4 relative flex gap-4 items-center shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-4 relative flex gap-4 items-center shadow-sm ${simState.hero === "split" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, hero: "split"})}>
-                        <div className={`check-icon absolute top-2 right-2 text-brand-primary`}><svg className="w-5 h-5"
+                        <div className={`check-icon absolute top-2 right-2 text-brand-primary ${simState.hero === "split" ? "" : "hidden"}`}><svg className="w-5 h-5"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <div
@@ -352,11 +457,11 @@ export default function Laboratorio() {
                         </div>
                     </div>
 
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-4 relative flex gap-4 items-center shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-4 relative flex gap-4 items-center shadow-sm ${simState.hero === "imersivo" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, hero: "imersivo"})}>
-                        <div className={`check-icon absolute top-2 right-2 text-brand-primary`}><svg className="w-5 h-5"
+                        <div className={`check-icon absolute top-2 right-2 text-brand-primary ${simState.hero === "imersivo" ? "" : "hidden"}`}><svg className="w-5 h-5"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <div
@@ -383,31 +488,31 @@ export default function Laboratorio() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-5 text-center shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-5 text-center shadow-sm relative ${simState.animacao === "static" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, animacao: "static"})}>
-                        <div className={`check-icon absolute top-3 right-3 text-brand-primary`}><svg className="w-4 h-4"
+                        <div className={`check-icon absolute top-3 right-3 text-brand-primary ${simState.animacao === "static" ? "" : "hidden"}`}><svg className="w-4 h-4"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <h3 className="text-sm font-bold text-brand-secondary mb-1">Estático</h3>
                         <p className="text-[10px] text-brand-muted">Velocidade extrema. Direto ao ponto.</p>
                     </div>
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-5 text-center shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-5 text-center shadow-sm relative ${simState.animacao === "fade" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, animacao: "fade"})}>
-                        <div className={`check-icon absolute top-3 right-3 text-brand-primary`}><svg className="w-4 h-4"
+                        <div className={`check-icon absolute top-3 right-3 text-brand-primary ${simState.animacao === "fade" ? "" : "hidden"}`}><svg className="w-4 h-4"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <h3 className="text-sm font-bold text-brand-secondary mb-1">Elegância (Fade)</h3>
                         <p className="text-[10px] text-brand-muted">Suave e sofisticado.</p>
                     </div>
-                    <div className="option-card bg-brand-surface border border-brand-border rounded-2xl p-5 text-center shadow-sm"
+                    <div
                         className={`option-card bg-brand-surface border rounded-2xl p-5 text-center shadow-sm relative ${simState.animacao === "float" ? "border-brand-primary ring-2 ring-brand-primary" : "border-brand-border"}`} onClick={() => setSimState({...simState, animacao: "float"})}>
-                        <div className={`check-icon absolute top-3 right-3 text-brand-primary`}><svg className="w-4 h-4"
+                        <div className={`check-icon absolute top-3 right-3 text-brand-primary ${simState.animacao === "float" ? "" : "hidden"}`}><svg className="w-4 h-4"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                     d="M5 13l4 4L19 7"></path>
                             </svg></div>
                         <h3 className="text-sm font-bold text-brand-secondary mb-1">High-End (Parallax)</h3>
@@ -415,7 +520,6 @@ export default function Laboratorio() {
                     </div>
                 </div>
             </div>
-
         </div>
 
         {/* ========================================== */}
@@ -425,7 +529,7 @@ export default function Laboratorio() {
             <div className="sticky top-32 space-y-6">
 
                 {/* Cabeçalho do Simulador */}
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h2 className="text-xl font-extrabold text-brand-secondary flex items-center gap-3">
                             <span className="relative flex h-3 w-3">
@@ -435,13 +539,63 @@ export default function Laboratorio() {
                             </span>
                             Live Preview
                         </h2>
-                        <p className="text-xs text-brand-muted mt-1 font-medium">As suas escolhas refletidas em tempo real.
+                        <p className="text-xs text-brand-muted mt-1 font-medium">Edite os textos clicando diretamente neles!
                         </p>
+                    </div>
+
+                    {/* Seletor de Dispositivo */}
+                    <div className="flex bg-gray-100 border border-brand-border rounded-full p-1 self-start sm:self-auto shadow-sm">
+                        <button
+                            type="button"
+                            onClick={() => setDevice('desktop')}
+                            title="Visualizar em Desktop"
+                            className={`p-2 rounded-full transition-all ${
+                                device === 'desktop'
+                                    ? 'bg-brand-primary text-white shadow-sm'
+                                    : 'text-brand-muted hover:text-brand-primary'
+                            }`}
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setDevice('tablet')}
+                            title="Visualizar em Tablet"
+                            className={`p-2 rounded-full transition-all ${
+                                device === 'tablet'
+                                    ? 'bg-brand-primary text-white shadow-sm'
+                                    : 'text-brand-muted hover:text-brand-primary'
+                            }`}
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setDevice('mobile')}
+                            title="Visualizar em Celular"
+                            className={`p-2 rounded-full transition-all ${
+                                device === 'mobile'
+                                    ? 'bg-brand-primary text-white shadow-sm'
+                                    : 'text-brand-muted hover:text-brand-primary'
+                            }`}
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
                 {/* JANELA DO SIMULADOR */}
-                <div className="bg-white border border-brand-border rounded-[2rem] shadow-floating overflow-hidden">
+                <div 
+                    className={`bg-white border border-brand-border rounded-[2rem] shadow-floating overflow-hidden transition-all duration-500 ease-in-out mx-auto w-full ${
+                        device === 'mobile' ? 'max-w-[340px]' : device === 'tablet' ? 'max-w-[560px]' : 'max-w-full'
+                    }`}
+                >
 
                     {/* Barra de Topo do Browser Falso */}
                     <div className="bg-gray-100 px-5 py-4 flex gap-2 border-b border-gray-200">
@@ -452,40 +606,82 @@ export default function Laboratorio() {
 
                     {/* Conteúdo do Simulador Dinâmico */}
                     <div id="sim-content"
-                        className="relative w-full h-[400px] flex items-center justify-center overflow-hidden font-sans">
+                        className={`relative w-full h-[400px] flex items-center justify-center overflow-hidden font-sans transition-all duration-500 ${simState.fonte}`}
+                        style={simStyle}>
 
                         {/* Variante 1: Central */}
-                        {/* A animação (sim-anim-target) vai para o H3 */}
                         <div id="sim-hero-central"
-                            className="w-full text-center relative z-10 flex flex-col items-center px-6">
+                            className={`w-full text-center relative z-10 flex flex-col items-center px-6 ${simState.hero === "central" ? "" : "hidden"}`}>
                             <div
+                                style={{ borderColor: colors.primaria, color: colors.primaria }}
                                 className="sim-badge px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase mb-4 border transition-colors inline-block">
                                 Novidade</div>
                             <h3
-                                className={`sim-title sim-anim-target text-3xl sm:text-4xl font-extrabold mb-4 leading-tight ${getAnimClass()}`}>
-                                O Seu Novo<br />Website <span id="sim-title-span-central" style={{color: colors.primaria}}>Premium.</span></h3>
-                            <p className="sim-text text-sm mb-8 max-w-xs mx-auto">Esta é a área onde o cliente foca toda a
-                                atenção na sua grande promessa de vendas.</p>
-                            <button className={getBtnClass("px-8 py-3.5 text-sm font-bold uppercase tracking-wider")}>Contactar
-                                Equipe</button>
+                                contentEditable
+                                suppressContentEditableWarning
+                                onBlur={(e) => setPreviewTexts({ ...previewTexts, titleCentral: e.target.textContent })}
+                                style={{ color: colors.secundaria }}
+                                className={`sim-title sim-anim-target text-2xl sm:text-3xl font-extrabold mb-4 leading-tight outline-none hover:bg-black/5 focus:bg-black/5 focus:ring-1 focus:ring-brand-primary/30 rounded px-1 transition-all cursor-text ${getAnimClass()}`}>
+                                {previewTexts.titleCentral}
+                            </h3>
+                            <p 
+                                contentEditable
+                                suppressContentEditableWarning
+                                onBlur={(e) => setPreviewTexts({ ...previewTexts, descCentral: e.target.textContent })}
+                                className="sim-text text-xs sm:text-sm mb-8 max-w-xs mx-auto outline-none hover:bg-black/5 focus:bg-black/5 focus:ring-1 focus:ring-brand-primary/30 rounded px-1 transition-all cursor-text">
+                                {previewTexts.descCentral}
+                            </p>
+                            <button 
+                                style={getBtnStyle()} 
+                                className={getBtnClass("px-8 py-3.5 text-xs font-bold uppercase tracking-wider shadow-sm")}
+                            >
+                                <span 
+                                    contentEditable
+                                    suppressContentEditableWarning
+                                    onBlur={(e) => setPreviewTexts({ ...previewTexts, btnCentral: e.target.textContent })}
+                                    className="outline-none"
+                                >
+                                    {previewTexts.btnCentral}
+                                </span>
+                            </button>
                         </div>
 
                         {/* Variante 2: Dual */}
-                        {/* A animação (sim-anim-target) vai para a imagem */}
                         <div id="sim-hero-dual"
-                            className="w-full flex items-center justify-between gap-4 sm:gap-6 px-4 sm:px-8 relative z-10 hidden">
+                            className={`w-full flex items-center justify-between gap-4 sm:gap-6 px-4 sm:px-8 relative z-10 ${simState.hero === "dual" ? "" : "hidden"}`}>
                             <div className="flex-1 text-left">
-                                <h3 className="sim-title text-2xl sm:text-3xl font-extrabold mb-3 leading-tight">
-                                    Solução<br /><span id="sim-title-span-dual" style={{color: colors.primaria}}>Avançada.</span></h3>
-                                <p className="sim-text text-[11px] sm:text-xs mb-5 max-w-[200px]">Texto direto à esquerda
-                                    com imagem à direita, gerando equilíbrio.</p>
-                                <button
-                                    className={getBtnClass("px-5 py-2.5 sm:px-6 sm:py-3 text-[10px] sm:text-xs font-bold uppercase tracking-wider")}>Ver
-                                    Mais</button>
+                                <h3 
+                                    contentEditable
+                                    suppressContentEditableWarning
+                                    onBlur={(e) => setPreviewTexts({ ...previewTexts, titleDual: e.target.textContent })}
+                                    style={{ color: colors.secundaria }}
+                                    className="sim-title text-xl sm:text-2xl font-extrabold mb-3 leading-tight outline-none hover:bg-black/5 focus:bg-black/5 focus:ring-1 focus:ring-brand-primary/30 rounded px-1 transition-all cursor-text">
+                                    {previewTexts.titleDual}
+                                </h3>
+                                <p 
+                                    contentEditable
+                                    suppressContentEditableWarning
+                                    onBlur={(e) => setPreviewTexts({ ...previewTexts, descDual: e.target.textContent })}
+                                    className="sim-text text-[10px] sm:text-xs mb-5 max-w-[200px] outline-none hover:bg-black/5 focus:bg-black/5 focus:ring-1 focus:ring-brand-primary/30 rounded px-1 transition-all cursor-text">
+                                    {previewTexts.descDual}
+                                </p>
+                                <button 
+                                    style={getBtnStyle()}
+                                    className={getBtnClass("px-5 py-2.5 sm:px-6 sm:py-3 text-[10px] sm:text-xs font-bold uppercase tracking-wider")}
+                                >
+                                    <span 
+                                        contentEditable
+                                        suppressContentEditableWarning
+                                        onBlur={(e) => setPreviewTexts({ ...previewTexts, btnDual: e.target.textContent })}
+                                        className="outline-none"
+                                    >
+                                        {previewTexts.btnDual}
+                                    </span>
+                                </button>
                             </div>
                             <div className="flex-shrink-0">
                                 <div
-                                    className={`sim-mockup-img sim-anim-target w-[110px] sm:w-[140px] aspect-[4/5] bg-gray-200 rounded-2xl shadow-lg border-4 border-white transition-all duration-500 overflow-hidden ${getAnimClass()}`}>
+                                    className={`sim-mockup-img sim-anim-target w-[100px] sm:w-[130px] aspect-[4/5] bg-gray-200 rounded-2xl shadow-lg border-4 border-white transition-all duration-500 overflow-hidden ${getAnimClass()}`}>
                                     <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80"
                                         className="w-full h-full object-cover opacity-90" alt="Mockup" />
                                 </div>
@@ -493,15 +689,36 @@ export default function Laboratorio() {
                         </div>
 
                         {/* Variante 3: Split */}
-                        {/* A animação (sim-anim-target) vai para a imagem */}
                         <div id="sim-hero-split" className={`absolute inset-0 w-full h-full flex ${simState.hero === "split" ? "" : "hidden"}`}>
-                            <div className="w-1/2 h-full flex flex-col justify-center p-8 sm:p-10 relative z-10 bg-inherit">
-                                <h3 className="sim-title text-2xl sm:text-3xl font-extrabold mb-3 leading-tight">
-                                    Visão<br /><span id="sim-title-span-split" style={{color: colors.primaria}}>Dividida.</span></h3>
-                                <p className="sim-text text-[11px] sm:text-xs mb-6 max-w-[180px]">Contraste perfeito entre
-                                    texto forte e imagem.</p>
-                                <button
-                                    className={getBtnClass("px-5 py-2.5 sm:px-6 sm:py-3 text-[10px] sm:text-xs font-bold uppercase tracking-wider self-start")}>Explorar</button>
+                            <div className="w-1/2 h-full flex flex-col justify-center p-6 sm:p-8 relative z-10 bg-inherit">
+                                <h3 
+                                    contentEditable
+                                    suppressContentEditableWarning
+                                    onBlur={(e) => setPreviewTexts({ ...previewTexts, titleSplit: e.target.textContent })}
+                                    style={{ color: colors.secundaria }}
+                                    className="sim-title text-xl sm:text-2xl font-extrabold mb-3 leading-tight outline-none hover:bg-black/5 focus:bg-black/5 focus:ring-1 focus:ring-brand-primary/30 rounded px-1 transition-all cursor-text">
+                                    {previewTexts.titleSplit}
+                                </h3>
+                                <p 
+                                    contentEditable
+                                    suppressContentEditableWarning
+                                    onBlur={(e) => setPreviewTexts({ ...previewTexts, descSplit: e.target.textContent })}
+                                    className="sim-text text-[10px] sm:text-xs mb-6 max-w-[180px] outline-none hover:bg-black/5 focus:bg-black/5 focus:ring-1 focus:ring-brand-primary/30 rounded px-1 transition-all cursor-text">
+                                    {previewTexts.descSplit}
+                                </p>
+                                <button 
+                                    style={getBtnStyle()}
+                                    className={getBtnClass("px-5 py-2.5 sm:px-6 sm:py-3 text-[10px] sm:text-xs font-bold uppercase tracking-wider self-start")}
+                                >
+                                    <span 
+                                        contentEditable
+                                        suppressContentEditableWarning
+                                        onBlur={(e) => setPreviewTexts({ ...previewTexts, btnSplit: e.target.textContent })}
+                                        className="outline-none"
+                                    >
+                                        {previewTexts.btnSplit}
+                                    </span>
+                                </button>
                             </div>
                             <div className="w-1/2 h-full relative overflow-hidden flex-shrink-0">
                                 <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80"
@@ -511,18 +728,37 @@ export default function Laboratorio() {
                         </div>
 
                         {/* Variante 4: Imersivo */}
-                        {/* A animação (sim-anim-target) vai para o H3 */}
                         <div id="sim-hero-imersivo"
-                            className="absolute inset-0 w-full h-full flex flex-col items-center justify-center text-center p-8 bg-imersivo-mockup hidden relative">
-                            <div className="absolute inset-0 bg-black/60 z-0"></div> {/* Overlay escuro obrigatório */}
+                            className={`absolute inset-0 w-full h-full flex flex-col items-center justify-center text-center p-8 bg-imersivo-mockup relative ${simState.hero === "imersivo" ? "" : "hidden"}`}>
+                            <div className="absolute inset-0 bg-black/60 z-0"></div>
                             <div className="relative z-10 w-full px-4">
                                 <h3
-                                    className={`text-white sim-anim-target text-3xl sm:text-4xl font-extrabold mb-4 leading-tight ${getAnimClass()}`}>
-                                    Imersão<br /><span id="sim-title-span-imersivo" style={{color: colors.primaria}}>Total.</span></h3>
-                                <p className="text-gray-300 text-sm mb-8 max-w-xs mx-auto">A imagem toma conta de todo o
-                                    ecrã, gerando grande impacto visual.</p>
-                                <button
-                                    className={getBtnClass("px-8 py-3.5 text-sm font-bold uppercase tracking-wider")}>Aceder</button>
+                                    contentEditable
+                                    suppressContentEditableWarning
+                                    onBlur={(e) => setPreviewTexts({ ...previewTexts, titleImersivo: e.target.textContent })}
+                                    className={`text-white sim-anim-target text-2xl sm:text-3xl font-extrabold mb-4 leading-tight outline-none hover:bg-white/10 focus:bg-white/10 focus:ring-1 focus:ring-white/30 rounded px-1 transition-all cursor-text ${getAnimClass()}`}>
+                                    {previewTexts.titleImersivo}
+                                </h3>
+                                <p 
+                                    contentEditable
+                                    suppressContentEditableWarning
+                                    onBlur={(e) => setPreviewTexts({ ...previewTexts, descImersivo: e.target.textContent })}
+                                    className="text-gray-300 text-xs sm:text-sm mb-8 max-w-xs mx-auto outline-none hover:bg-white/10 focus:bg-white/10 focus:ring-1 focus:ring-white/30 rounded px-1 transition-all cursor-text">
+                                    {previewTexts.descImersivo}
+                                </p>
+                                <button 
+                                    style={getBtnStyle()}
+                                    className={getBtnClass("px-8 py-3.5 text-xs font-bold uppercase tracking-wider")}
+                                >
+                                    <span 
+                                        contentEditable
+                                        suppressContentEditableWarning
+                                        onBlur={(e) => setPreviewTexts({ ...previewTexts, btnImersivo: e.target.textContent })}
+                                        className="outline-none"
+                                    >
+                                        {previewTexts.btnImersivo}
+                                    </span>
+                                </button>
                             </div>
                         </div>
 

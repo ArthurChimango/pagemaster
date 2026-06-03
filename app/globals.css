@@ -18,10 +18,10 @@
   --shadow-floating: 0 25px 50px -12px rgba(41, 98, 255, 0.25);
 
   --font-sans: var(--font-inter), sans-serif;
-  --font-serif: 'Playfair Display', serif;
-  --font-mono: 'Space Mono', monospace;
-  --font-outfit: 'Outfit', sans-serif;
-  --font-bebas: 'Bebas Neue', cursive;
+  --font-serif: var(--font-playfair), serif;
+  --font-mono: var(--font-space-mono), monospace;
+  --font-outfit: var(--font-outfit), sans-serif;
+  --font-bebas: var(--font-bebas), cursive;
 }
 
 body {
@@ -229,3 +229,19 @@ input[type="color"] {
   background-size: cover;
   background-position: center;
 }
+
+@keyframes card-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-card-in {
+  animation: card-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+

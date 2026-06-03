@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display, Outfit, Bebas_Neue, Space_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -6,6 +6,29 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
+
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+});
+
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+});
+
+const bebas = Bebas_Neue({
+  weight: "400",
+  variable: "--font-bebas",
+  subsets: ["latin"],
+});
+
+const spaceMono = Space_Mono({
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
+  subsets: ["latin"],
+});
+
 
 export const metadata = {
   title: "PageMaster | Criação de Sites, Sistemas Web e Landing Pages em Uberlândia",
@@ -44,7 +67,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-PT" className={`${inter.variable} h-full antialiased`}>
+    <html lang="pt-PT" className={`${inter.variable} ${playfair.variable} ${outfit.variable} ${bebas.variable} ${spaceMono.variable} h-full antialiased`}>
       <head>
         {/* Google Tag Manager */}
         <Script id="gtm" strategy="afterInteractive">

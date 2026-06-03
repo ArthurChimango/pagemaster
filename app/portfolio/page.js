@@ -3,8 +3,145 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
+const portfolioItems = [
+  {
+    id: 1,
+    title: "Clínica de Fisioterapia",
+    category: "saude",
+    categoryLabel: "Saúde & Reabilitação",
+    badge: "Premium",
+    image: "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?auto=format&fit=crop&w=800&q=80",
+    link: "templates/Fisioped.html"
+  },
+  {
+    id: 2,
+    title: "Gestão Patrimonial",
+    category: "b2b",
+    categoryLabel: "Finanças & B2B",
+    badge: "Premium",
+    image: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80",
+    link: "templates/Investimento.html"
+  },
+  {
+    id: 3,
+    title: "Escritório de Advocacia",
+    category: "b2b",
+    categoryLabel: "Jurídico",
+    badge: "",
+    image: "https://cdn.dev.portal.estacio.br/tmpd15m2kum_c0d32e323e.webp",
+    link: "templates/Direito.html"
+  },
+  {
+    id: 4,
+    title: "Clínica Odontológica",
+    category: "saude",
+    categoryLabel: "Saúde Dentária",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80",
+    link: "templates/Dentistas.html"
+  },
+  {
+    id: 5,
+    title: "Estética Avançada",
+    category: "saude",
+    categoryLabel: "Beleza & Estética",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    link: "templates/Estetica.html"
+  },
+  {
+    id: 6,
+    title: "Psicologia Clínica",
+    category: "saude",
+    categoryLabel: "Saúde Mental",
+    badge: "",
+    image: "https://universidadisep.com/wp-content/uploads/2022/04/psicologia-psiquiatria.jpg",
+    link: "templates/psicologo.html"
+  },
+  {
+    id: 7,
+    title: "Clínica Veterinária",
+    category: "saude",
+    categoryLabel: "Pet & Vet",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    link: "templates/vet.html"
+  },
+  {
+    id: 8,
+    title: "Página de Agendamento",
+    category: "saude",
+    categoryLabel: "Saúde & Clínicas",
+    badge: "Premium",
+    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80",
+    link: "templates/clinica.html"
+  },
+  {
+    id: 9,
+    title: "Agenda Automática 24h",
+    category: "saude",
+    categoryLabel: "Beleza & Salão",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80",
+    link: "templates/Agendamento.html"
+  },
+  {
+    id: 10,
+    title: "Cardápio Digital",
+    category: "gastronomia",
+    categoryLabel: "Gastronomia",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80",
+    link: "templates/Cardapio.html"
+  },
+  {
+    id: 11,
+    title: "Página de Captura B2B",
+    category: "b2b",
+    categoryLabel: "Serviços B2B",
+    badge: "Pró+",
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80",
+    link: "templates/consultoria.html"
+  },
+  {
+    id: 12,
+    title: "Catálogo Interativo",
+    category: "varejo",
+    categoryLabel: "Lojas & Varejo",
+    badge: "Case Real",
+    image: "https://www.paulomauro.com.br/wp-content/uploads/2023/02/paulomauro-blog-capa-como-economizar-em-moveis-planejados.jpg",
+    link: "templates/catalogo.html"
+  },
+  {
+    id: 13,
+    title: "Clínica Nutricionista",
+    category: "saude",
+    categoryLabel: "Saúde Alimentar",
+    badge: "Premium",
+    image: "https://www.panvel.com/blog/wp-content/uploads/2024/08/iStock-1861008654.jpg",
+    link: "templates/nutricionista.html"
+  }
+];
+
 export default function Portfolio() {
   const [formData, setFormData] = useState({ nome: '', modelo: '', ideia: '' });
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const categories = [
+    { key: "all", label: "Todos" },
+    { key: "saude", label: "Saúde" },
+    { key: "gastronomia", label: "Gastronomia" },
+    { key: "b2b", label: "B2B" },
+    { key: "varejo", label: "Varejo" }
+  ];
+
+  const filteredItems = portfolioItems.filter(item => {
+    const matchesCategory = selectedCategory === "all" || item.category === selectedCategory;
+    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          item.categoryLabel.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -67,349 +204,95 @@ export default function Portfolio() {
     </section>
 
     {/* 3. Galeria Cinematográfica */}
-    <section className="py-32 bg-brand-background">
+    <section className="py-20 bg-brand-background">
         <div className="max-w-[1400px] mx-auto px-6">
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            {/* Filtros e Busca */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-16">
+                {/* Abas de Categorias */}
+                <div className="flex flex-wrap gap-2">
+                    {categories.map((cat) => (
+                        <button
+                            key={cat.key}
+                            type="button"
+                            onClick={() => setSelectedCategory(cat.key)}
+                            className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 border ${
+                                selectedCategory === cat.key
+                                    ? 'bg-brand-primary text-white border-brand-primary shadow-lg shadow-blue-500/20'
+                                    : 'bg-white text-brand-muted border-brand-border hover:bg-gray-50'
+                            }`}
+                        >
+                            {cat.label}
+                        </button>
+                    ))}
+                </div>
 
-                {/* 1. Fisioterapia Pediátrica */}
-                <a href="templates/Fisioped.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <div className="absolute top-6 right-6 z-20 pointer-events-none">
-                        <span
-                            className="bg-brand-primary text-white text-[10px] uppercase font-bold px-4 py-2 rounded-full shadow-md tracking-widest">
-                            Premium
-                        </span>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?auto=format&fit=crop&w=800&q=80"
-                        alt="Fisioterapia" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Saúde &
-                            Reabilitação</p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Clínica de Fisioterapia</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                {/* 2. Investimento */}
-                <a href="templates/Investimento.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <div className="absolute top-6 right-6 z-20 pointer-events-none">
-                        <span
-                            className="bg-brand-primary text-white text-[10px] uppercase font-bold px-4 py-2 rounded-full shadow-md tracking-widest">
-                            Premium
-                        </span>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80"
-                        alt="Investimentos" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Finanças &
-                            B2B</p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Gestão Patrimonial</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                {/* 3. Advogado */}
-                <a href="templates/Direito.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <div className="absolute top-6 right-6 z-20 pointer-events-none">
-
-                    </div>
-                    <img src="https://cdn.dev.portal.estacio.br/tmpd15m2kum_c0d32e323e.webp" alt="Advocacia"
-                        className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Jurídico</p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Escritório de Advocacia</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                {/* 4. Odontologia */}
-                <a href="templates/Dentistas.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80"
-                        alt="Odontologia" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Saúde
-                            Dentária</p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Clínica Odontológica</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                {/* 5. Estética */}
-                <a href="templates/Estetica.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                        alt="Estética" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Beleza &
-                            Estética</p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Estética Avançada</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                {/* 6. Psicologia */}
-                <a href="templates/psicologo.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <img src="https://universidadisep.com/wp-content/uploads/2022/04/psicologia-psiquiatria.jpg"
-                        alt="Psicologia" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Saúde Mental
-                        </p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Psicologia Clínica</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                {/* 7. Veterinária */}
-                <a href="templates/vet.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <img src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                        alt="Veterinária" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Pet & Vet
-                        </p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Clínica Veterinária</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                {/* 8. Clínica Médica Padrão */}
-                <a href="templates/clinica.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <div className="absolute top-6 right-6 z-20 pointer-events-none">
-                        <span
-                            className="bg-brand-primary text-white text-[10px] uppercase font-bold px-4 py-2 rounded-full shadow-md tracking-widest">
-                            Premium
-                        </span>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80"
-                        alt="Clínica Médica" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Saúde &
-                            Clínicas</p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Página de Agendamento</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                {/* 9. Agendamento Salão */}
-                <a href="templates/Agendamento.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80"
-                        alt="Estética e Salão" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Beleza &
-                            Salão</p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Agenda Automática 24h</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                {/* 10. Cardápio Digital */}
-                <a href="templates/Cardapio.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80"
-                        alt="Delivery" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Gastronomia
-                        </p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Cardápio Digital</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                {/* 11. Consultoria */}
-                <a href="templates/consultoria.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <div className="absolute top-6 right-6 z-20 pointer-events-none">
-                        <span
-                            className="bg-brand-secondary text-white text-[10px] uppercase font-bold px-4 py-2 rounded-full shadow-md tracking-widest border border-gray-600">
-                            Pró+
-                        </span>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80"
-                        alt="Consultoria" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Serviços B2B
-                        </p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Página de Captura B2B</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                {/* 12. Catálogo */}
-                <a href="templates/catalogo.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <div className="absolute top-6 right-6 z-20 pointer-events-none">
-                        <span
-                            className="bg-brand-secondary text-white text-[10px] uppercase font-bold px-4 py-2 rounded-full shadow-md tracking-widest border border-gray-600">
-                            Case Real
-                        </span>
-                    </div>
-                    <img src="https://www.paulomauro.com.br/wp-content/uploads/2023/02/paulomauro-blog-capa-como-economizar-em-moveis-planejados.jpg"
-                        alt="Varejo" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Lojas &
-                            Varejo</p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Catálogo Interativo</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
-                {/* 13. Nutricionista */}
-                <a href="templates/nutricionista.html" target="_blank"
-                    className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all">
-                    <div className="absolute top-6 right-6 z-20 pointer-events-none">
-                        <span
-                            className="bg-brand-primary text-white text-[10px] uppercase font-bold px-4 py-2 rounded-full shadow-md tracking-widest">
-                            Premium
-                        </span>
-                    </div>
-                    <img src="https://www.panvel.com/blog/wp-content/uploads/2024/08/iStock-1861008654.jpg"
-                        alt="Nutrição" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity">
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Saúde
-                            Alimentar</p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">Clínica Nutricionista</h3>
-                        <div
-                            className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            Testar na Prática <svg className="w-4 h-4" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-
+                {/* Input de Busca */}
+                <div className="relative w-full md:max-w-xs">
+                    <input
+                        type="text"
+                        placeholder="Buscar modelo..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full bg-white border border-brand-border rounded-full py-3 pl-12 pr-6 text-sm focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-secondary font-medium shadow-sm"
+                    />
+                    <svg className="w-5 h-5 text-brand-muted absolute left-4 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
             </div>
+
+            {/* Lista de Modelos */}
+            {filteredItems.length === 0 ? (
+                <div className="text-center py-20 bg-white border border-brand-border rounded-[2rem] shadow-soft">
+                    <svg className="w-16 h-16 text-brand-muted mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 className="text-xl font-bold text-brand-secondary mb-2">Nenhum modelo encontrado</h3>
+                    <p className="text-sm text-brand-muted">Tente buscar por termos mais simples ou mude de categoria.</p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+                    {filteredItems.map((item, index) => (
+                        <a 
+                            key={item.id}
+                            href={item.link} 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ animationDelay: `${index * 50}ms` }}
+                            className="group block relative overflow-hidden rounded-[2rem] aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 hover:shadow-floating shadow-soft transition-all opacity-0 animate-card-in"
+                        >
+                            {item.badge && (
+                                <div className="absolute top-6 right-6 z-20 pointer-events-none">
+                                    <span className="bg-brand-primary text-white text-[10px] uppercase font-bold px-4 py-2 rounded-full shadow-md tracking-widest">
+                                        {item.badge}
+                                    </span>
+                                </div>
+                            )}
+                            <img 
+                                src={item.image}
+                                alt={item.title} 
+                                className="w-full h-full object-cover img-reveal absolute inset-0" 
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity" />
+                            <div className="absolute bottom-0 left-0 p-8 w-full z-10">
+                                <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">
+                                    {item.categoryLabel}
+                                </p>
+                                <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2">
+                                    {item.title}
+                                </h3>
+                                <div className="text-white text-sm font-bold flex items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                                    Testar na Prática 
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+                    ))}
+                </div>
+            )}
         </div>
     </section>
 
