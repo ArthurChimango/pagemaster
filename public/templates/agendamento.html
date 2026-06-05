@@ -940,7 +940,7 @@
                     <div className="w-full max-w-5xl bg-white md:rounded-[36px] md:shadow-2xl overflow-hidden flex flex-col md:flex-row h-full md:h-[75vh] md:max-h-[680px] border border-gray-150/10 animate-fade-in relative z-10">
                         
                         {/* Left Specialist Banner Pane (Banner alignment: object-top avoids cutting heads) */}
-                        <div className="w-full md:w-2/5 h-40 md:h-full relative flex-shrink-0">
+                        <div className="w-full md:w-2/5 h-64 md:h-full relative flex-shrink-0">
                             <img
                                 src={profImage}
                                 className="w-full h-full object-cover object-top"
@@ -1529,9 +1529,9 @@
                         </div>
 
                         {/* Floating bottom capsule navbar visible on both Landing and Services steps, floating fixed at the bottom */}
-                        {(page === 'home' || (page === 'booking' && step === 1)) && (
+                        {(page === 'booking' && step === 1) && (
                             <BottomNavigation 
-                                activeTab={page === 'home' ? 'home' : 'services'} 
+                                activeTab="services" 
                                 onTabSelect={(tab) => {
                                     if (tab === 'home') {
                                         setPage('home');
