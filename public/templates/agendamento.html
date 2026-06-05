@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <script>
+        (function() {
+            function displayError(msg, stack) {
+                var errDiv = document.getElementById('debug-error-panel');
+                if (!errDiv) {
+                    errDiv = document.createElement('div');
+                    errDiv.id = 'debug-error-panel';
+                    errDiv.style.position = 'fixed';
+                    errDiv.style.top = '0';
+                    errDiv.style.left = '0';
+                    errDiv.style.width = '100%';
+                    errDiv.style.height = '100%';
+                    errDiv.style.backgroundColor = '#1E1A17';
+                    errDiv.style.color = '#FF5E36';
+                    errDiv.style.padding = '20px';
+                    errDiv.style.zIndex = '999999';
+                    errDiv.style.fontFamily = 'monospace';
+                    errDiv.style.fontSize = '12px';
+                    errDiv.style.overflow = 'auto';
+                    errDiv.style.textTransform = 'none';
+                    if (document.body) {
+                        document.body.appendChild(errDiv);
+                    } else {
+                        window.addEventListener('DOMContentLoaded', function() {
+                            document.body.appendChild(errDiv);
+                        });
+                    }
+                }
+                errDiv.innerHTML = '<h1 style="font-size: 20px; margin-bottom: 10px;">DIAGNOSTICO DE ERRO (MAISON L\'ÉCLAT)</h1>' +
+                    '<p><b>MENSAGEM:</b> ' + msg + '</p>' +
+                    (stack ? '<pre style="margin-top: 15px; border-top: 1px solid #FF5E36; pt-15px;"><b>STACK:</b> ' + stack + '</pre>' : '');
+            }
+
+            window.addEventListener('error', function(e) {
+                displayError(e.message, e.error ? e.error.stack : 'ARQUIVO: ' + e.filename + ' LINHA: ' + e.lineno);
+            });
+
+            var oldConsoleError = console.error;
+            console.error = function() {
+                var args = Array.prototype.slice.call(arguments);
+                oldConsoleError.apply(console, args);
+                var msg = args.map(function(arg) {
+                    if (arg instanceof Error) return arg.message + '\n' + arg.stack;
+                    if (typeof arg === 'object') {
+                        try { return JSON.stringify(arg); } catch(e) { return String(arg); }
+                    }
+                    return String(arg);
+                }).join(' ');
+                displayError(msg);
+            };
+        })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MAISON L'ÉCLAT - AGENDAMENTO PREMIUM</title>
+    <meta name="description" content="AGENDE SEU MOMENTO DE BELEZA E BEM-ESTAR NA MAISON L'ÉCLAT. ESTÉTICA DE LUXO COM ATENDIMENTO EXCLUSIVO.">
+    <meta name="theme-color" content="#1E1A17">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="MAISON L'ÉCLAT - AGENDAMENTO PREMIUM">
+    <meta property="og:description" content="AGENDE SEU MOMENTO DE BELEZA E BEM-ESTAR NA MAISON L'ÉCLAT. ESTÉTICA AVANÇADA DE LUXO COM OS MELHORES PROFISSIONAIS.">
+    <meta property="og:type" content="website">
+
+    <!-- Google Fonts - Montserrat (Modern Sans-Serif - Thicker/Fatter & All Caps style) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        orangeAccent: {
+                            DEFAULT: '#EAA499', // Creamy blush pink
+                            hover: '#D28E83',
+                            light: '#FAF0ED',
+                        },
+                        luxuryDark: {
+                            DEFAULT: '#1E1A17',
+                            card: '#2A2420',
+                        },
+                        luxuryLight: {
+                            DEFAULT: '#F9F8F6',
+                            card: '#FFFFFF',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- FIREBASE COMPAT SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: transparent;
+            color: #1E1A17;
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .bg-luxury-cover {
+            background-image: url('https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=1600&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            filter: blur(24px);
+            transform: scale(1.15);
+            opacity: 0.45;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -10;
+        }
+
+        .bg-luxury-overlay {
+            background: radial-gradient(circle at top, rgba(250, 248, 246, 0.75) 0%, rgba(30, 26, 23, 0.3) 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -9;
+            pointer-events: none;
+        }
+
+        /* Hide scrollbars */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.45s ease forwards;
+        }
+
+        @keyframes slideLeft {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideRight {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .animate-slide-left {
+            animation: slideLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .animate-slide-right {
+            animation: slideRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Success Icons */
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-icon {
+            animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Confetti */
+        @keyframes confettiFloat {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-160px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .confetti-dot {
+            position: absolute;
+            bottom: -10px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: confettiFloat linear forwards;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-orangeAccent selection:text-white uppercase tracking-wider">
+    <div class="bg-luxury-cover"></div>
+    <div class="bg-luxury-overlay"></div>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // --- FIREBASE CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBe7BZFKAFXxqElC_GgI5O-4m8QuBRJ-2Q",
+            authDomain: "barbearia-d4d70.firebaseapp.com",
+            projectId: "barbearia-d4d70",
+            storageBucket: "barbearia-d4d70.firebasestorage.app",
+            messagingSenderId: "597532545756",
+            appId: "1:597532545756:web:437ff38c1d734dd2cfda19"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        const { useState, useEffect, useMemo, useRef, useCallback } = React;
+
+        // --- UTILS ---
+        const formatCurrency = (val) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+        
+        const formatDateDisplay = (dateString) => {
+            if (!dateString) return '';
+            const [year, month, day] = dateString.split('-');
+            return `${day}/${month}`;
+        };
+
+        const normalizeTime = (timeInput) => {
+            if (!timeInput) return "";
+            const str = String(timeInput);
+            const match = str.match(/(\d{1,2}):(\d{2})/);
+            if (match) return `${match[1].padStart(2, '0')}:${match[2]}`;
+            return str;
+        };
+
+        const applyPhoneMask = (value) => {
+            let digits = value.replace(/\D/g, '');
+            if (digits.length > 11) digits = digits.substring(0, 11);
+            if (digits.length > 7) {
+                return `(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${digits.substring(7)}`;
+            } else if (digits.length > 2) {
+                return `(${digits.substring(0, 2)}) ${digits.substring(2)}`;
+            } else if (digits.length > 0) {
+                return `(${digits}`;
+            }
+            return '';
+        };
+
+        const formatFullDate = (dateString) => {
+            if (!dateString) return '';
+            const [year, month, day] = dateString.split('-').map(Number);
+            const date = new Date(year, month - 1, day);
+            const weekDays = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
+            const months = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
+            return `${weekDays[date.getDay()]} - ${day} DE ${months[date.getMonth()]}`;
+        };
+
+        const buildGoogleCalendarUrl = (formData) => {
+            const [year, month, day] = formData.date.split('-');
+            const [hours, minutes] = formData.time.split(':');
+            const startDate = new Date(year, month - 1, day, hours, minutes);
+            const endDate = new Date(startDate.getTime() + (formData.service?.duration || 30) * 60000);
+
+            const fmt = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+            const profName = typeof formData.professional === 'string' ? formData.professional : formData.professional?.name || '';
+            const title = encodeURIComponent(`${formData.service?.name} - MAISON L'ÉCLAT`);
+            const details = encodeURIComponent(`SERVIÇO: ${formData.service?.name}\nPROFISSIONAL: ${profName}\nPREÇO: ${formatCurrency(formData.service?.price)}`);
+            const location = encodeURIComponent('AV. DOS ANAIS, 1000 - SETOR SUL, UBERLÂNDIA - MG');
+            const dates = `${fmt(startDate)}/${fmt(endDate)}`;
+
+            return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}`;
+        };
+
+        // --- DYNAMIC IMAGES MAPPING ---
+        const getServiceImage = (service) => {
+            if (service.image) return service.image;
+            if (service.foto) return service.foto;
+            const name = String(service.name || '').toLowerCase();
+            const cat = String(service.category || service.categoria || '').toLowerCase();
+            
+            if (name.includes('pele') || name.includes('facial') || cat.includes('facial') || name.includes('peeling') || name.includes('limpeza')) {
+                return 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&q=80&w=400';
+            }
+            if (name.includes('massagem') || name.includes('drenagem') || cat.includes('corporal') || name.includes('corporal') || name.includes('massoterapia')) {
+                return 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=400';
+            }
+            if (name.includes('botox') || name.includes('preenchimento') || name.includes('labial') || cat.includes('injet') || name.includes('injet') || name.includes('toxina')) {
+                return 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=400';
+            }
+            if (name.includes('cilios') || name.includes('sobrancelha') || name.includes('design') || name.includes('micro') || name.includes('extensao')) {
+                return 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=400';
+            }
+            return 'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?auto=format&fit=crop&q=80&w=400';
+        };
+
+        const getStaffImage = (member) => {
+            if (!member) return 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400';
+            if (member.image) return member.image;
+            if (member.foto) return member.foto;
+            const name = String(member.name || '').toLowerCase();
+            if (name.includes('helena') || name.includes('ribeiro')) {
+                return 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400';
+            }
+            if (name.includes('beatriz') || name.includes('silva') || name.includes('bia')) {
+                return 'https://images.unsplash.com/photo-1594744803329-e58b31de215f?auto=format&fit=crop&q=80&w=400';
+            }
+            if (name.includes('lucas') || name.includes('santos') || name.includes('dr.')) {
+                return 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=400';
+            }
+            return 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400';
+        };
+
+        // --- ICONS ---
+        const Icons = {
+            ChevronLeft: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>,
+            Clock: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>,
+            CheckCircle: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>,
+            Calendar: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>,
+            Instagram: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>,
+            Phone: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72(12.84) 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>,
+            MapPin: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>,
+            Check: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>,
+            User: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+            Search: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>,
+            Bell: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>,
+            Grid: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>,
+            Info: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>,
+            Home: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+        };
+
+        // --- SKELETON LOADING ---
+        const SkeletonLoading = () => (
+            <div className="h-[100dvh] w-full flex flex-col justify-center items-center bg-[#1E1A17] text-white uppercase tracking-widest font-black">
+                <div className="w-12 h-12 border-4 border-orangeAccent/20 border-t-orangeAccent rounded-full animate-spin mb-4" />
+                <span className="text-[10px] tracking-[0.35em] font-black text-orangeAccent">MAISON L'ÉCLAT</span>
+            </div>
+        );
+
+        // --- CONFETTI ANIMATION ---
+        const Confetti = () => {
+            const dots = useMemo(() => {
+                return Array.from({ length: 30 }).map((_, i) => {
+                    const left = Math.random() * 100;
+                    const delay = Math.random() * 3;
+                    const duration = 2 + Math.random() * 2;
+                    const size = 6 + Math.random() * 6;
+                    const color = ['#EAA499', '#D28E83', '#FAF0ED', '#FFFFFF'][Math.floor(Math.random() * 4)];
+                    return { left, delay, duration, size, color };
+                });
+            }, []);
+
+            return (
+                <div className="confetti-container">
+                    {dots.map((dot, i) => (
+                        <div
+                            key={i}
+                            className="confetti-dot"
+                            style={{
+                                left: `${dot.left}%`,
+                                animationDelay: `${dot.delay}s`,
+                                animationDuration: `${dot.duration}s`,
+                                width: `${dot.size}px`,
+                                height: `${dot.size}px`,
+                                backgroundColor: dot.color,
+                            }}
+                        />
+                    ))}
+                </div>
+            );
+        };
+
+        // --- BOTTOM NAVIGATION BAR (Suspended Floating Menu) ---
+        const BottomNavigation = ({ activeTab, onTabSelect }) => {
+            return (
+                <div className="fixed bottom-5 left-1/2 -translate-x-1/2 w-[90%] md:max-w-md z-50">
+                    <div className="bg-luxuryDark/95 backdrop-blur-lg border border-white/10 rounded-full px-6 py-4 flex items-center justify-between text-white shadow-2xl">
+                        <button
+                            onClick={() => onTabSelect('home')}
+                            className={`flex flex-col items-center gap-1 transition-all duration-300 ${activeTab === 'home' ? 'text-orangeAccent scale-110' : 'text-white/50 hover:text-white'}`}
+                        >
+                            <Icons.Home className="w-5 h-5" />
+                            <span className="text-[8px] uppercase tracking-widest font-black">INÍCIO</span>
+                        </button>
+                        <button
+                            onClick={() => onTabSelect('services')}
+                            className={`flex flex-col items-center gap-1 transition-all duration-300 ${activeTab === 'services' ? 'text-orangeAccent scale-110' : 'text-white/50 hover:text-white'}`}
+                        >
+                            <Icons.Grid className="w-5 h-5" />
+                            <span className="text-[8px] uppercase tracking-widest font-black">SERVIÇOS</span>
+                        </button>
+                        <button
+                            onClick={() => onTabSelect('contact')}
+                            className={`flex flex-col items-center gap-1 transition-all duration-300 ${activeTab === 'contact' ? 'text-orangeAccent scale-110' : 'text-white/50 hover:text-white'}`}
+                        >
+                            <Icons.Info className="w-5 h-5" />
+                            <span className="text-[8px] uppercase tracking-widest font-black">CONTATO</span>
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- CONTACT MODAL SHEET ---
+        const ContactSheet = ({ isOpen, onClose }) => {
+            if (!isOpen) return null;
+            return (
+                <div className="fixed inset-0 z-[100] bg-luxuryDark/70 backdrop-blur-sm animate-fade-in flex items-end justify-center">
+                    <div className="w-full max-w-md bg-white rounded-t-[32px] md:rounded-[32px] md:mb-10 p-6 pb-10 shadow-2xl animate-slide-up space-y-6 max-h-[90%] overflow-y-auto">
+                        <div className="flex justify-between items-center border-b border-gray-150 pb-4">
+                            <div>
+                                <h3 className="text-lg font-black text-luxuryDark tracking-wider">MAISON L'ÉCLAT</h3>
+                                <p className="text-[9px] text-orangeAccent tracking-[0.25em] font-black mt-1">CONTATO & LOCALIZAÇÃO</p>
+                            </div>
+                            <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-150 flex items-center justify-center font-black text-gray-500 hover:bg-gray-200">
+                                ✕
+                            </button>
+                        </div>
+
+                        <div className="space-y-5">
+                            <div className="flex gap-4 items-start">
+                                <div className="w-10 h-10 rounded-full bg-orangeAccent/10 flex items-center justify-center flex-shrink-0">
+                                    <Icons.MapPin className="text-orangeAccent w-5 h-5" />
+                                </div>
+                                <div>
+                                    <span className="text-[9px] text-gray-400 font-black uppercase tracking-wider block">ENDEREÇO</span>
+                                    <p className="text-xs text-luxuryDark font-extrabold mt-1 leading-normal">AV. DOS ANAIS, 1000 — SETOR SUL, UBERLÂNDIA - MG</p>
+                                    <a href="https://maps.google.com/?q=Uberlândia,MG" target="_blank" rel="noopener noreferrer" className="text-[10px] font-black text-orangeAccent hover:underline inline-block mt-1 tracking-widest">VER NO GOOGLE MAPS →</a>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4 items-start">
+                                <div className="w-10 h-10 rounded-full bg-orangeAccent/10 flex items-center justify-center flex-shrink-0">
+                                    <Icons.Phone className="text-orangeAccent w-5 h-5" />
+                                </div>
+                                <div>
+                                    <span className="text-[9px] text-gray-400 font-black uppercase tracking-wider block">FALE CONOSCO</span>
+                                    <a href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer" className="text-xs text-luxuryDark font-extrabold hover:text-orangeAccent mt-1 block tracking-wider">+55 (34) 99999-9999</a>
+                                    <p className="text-[9px] text-gray-400 font-bold mt-1">ATENDIMENTO DAS 09:00 ÀS 19:00</p>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4 items-start">
+                                <div className="w-10 h-10 rounded-full bg-orangeAccent/10 flex items-center justify-center flex-shrink-0">
+                                    <Icons.Instagram className="text-orangeAccent w-5 h-5" />
+                                </div>
+                                <div>
+                                    <span className="text-[9px] text-gray-400 font-black uppercase tracking-wider block">REDE SOCIAL</span>
+                                    <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" className="text-xs text-luxuryDark font-extrabold hover:text-orangeAccent mt-1 block tracking-wider">@MAISON.LECLAT</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a
+                            href="https://wa.me/5500000000000"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full bg-orangeAccent hover:bg-orangeAccent-hover text-white font-black text-xs uppercase tracking-[0.2em] py-4 rounded-full transition-all duration-300 flex justify-center items-center gap-2 shadow-lg shadow-orangeAccent/20 h-12"
+                        >
+                            <Icons.Phone className="w-4 h-4" />
+                            CHAMAR NO WHATSAPP
+                        </a>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- SWIPE TO UNLOCK / DRAG TO AGENDAR COMPONENT ---
+        const SwipeButton = ({ onSwipeSuccess }) => {
+            const [dragX, setDragX] = useState(0);
+            const [isDragging, setIsDragging] = useState(false);
+            const trackRef = useRef(null);
+            const startXRef = useRef(0);
+
+            const handleStart = (clientX) => {
+                setIsDragging(true);
+                startXRef.current = clientX - dragX;
+            };
+
+            const handleMove = (clientX) => {
+                if (!isDragging || !trackRef.current) return;
+                const trackWidth = trackRef.current.offsetWidth;
+                const thumbWidth = 48; // W-12 is 48px
+                const padding = 12; // left-1.5 and right-1.5 total padding
+                const maxDrag = trackWidth - thumbWidth - padding;
+                let newX = clientX - startXRef.current;
+                if (newX < 0) newX = 0;
+                if (newX > maxDrag) newX = maxDrag;
+                setDragX(newX);
+            };
+
+            const handleEnd = () => {
+                if (!isDragging || !trackRef.current) return;
+                setIsDragging(false);
+                const trackWidth = trackRef.current.offsetWidth;
+                const thumbWidth = 48;
+                const padding = 12;
+                const maxDrag = trackWidth - thumbWidth - padding;
+                if (dragX >= maxDrag * 0.85) {
+                    setDragX(maxDrag);
+                    onSwipeSuccess();
+                } else {
+                    setDragX(0);
+                }
+            };
+
+            const onMouseDown = (e) => handleStart(e.clientX);
+            const onMouseMove = (e) => handleMove(e.clientX);
+            const onMouseUp = () => handleEnd();
+            const onMouseLeave = () => { if (isDragging) handleEnd(); };
+
+            const onTouchStart = (e) => handleStart(e.touches[0].clientX);
+            const onTouchMove = (e) => handleMove(e.touches[0].clientX);
+            const onTouchEnd = () => handleEnd();
+
+            return (
+                <div 
+                    ref={trackRef}
+                    className="w-full max-w-xs h-14 bg-luxuryDark-card/90 rounded-full relative overflow-hidden border border-white/10 mx-auto select-none flex items-center"
+                    onMouseMove={onMouseMove}
+                    onMouseUp={onMouseUp}
+                    onMouseLeave={onMouseLeave}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={onTouchEnd}
+                >
+                    <div className="absolute inset-0 flex items-center justify-center text-white/40 font-black text-[9px] tracking-[0.2em] pointer-events-none uppercase">
+                        ARRASTE PARA INICIAR &gt;&gt;&gt;
+                    </div>
+                    <div
+                        onMouseDown={onMouseDown}
+                        onTouchStart={onTouchStart}
+                        className="w-11 h-11 bg-orangeAccent rounded-full absolute top-1.5 flex items-center justify-center text-white cursor-grab active:cursor-grabbing shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
+                        style={{ 
+                            left: `${dragX + 6}px`, 
+                            transition: isDragging ? 'none' : 'left 0.25s cubic-bezier(0.16, 1, 0.3, 1)' 
+                        }}
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" className="w-4 h-4"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- SCREEN 1: ONBOARDING ---
+        const HomeLanding = ({ onBook }) => {
+            return (
+                <div 
+                    className="absolute inset-0 w-full h-full bg-cover bg-center flex flex-col justify-end px-6 pb-24 pt-8 animate-fade-in"
+                    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1600&auto=format&fit=crop')" }}
+                >
+                    {/* Shadow overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-luxuryDark via-luxuryDark/40 to-transparent" />
+
+                    {/* Content */}
+                    <div className="relative z-10 space-y-6 max-w-2xl mx-auto w-full text-center md:text-left mb-6">
+                        <span className="text-[10px] text-orangeAccent tracking-[0.35em] font-black uppercase block">
+                            MAISON L'ÉCLAT
+                        </span>
+                        
+                        <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white tracking-widest leading-tight uppercase">
+                            DESCUBRA A BELEZA<br />
+                            EM VOCÊ HOJE
+                        </h1>
+                        
+                        <div className="h-[2px] w-12 bg-orangeAccent/50 md:mx-0 mx-auto" />
+                        
+                        <p className="text-[10px] md:text-xs text-white/60 max-w-lg leading-relaxed font-bold tracking-widest uppercase">
+                            DESCUBRA A BELEZA EM VOCÊ E SINTA A DIFERENÇA COM UM ATENDIMENTO EXCLUSIVO E PERSONALIZADO.
+                        </p>
+
+                        <div className="pt-4 flex justify-center md:justify-start">
+                            <SwipeButton onSwipeSuccess={onBook} />
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- SCREEN 2: SERVICES & PROCEDURES ---
+        const StepServices = ({ services, formData, setFormData, nextStep }) => {
+            const [search, setSearch] = useState('');
+            const [selectedCategory, setSelectedCategory] = useState('Todos');
+
+            const categories = useMemo(() => {
+                const list = ['Todos'];
+                services.forEach(s => {
+                    const cat = s.category || s.categoria;
+                    if (cat && !list.includes(cat)) {
+                        list.push(cat);
+                    }
+                });
+                return list;
+            }, [services]);
+
+            const filteredServices = useMemo(() => {
+                return services.filter(s => {
+                    const matchesSearch = String(s.name || '').toLowerCase().includes(search.toLowerCase()) || 
+                                          String(s.description || '').toLowerCase().includes(search.toLowerCase());
+                    const matchesCat = selectedCategory === 'Todos' || (s.category || s.categoria) === selectedCategory;
+                    return matchesSearch && matchesCat;
+                });
+            }, [services, search, selectedCategory]);
+
+            return (
+                <div className="w-full max-w-6xl mx-auto px-5 pt-6 pb-32 overflow-y-auto hide-scrollbar flex-1 flex flex-col animate-fade-in">
+                    {/* Header */}
+                    <div className="flex justify-between items-center mb-6 flex-shrink-0">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full border-2 border-orangeAccent/30 p-0.5 flex items-center justify-center shadow-sm">
+                                <img
+                                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150"
+                                    className="w-full h-full object-cover rounded-full"
+                                    alt="Maison"
+                                />
+                            </div>
+                            <div>
+                                <span className="text-[8px] text-gray-400 font-black block uppercase tracking-widest">OLÁ, SEJA BEM-VINDA!</span>
+                                <span className="font-black text-luxuryDark text-sm tracking-wider">MAISON L'ÉCLAT</span>
+                            </div>
+                        </div>
+                        <button className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-luxuryDark/75 shadow-sm border border-gray-100 hover:text-orangeAccent hover:border-orangeAccent/30 active:scale-95 transition-all">
+                            <Icons.Bell className="w-5 h-5" />
+                        </button>
+                    </div>
+
+                    {/* Search Bar */}
+                    <div className="relative mb-5 flex-shrink-0">
+                        <span className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-gray-400">
+                            <Icons.Search className="w-4 h-4" />
+                        </span>
+                        <input
+                            type="text"
+                            placeholder="BUSCAR PROCEDIMENTO..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value.toUpperCase())}
+                            className="w-full bg-white border border-gray-100 rounded-full pl-11 pr-5 py-3.5 text-[9px] text-luxuryDark font-black shadow-sm placeholder-gray-400 focus:outline-none focus:border-orangeAccent/40 transition-colors uppercase tracking-widest"
+                        />
+                    </div>
+
+                    {/* Promo Card */}
+                    <div className="bg-luxuryDark text-white rounded-[24px] p-6 mb-6 relative overflow-hidden shadow-lg border border-white/5 flex-shrink-0 md:flex md:items-center md:justify-between">
+                        <div className="absolute right-0 top-0 w-32 h-32 bg-orangeAccent/20 rounded-full blur-2xl -mr-6 -mt-6"></div>
+                        <div className="relative z-10 md:max-w-xl">
+                            <span className="bg-orangeAccent/15 text-orangeAccent px-3 py-1 rounded-full text-[8px] font-black tracking-widest uppercase mb-2 inline-block">
+                                OFERTA EXCLUSIVA
+                            </span>
+                            <h4 className="font-black text-sm md:text-lg text-white leading-snug tracking-wide uppercase">
+                                GANHE 20% OFF NO PRIMEIRO PROCEDIMENTO
+                            </h4>
+                            <p className="text-[9px] md:text-xs text-white/50 mt-1 font-bold tracking-widest uppercase">
+                                SELECIONE E SINTA O TOQUE DO LUXO EM SUA PELE.
+                            </p>
+                        </div>
+                        <button 
+                            onClick={() => {
+                                const skinCleanse = services.find(s => String(s.name).toLowerCase().includes('limpeza'));
+                                if (skinCleanse) {
+                                    setFormData({ ...formData, service: skinCleanse });
+                                    setTimeout(nextStep, 200);
+                                } else if (services.length > 0) {
+                                    setFormData({ ...formData, service: services[0] });
+                                    setTimeout(nextStep, 200);
+                                }
+                            }}
+                            className="relative z-10 bg-orangeAccent hover:bg-orangeAccent-hover text-white text-[8px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full mt-4 md:mt-0 transition-all duration-300 active:scale-95 shadow-md shadow-orangeAccent/20 h-10 flex items-center justify-center shrink-0"
+                        >
+                            AGENDAR AGORA
+                        </button>
+                    </div>
+
+                    {/* Category Selector (Horizontal Scroll) */}
+                    <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-4 -mx-5 px-5 flex-shrink-0">
+                        {categories.map((cat) => (
+                            <button
+                                key={cat}
+                                onClick={() => setSelectedCategory(cat)}
+                                className={`px-5 py-2.5 rounded-full text-[9px] uppercase tracking-widest font-black transition-all duration-300 shrink-0
+                                    ${selectedCategory === cat 
+                                        ? 'bg-orangeAccent text-white shadow-md shadow-orangeAccent/20 scale-102' 
+                                        : 'bg-white text-luxuryDark/60 border border-gray-100 hover:border-orangeAccent/30'}`}
+                            >
+                                {cat.toUpperCase()}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Grid of Procedures (Responsive Columns) */}
+                    {filteredServices.length > 0 ? (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 flex-1">
+                            {filteredServices.map(service => {
+                                const isSelected = formData.service?.id === service.id;
+                                return (
+                                    <div
+                                        key={service.id}
+                                        onClick={() => { setFormData({ ...formData, service }); setTimeout(nextStep, 200); }}
+                                        className={`bg-white rounded-[22px] p-4 border cursor-pointer hover:shadow-md transition-all duration-300 flex flex-col justify-between relative group
+                                            ${isSelected ? 'border-orangeAccent bg-white shadow-md' : 'border-gray-100 bg-white/70'}`}
+                                    >
+                                        <div>
+                                            <div className="w-full h-32 rounded-[18px] overflow-hidden mb-4 relative">
+                                                <img
+                                                    src={getServiceImage(service)}
+                                                    alt={service.name}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                />
+                                                <span className="absolute top-2 left-2 bg-luxuryDark/75 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-[7px] font-black uppercase tracking-widest">
+                                                    {service.duration} MIN
+                                                </span>
+                                            </div>
+                                            <h5 className="font-black text-xs text-luxuryDark tracking-wider line-clamp-2 uppercase leading-tight min-h-[32px]">
+                                                {service.name}
+                                            </h5>
+                                            <p className="text-[8px] text-gray-400 mt-1 uppercase tracking-widest font-bold">
+                                                {(service.category || service.categoria || 'ESTÉTICA').toUpperCase()}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 flex-shrink-0">
+                                            <span className="text-xs font-black text-orangeAccent tracking-wider">
+                                                {formatCurrency(service.price)}
+                                            </span>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setFormData({ ...formData, service });
+                                                    setTimeout(nextStep, 200);
+                                                }}
+                                                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-sm active:scale-90 font-black text-sm
+                                                    ${isSelected ? 'bg-luxuryDark text-white' : 'bg-orangeAccent text-white hover:bg-orangeAccent-hover'}`}
+                                            >
+                                                {isSelected ? <Icons.Check className="w-4 h-4" /> : <span>+</span>}
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="p-10 text-center text-[10px] text-gray-400 bg-white/50 rounded-2xl border border-dashed border-gray-200 mt-4 font-black tracking-widest">
+                            NENHUM PROCEDIMENTO ENCONTRADO NESTA CATEGORIA.
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // --- SCREEN 2.5: SPECIALIST SELECTION (Tighter layout cards) ---
+        const StepProfessional = ({ staff, formData, setFormData, nextStep, onBack }) => {
+            return (
+                <div className="w-full max-w-3xl mx-auto px-5 pt-6 pb-12 overflow-y-auto hide-scrollbar flex-1 flex flex-col animate-fade-in">
+                    {/* Header */}
+                    <div className="flex items-center gap-4 mb-6 flex-shrink-0">
+                        <button onClick={onBack} className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-luxuryDark border border-gray-100 shadow-sm active:scale-95">
+                            <Icons.ChevronLeft className="w-4 h-4" />
+                        </button>
+                        <div>
+                            <span className="text-[8px] text-gray-400 font-black block uppercase tracking-widest">PASSO 2 DE 3</span>
+                            <h2 className="font-black text-luxuryDark text-base tracking-wider uppercase">ESCOLHA A ESPECIALISTA</h2>
+                        </div>
+                    </div>
+
+                    {/* Compact layout list grid (no flex-1 to prevent stretching cards vertically) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+                        {/* Professional cards */}
+                        {staff.map(member => {
+                            const isSelected = formData.professional?.id === member.id;
+                            return (
+                                <div
+                                    key={member.id}
+                                    onClick={() => { setFormData({ ...formData, professional: member }); setTimeout(nextStep, 200); }}
+                                    className={`p-4 rounded-[16px] border cursor-pointer flex items-center justify-between transition-all duration-300 bg-white hover:shadow-md
+                                        ${isSelected ? 'border-orangeAccent bg-[#FAF0ED]/10 shadow-md scale-[1.01]' : 'border-gray-100 bg-white/70'}`}
+                                >
+                                    <div className="flex items-center gap-3.5 text-left">
+                                        <img
+                                            src={getStaffImage(member)}
+                                            className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                                            alt={member.name}
+                                        />
+                                        <div className="flex flex-col justify-center">
+                                            <h4 className="font-black text-xs text-luxuryDark tracking-wider uppercase leading-tight">{member.name.toUpperCase()}</h4>
+                                            <p className="text-[8px] text-orangeAccent tracking-widest uppercase font-black mt-1">{(member.role || 'ESTETICISTA').toUpperCase()}</p>
+                                            <p className="text-[8px] text-gray-400 mt-1 flex items-center gap-1 font-bold tracking-widest">⭐ 4.9 (148 AVALIAÇÕES)</p>
+                                        </div>
+                                    </div>
+                                    <span className="w-5 h-5 rounded-full border border-gray-200 flex items-center justify-center text-white text-[10px] flex-shrink-0">
+                                        {isSelected && <div className="w-3 h-3 bg-orangeAccent rounded-full" />}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        // --- SCREEN 3: SPECIALIST DETAILS, DATE & TIME (Mockup aligned picker design) ---
+        const StepDateTime = ({ formData, setFormData, onConfirm, onBack, allTimeSlots, busySlots, workingDays }) => {
+            const [activeTab, setActiveTab] = useState('Agenda');
+
+            const profName = typeof formData.professional === 'string' ? formData.professional : formData.professional?.name || 'MAISON L\'ÉCLAT';
+            const profRole = typeof formData.professional === 'object' && formData.professional?.role ? formData.professional.role : 'ESTÉTICA ESPECIALIZADA';
+            const profImage = typeof formData.professional === 'object' ? getStaffImage(formData.professional) : 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=600&auto=format&fit=crop';
+
+            // Load dates
+            const days = useMemo(() => {
+                let list = [];
+                let d = new Date();
+                d.setHours(0, 0, 0, 0);
+                for (let i = 0; i < 45; i++) {
+                    let curr = new Date(d);
+                    curr.setDate(curr.getDate() + i);
+                    if (workingDays && workingDays.includes(curr.getDay())) {
+                        list.push(curr);
+                    }
+                }
+                return list;
+            }, [workingDays]);
+
+            const weekDaysShort = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+            const months = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
+
+            const getMonthYearHeader = (dateStr) => {
+                if (!dateStr) return '';
+                const [year, month, day] = dateStr.split('-').map(Number);
+                return `${months[month - 1]} ${year}`;
+            };
+
+            // Available slots filters
+            const availableSlots = useMemo(() => {
+                let rawSlots = allTimeSlots || [];
+                if (formData.professional && typeof formData.professional === 'object') {
+                    const profHours = formData.professional.availableHours;
+                    if (Array.isArray(profHours) && profHours.length > 0 && profHours[0].trim() !== "") {
+                        rawSlots = profHours;
+                    }
+                }
+                let baseSlots = rawSlots.map(normalizeTime);
+
+                // Filter busy slots
+                baseSlots = baseSlots.filter(slotTime => {
+                    const profCheckName = typeof formData.professional === 'string' ? formData.professional : formData.professional.name;
+                    return !busySlots.some(busy => 
+                        busy.date === formData.date && 
+                        normalizeTime(busy.time) === slotTime && 
+                        busy.professional === profCheckName
+                    );
+                });
+
+                // Filter past times if date is today
+                if (formData.date) {
+                    const today = new Date();
+                    const todayStr = today.toLocaleDateString('en-CA');
+                    if (formData.date === todayStr) {
+                        const nowHours = today.getHours();
+                        const nowMinutes = today.getMinutes();
+                        baseSlots = baseSlots.filter(slotTime => {
+                            const [slotH, slotM] = slotTime.split(':').map(Number);
+                            return slotH > nowHours || (slotH === nowHours && slotM > nowMinutes);
+                        });
+                    }
+                }
+
+                return baseSlots;
+            }, [formData.date, formData.professional, allTimeSlots, busySlots]);
+
+            return (
+                <div className="w-full flex-1 flex items-center justify-center p-0 md:p-6 lg:p-10 h-full overflow-hidden bg-transparent">
+                    <div className="w-full max-w-5xl bg-white md:rounded-[36px] md:shadow-2xl overflow-hidden flex flex-col md:flex-row h-full md:h-[75vh] md:max-h-[680px] border border-gray-150/10 animate-fade-in relative z-10">
+                        
+                        {/* Left Specialist Banner Pane (Banner alignment: object-top avoids cutting heads) */}
+                        <div className="w-full md:w-2/5 h-40 md:h-full relative flex-shrink-0">
+                            <img
+                                src={profImage}
+                                className="w-full h-full object-cover object-top"
+                                alt={profName}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/80 via-black/40 to-black/10" />
+                            
+                            {/* Floating Back Button */}
+                            <button
+                                onClick={onBack}
+                                className="absolute top-4 left-4 w-9 h-9 rounded-full bg-white/85 backdrop-blur-md flex items-center justify-center text-luxuryDark shadow-md active:scale-90"
+                            >
+                                <Icons.ChevronLeft className="w-5 h-5 text-luxuryDark font-black" />
+                            </button>
+
+                            {/* Pinned overlay details */}
+                            <div className="hidden md:block absolute bottom-8 left-6 text-white space-y-2.5">
+                                <span className="bg-orangeAccent/20 text-orangeAccent px-3 py-1 rounded-full text-[8px] font-black tracking-widest uppercase inline-block border border-orangeAccent/30">
+                                    ESPECIALISTA
+                                </span>
+                                <h3 className="text-xl font-black tracking-wide uppercase leading-tight">{profName.toUpperCase()}</h3>
+                                <p className="text-[9px] text-orangeAccent font-black uppercase tracking-widest">{profRole.toUpperCase()}</p>
+                                <span className="text-[10px] font-bold text-white/80 block mt-1">⭐ 4.9 (148 AVALIAÇÕES)</span>
+                            </div>
+                        </div>
+
+                        {/* Right Content Selector Pane */}
+                        <div className="flex-1 flex flex-col justify-between overflow-hidden bg-white -mt-6 md:mt-0 rounded-t-[32px] md:rounded-none relative z-10 shadow-2xl md:shadow-none">
+                            
+                            {/* Scrollable inputs wrapper */}
+                            <div className="flex-1 overflow-y-auto px-5 pt-6 pb-4 hide-scrollbar">
+                                
+                                {/* Mobile-only specialist details */}
+                                <div className="flex justify-between items-start mb-4 md:hidden">
+                                    <div>
+                                        <h3 className="text-base font-black text-luxuryDark tracking-wide leading-tight uppercase">{profName.toUpperCase()}</h3>
+                                        <p className="text-[8px] text-orangeAccent font-black uppercase tracking-widest mt-1">{profRole.toUpperCase()}</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <span className="text-xs font-black text-luxuryDark block">⭐ 4.9</span>
+                                        <span className="text-[8px] text-gray-400 font-bold block uppercase tracking-widest mt-0.5">148 AVALIAÇÕES</span>
+                                    </div>
+                                </div>
+
+                                {/* Section tabs (Mockup styled: capsule pills button layout) */}
+                                <div className="flex gap-2.5 mb-6 text-[9px] font-black uppercase tracking-widest">
+                                    {['Agenda', 'Sobre', 'Avaliações'].map(tab => {
+                                        const isActive = activeTab === tab;
+                                        return (
+                                            <button
+                                                key={tab}
+                                                onClick={() => setActiveTab(tab)}
+                                                className={`px-5 py-2.5 rounded-full font-black transition-all duration-300 border
+                                                    ${isActive 
+                                                        ? 'bg-orangeAccent text-white border-orangeAccent shadow-md shadow-orangeAccent/20' 
+                                                        : 'bg-luxuryLight text-gray-400 border-gray-100 hover:border-orangeAccent/30'}`}
+                                            >
+                                                {tab === 'Agenda' ? 'BOOKING' : tab.toUpperCase()}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* TAB: AGENDA (Date & Time selector) */}
+                                {activeTab === 'Agenda' && (
+                                    <div className="space-y-6">
+                                        {/* Date Picker Carousel with Month/Year header */}
+                                        <div>
+                                            <div className="text-[10px] text-luxuryDark font-black uppercase tracking-widest mb-3 flex items-center justify-between">
+                                                <span>ESCOLHA O DIA</span>
+                                                {formData.date && (
+                                                    <span className="text-orangeAccent">{getMonthYearHeader(formData.date)}</span>
+                                                )}
+                                            </div>
+                                            <div className="flex gap-2.5 overflow-x-auto hide-scrollbar pb-3 -mx-5 px-5">
+                                                {days.map((dateObj, idx) => {
+                                                    const dateStr = dateObj.toLocaleDateString('en-CA');
+                                                    const isSelected = formData.date === dateStr;
+                                                    const isToday = new Date().toDateString() === dateObj.toDateString();
+
+                                                    return (
+                                                        <button
+                                                            key={idx}
+                                                            onClick={() => setFormData({ ...formData, date: dateStr, time: null })}
+                                                            className={`w-14 py-3 rounded-full flex flex-col items-center justify-between shrink-0 border active:scale-95 transition-all duration-300 h-24
+                                                                ${isSelected
+                                                                    ? 'bg-orangeAccent text-white border-orangeAccent shadow-lg shadow-orangeAccent/20 scale-102'
+                                                                    : 'bg-luxuryLight border-gray-100 text-luxuryDark/65 hover:border-orangeAccent/30 shadow-sm'}`}
+                                                        >
+                                                            <span className={`text-[7px] uppercase tracking-widest font-black mt-1 ${isSelected ? 'text-white' : 'text-gray-450'}`}>
+                                                                {isToday ? 'HOJE' : weekDaysShort[dateObj.getDay()]}
+                                                            </span>
+                                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-xs mb-1
+                                                                ${isSelected 
+                                                                    ? 'bg-white text-orangeAccent border border-orangeAccent' 
+                                                                    : 'bg-white text-luxuryDark border border-transparent shadow-sm'}`}
+                                                            >
+                                                                {dateObj.getDate()}
+                                                            </div>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+
+                                        {/* Time Slots Picker (Mockup styled: rounded-full pills) */}
+                                        <div>
+                                            <span className="text-[10px] text-luxuryDark font-black uppercase tracking-widest block mb-3">HORÁRIOS DISPONÍVEIS</span>
+                                            {!formData.date ? (
+                                                <div className="p-5 bg-luxuryLight border border-gray-100 rounded-2xl text-center text-[9px] text-gray-400 font-black tracking-widest">
+                                                    SELECIONE UM DIA ACIMA PARA CARREGAR A AGENDA.
+                                                </div>
+                                            ) : availableSlots.length > 0 ? (
+                                                <div className="flex flex-wrap gap-2">
+                                                    {availableSlots.map((time, idx) => (
+                                                        <button
+                                                            key={idx}
+                                                            onClick={() => setFormData({ ...formData, time })}
+                                                            className={`px-5 py-3 rounded-full text-[10px] font-black border transition-all active:scale-95 text-center shadow-sm
+                                                                ${formData.time === time
+                                                                    ? 'bg-orangeAccent text-white border-orangeAccent shadow-md scale-102'
+                                                                    : 'bg-luxuryLight border-gray-100 text-luxuryDark/80 hover:bg-white hover:border-orangeAccent/30'}`}
+                                                        >
+                                                            {time}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <div className="p-6 bg-white border border-gray-100 rounded-2xl text-center text-[9px] text-gray-400 font-black tracking-widest">
+                                                    SEM HORÁRIOS LIVRES PARA ESTE DIA.
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* TAB: SOBRE */}
+                                {activeTab === 'Sobre' && (
+                                    <div className="text-[10px] text-gray-500 font-bold leading-relaxed space-y-3 pt-1 tracking-wider uppercase">
+                                        <p>PROFISSIONAL PÓS-GRADUADA EM ESTÉTICA AVANÇADA E COSMETOLOGIA, DEDICADA A REALÇAR A BELEZA NATURAL ATRAVÉS DE PROCEDIMENTOS REFINADOS E DE ALTA TECNOLOGIA.</p>
+                                        <p>ESPECIALISTA EM DRENAGEM FACIAL, LIMPEZA PROFUNDA E TRATAMENTOS REJUVENESCEDORES. PROPORCIONA UM ATENDIMENTO LUXUOSO FOCADO NO BEM-ESTAR TOTAL.</p>
+                                    </div>
+                                )}
+
+                                {/* TAB: AVALIAÇÕES */}
+                                {activeTab === 'Avaliações' && (
+                                    <div className="space-y-3 pt-1">
+                                        <div className="bg-luxuryLight p-3 rounded-2xl border border-gray-100 space-y-1">
+                                            <div className="flex justify-between items-center text-[8px] font-black uppercase">
+                                                <span className="text-luxuryDark">MARIANA S.</span>
+                                                <span className="text-orangeAccent">⭐⭐⭐⭐⭐</span>
+                                            </div>
+                                            <p className="text-[9px] text-gray-500 font-bold leading-normal tracking-wide uppercase">MÃO DE ANJO! A LIMPEZA DE PELE FOI SUPER TRANQUILA E O RESULTADO IMEDIATO MARAVILHOSO.</p>
+                                        </div>
+                                        <div className="bg-luxuryLight p-3 rounded-2xl border border-gray-100 space-y-1">
+                                            <div className="flex justify-between items-center text-[8px] font-black uppercase">
+                                                <span className="text-luxuryDark">CAMILA R.</span>
+                                                <span className="text-orangeAccent">⭐⭐⭐⭐⭐</span>
+                                            </div>
+                                            <p className="text-[9px] text-gray-500 font-bold leading-normal tracking-wide uppercase">ATENDIMENTO DE ALTÍSSIMO NÍVEL. O ESPAÇO É LINDO E A DRA. HELENA É EXTREMAMENTE DETALHISTA.</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Sticky Action Footer Pane (Mockup aligned: card details and book button) */}
+                            <div className="pt-4 pb-5 px-5 border-t border-gray-150 bg-white flex-shrink-0 shadow-[0_-8px_20px_rgba(0,0,0,0.02)]">
+                                {/* Selected slot details banner card */}
+                                {formData.date && formData.time && (
+                                    <div className="bg-luxuryLight border border-gray-100 rounded-[20px] p-3 flex items-center justify-between gap-3 mb-4 text-[9px] font-black uppercase tracking-wider">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-8 h-8 rounded-full bg-orangeAccent/10 flex items-center justify-center text-orangeAccent">
+                                                <Icons.Calendar className="w-4 h-4" />
+                                            </div>
+                                            <div>
+                                                <p className="text-luxuryDark leading-none">{formatFullDate(formData.date)}</p>
+                                                <p className="text-gray-400 mt-1">{formData.time}</p>
+                                            </div>
+                                        </div>
+                                        <span className="text-orangeAccent text-xs pr-2">{formatCurrency(formData.service?.price || 0)}</span>
+                                    </div>
+                                )}
+
+                                <button
+                                    onClick={onConfirm}
+                                    disabled={!formData.date || !formData.time}
+                                    className="w-full bg-orangeAccent hover:bg-orangeAccent-hover disabled:opacity-40 disabled:cursor-not-allowed text-white font-black text-xs uppercase tracking-[0.2em] py-4.5 rounded-full transition-all duration-300 shadow-lg shadow-orangeAccent/20 text-center select-none active:scale-[0.98] outline-none h-12 flex items-center justify-center"
+                                >
+                                    RESERVAR AGORA
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- SCREEN 4: CLIENT DATA & VERIFICATION ---
+        const ClientInfoSheet = ({ isOpen, onClose, formData, setFormData, onSubmit, loading }) => {
+            if (!isOpen) return null;
+            return (
+                <div className="absolute inset-0 z-50 bg-luxuryDark/70 backdrop-blur-sm animate-fade-in flex items-end md:items-center justify-center">
+                    <div className="w-full max-w-md bg-white rounded-t-[32px] md:rounded-[32px] md:mb-0 p-6 pb-8 shadow-2xl animate-slide-up space-y-5 max-h-[90%] overflow-y-auto border border-gray-150/10">
+                        <div className="flex justify-between items-center border-b border-gray-100 pb-3 flex-shrink-0">
+                            <div>
+                                <h3 className="text-lg font-black text-luxuryDark uppercase tracking-wide">DADOS PESSOAIS</h3>
+                                <p className="text-[8px] text-orangeAccent tracking-[0.2em] font-black mt-1">CONFIRME SEUS DADOS PARA RESERVAR</p>
+                            </div>
+                            <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-black text-gray-500 hover:bg-gray-200">
+                                ✕
+                            </button>
+                        </div>
+
+                        {/* Booking brief summary */}
+                        <div className="bg-luxuryLight border border-gray-100 rounded-2xl p-4 text-[9px] font-black space-y-2.5 uppercase tracking-wide">
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">PROCEDIMENTO</span>
+                                <span className="text-luxuryDark text-right">{formData.service?.name}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">ESPECIALISTA</span>
+                                <span className="text-luxuryDark text-right font-black">
+                                    {String(typeof formData.professional === 'string' ? formData.professional : formData.professional?.name).toUpperCase()}
+                                </span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">DATA & HORA</span>
+                                <span className="text-luxuryDark text-right">{formatFullDate(formData.date)} ÀS {formData.time}</span>
+                            </div>
+                            <div className="border-t border-gray-150 pt-2.5 flex justify-between font-black">
+                                <span className="text-gray-400">TOTAL DO SERVIÇO</span>
+                                <span className="text-orangeAccent text-xs">{formatCurrency(formData.service?.price || 0)}</span>
+                            </div>
+                        </div>
+
+                        {/* Form Fields */}
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block">NOME COMPLETO</label>
+                                <input
+                                    type="text"
+                                    placeholder="EX: AMANDA SILVA"
+                                    value={formData.clientName}
+                                    onChange={(e) => setFormData({ ...formData, clientName: e.target.value.toUpperCase() })}
+                                    className="w-full bg-luxuryLight border border-gray-100 rounded-2xl px-4 py-3.5 text-[9px] text-luxuryDark font-black placeholder-gray-400 focus:outline-none focus:border-orangeAccent/45 uppercase tracking-widest"
+                                    required
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block">WHATSAPP</label>
+                                    <input
+                                        type="tel"
+                                        placeholder="(00) 00000-0000"
+                                        maxLength={15}
+                                        value={formData.clientPhone}
+                                        onChange={(e) => setFormData({ ...formData, clientPhone: applyPhoneMask(e.target.value) })}
+                                        className="w-full bg-luxuryLight border border-gray-100 rounded-2xl px-4 py-3.5 text-[9px] text-luxuryDark font-black placeholder-gray-400 focus:outline-none focus:border-orangeAccent/45 font-mono"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1.5 block">E-MAIL (OPCIONAL)</label>
+                                    <input
+                                        type="email"
+                                        placeholder="EX: AMANDA@EMAIL.COM"
+                                        value={formData.clientEmail}
+                                        onChange={(e) => setFormData({ ...formData, clientEmail: e.target.value.toUpperCase() })}
+                                        className="w-full bg-luxuryLight border border-gray-100 rounded-2xl px-4 py-3.5 text-[9px] text-luxuryDark font-black placeholder-gray-400 focus:outline-none focus:border-orangeAccent/45 uppercase tracking-widest"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={onSubmit}
+                            disabled={!formData.clientName || formData.clientPhone.length < 15 || loading}
+                            className="w-full bg-orangeAccent hover:bg-orangeAccent-hover text-white font-black text-xs uppercase tracking-[0.2em] py-4 rounded-full transition-all duration-300 flex justify-center items-center shadow-lg shadow-orangeAccent/20 h-12 animate-pulse-slow"
+                        >
+                            {loading ? (
+                                <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                            ) : (
+                                'CONFIRMAR AGENDAMENTO'
+                            )}
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- SCREEN 5: SUCCESS ---
+        const StepSuccess = ({ formData, onNewBooking }) => {
+            const profName = typeof formData.professional === 'string' ? formData.professional : formData.professional?.name || 'MAISON L\'ÉCLAT';
+            const calendarUrl = buildGoogleCalendarUrl(formData);
+
+            return (
+                <div className="w-full max-w-md mx-auto h-full flex flex-col justify-center items-center px-6 py-8 text-center animate-fade-in relative bg-transparent">
+                    <Confetti />
+
+                    <div className="w-20 h-20 mb-6 bg-orangeAccent/10 text-orangeAccent rounded-full flex items-center justify-center success-icon border-2 border-orangeAccent">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4.5" className="w-10 h-10">
+                            <polyline points="20 6 9 17 4 12" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </div>
+
+                    <h2 className="text-xl font-black text-luxuryDark tracking-wider mb-2 uppercase">AGENDAMENTO CONFIRMADO!</h2>
+                    <p className="text-gray-400 text-[9px] mb-8 max-w-xs leading-relaxed font-black tracking-widest uppercase">
+                        SEU MOMENTO DE AUTOCUIDADO E BELEZA DE LUXO NA MAISON L'ÉCLAT FOI RESERVADO COM SUCESSO.
+                    </p>
+
+                    {/* Summary Info Box */}
+                    <div className="bg-white rounded-[24px] border border-gray-100 w-full text-left p-5 space-y-3.5 shadow-sm mb-8 uppercase tracking-wide text-[9px] font-black">
+                        <div className="flex justify-between items-center">
+                            <span className="text-gray-400">PROCEDIMENTO</span>
+                            <span className="text-luxuryDark text-right">{formData.service?.name}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-gray-400">ESPECIALISTA</span>
+                            <span className="text-luxuryDark text-right">{profName.toUpperCase()}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-gray-400">DATA & HORA</span>
+                            <span className="text-luxuryDark text-right">{formatDateDisplay(formData.date)} ÀS {formData.time}</span>
+                        </div>
+                        <div className="border-t border-gray-100 pt-3.5 flex justify-between items-center">
+                            <span className="text-gray-400">VALOR TOTAL</span>
+                            <span className="text-orangeAccent text-sm">{formatCurrency(formData.service?.price || 0)}</span>
+                        </div>
+                    </div>
+
+                    {/* Bottom Action buttons */}
+                    <div className="w-full max-w-xs space-y-3.5">
+                        <a
+                            href={calendarUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full flex items-center justify-center gap-2 bg-luxuryDark hover:bg-[#342D28] text-white font-black text-xs uppercase tracking-[0.15em] py-4 rounded-full transition-all duration-300 shadow-md active:scale-95 h-12"
+                        >
+                            <Icons.Calendar className="w-4 h-4 text-orangeAccent" />
+                            ADICIONAR À AGENDA
+                        </a>
+
+                        <button
+                            onClick={onNewBooking}
+                            className="w-full bg-white border border-gray-100 text-luxuryDark hover:bg-gray-50 font-black text-[9px] uppercase tracking-[0.15em] py-3.5 rounded-full transition-all duration-300 active:scale-95 shadow-sm h-11"
+                        >
+                            FAZER OUTRO AGENDAMENTO
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- MAIN APP COMPONENT ---
+        function App() {
+            const [page, setPage] = useState('home'); // 'home' | 'booking'
+            const [step, setStep] = useState(1); // 1: Choose Service, 2: Choose Staff, 3: Choose Date/Time, 4: Client Form Modal, 5: Success Screen
+            const [loading, setLoading] = useState(false);
+            const [initialLoading, setInitialLoading] = useState(true);
+
+            // Firebase variables
+            const [services, setServices] = useState([]);
+            const [staff, setStaff] = useState([]);
+            const [allTimeSlots, setAllTimeSlots] = useState([]);
+            const [busySlots, setBusySlots] = useState([]);
+            const [webhookUrl, setWebhookUrl] = useState("");
+            const [workingDays, setWorkingDays] = useState([0, 1, 2, 3, 4, 5, 6]);
+
+            // Form Data
+            const [formData, setFormData] = useState({
+                service: null,
+                professional: null,
+                date: null,
+                time: null,
+                clientName: '',
+                clientPhone: '',
+                clientEmail: ''
+            });
+
+            const [showContact, setShowContact] = useState(false);
+            const [toast, setToast] = useState(null);
+
+            const showToast = (message, type = 'success') => {
+                setToast({ message, type });
+                setTimeout(() => setToast(null), 4000);
+            };
+
+            // Loading Initial Firebase Data
+            useEffect(() => {
+                const loadData = async () => {
+                    try {
+                        const servSnapshot = await db.collection('services').get();
+                        setServices(servSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+
+                        const staffSnapshot = await db.collection('staff').get();
+                        setStaff(staffSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+
+                        const settingsDoc = await db.collection('settings').doc('geral').get();
+                        if (settingsDoc.exists) {
+                            setAllTimeSlots(settingsDoc.data().timeSlots || []);
+                            setWebhookUrl(settingsDoc.data().webhookUrl || "");
+                            if (settingsDoc.data().workingDays !== undefined) {
+                                setWorkingDays(settingsDoc.data().workingDays);
+                            }
+                        }
+
+                        const apptsSnapshot = await db.collection('appointments').get();
+                        setBusySlots(apptsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+
+                    } catch (err) {
+                        console.error("Erro Firebase:", err);
+                    } finally {
+                        setInitialLoading(false);
+                    }
+                };
+
+                if (firebaseConfig.apiKey !== "SUA_API_KEY") {
+                    loadData();
+                } else {
+                    console.warn("Faltam chaves Firebase!");
+                    setInitialLoading(false);
+                }
+            }, []);
+
+            // Submitting Booking to Firestore
+            const handleSubmitBooking = async () => {
+                setLoading(true);
+                try {
+                    const newDoc = {
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        clientName: formData.clientName,
+                        clientPhone: formData.clientPhone,
+                        clientEmail: formData.clientEmail,
+                        service: formData.service,
+                        professional: typeof formData.professional === 'string' ? formData.professional : formData.professional.name,
+                        date: formData.date,
+                        time: normalizeTime(formData.time)
+                    };
+
+                    const docRef = await db.collection('appointments').add(newDoc);
+                    
+                    if (webhookUrl) {
+                        try {
+                            fetch(webhookUrl, {
+                                method: "POST",
+                                mode: "no-cors",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    clientName: formData.clientName,
+                                    clientPhone: formData.clientPhone,
+                                    service: formData.service,
+                                    professional: typeof formData.professional === 'string' ? formData.professional : formData.professional.name,
+                                    date: formData.date,
+                                    time: normalizeTime(formData.time)
+                                })
+                            });
+                        } catch (e) { }
+                    }
+
+                    // Add new booking to local busy slots list to prevent double booking in the same session
+                    setBusySlots(prev => [...prev, {
+                        professional: newDoc.professional,
+                        date: newDoc.date,
+                        time: newDoc.time
+                    }]);
+
+                    setStep(5); // Go to success step
+                } catch (err) {
+                    showToast("Erro ao realizar agendamento.", "error");
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const handleNewBooking = () => {
+                setFormData({
+                    service: null,
+                    professional: null,
+                    date: null,
+                    time: null,
+                    clientName: '',
+                    clientPhone: '',
+                    clientEmail: ''
+                });
+                setStep(1);
+                setPage('booking');
+            };
+
+            // Filter staff by selected service role (matches category names)
+            const filteredStaff = useMemo(() => {
+                if (!formData.service) return staff;
+                const category = formData.service.category || formData.service.categoria;
+                if (!category) return staff;
+                const normalizedCat = String(category).toLowerCase().trim();
+                return staff.filter(member => {
+                    if (!member.role) return true;
+                    const memberRoles = String(member.role).toLowerCase().split(/[\/,]/).map(r => r.trim());
+                    return memberRoles.includes(normalizedCat);
+                });
+            }, [staff, formData.service]);
+
+            const containerBg = page === 'home' ? 'bg-luxuryDark' : 'bg-luxuryLight';
+
+            if (initialLoading) return <SkeletonLoading />;
+
+            return (
+                <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+                    {/* Background decorations */}
+                    <div className="absolute -top-40 -left-40 w-96 h-96 bg-orangeAccent/10 rounded-full blur-3xl pointer-events-none animate-pulse" style={{ animationDuration: '6s' }} />
+                    <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-orangeAccent/5 rounded-full blur-3xl pointer-events-none animate-pulse" style={{ animationDuration: '8s' }} />
+
+                    {/* App Core Container */}
+                    <div className={`w-full min-h-screen ${containerBg} flex flex-col relative transition-colors duration-500 overflow-hidden`}>
+                        
+                        {/* Rendering screens based on page & step states */}
+                        <div className="flex-1 relative overflow-hidden h-full flex flex-col justify-between">
+                            {page === 'home' && (
+                                <HomeLanding onBook={handleNewBooking} />
+                            )}
+
+                            {page === 'booking' && (
+                                <div className="h-full relative flex-1 flex flex-col justify-between overflow-hidden">
+                                    {step === 1 && (
+                                        <StepServices 
+                                            services={services} 
+                                            formData={formData} 
+                                            setFormData={setFormData} 
+                                            nextStep={() => setStep(2)} 
+                                        />
+                                    )}
+                                    
+                                    {step === 2 && (
+                                        <StepProfessional 
+                                            staff={filteredStaff} 
+                                            formData={formData} 
+                                            setFormData={setFormData} 
+                                            nextStep={() => setStep(3)} 
+                                            onBack={() => setStep(1)} 
+                                        />
+                                    )}
+
+                                    {step === 3 && (
+                                        <StepDateTime 
+                                            formData={formData} 
+                                            setFormData={setFormData} 
+                                            onConfirm={() => setStep(4)} 
+                                            onBack={() => setStep(2)} 
+                                            allTimeSlots={allTimeSlots} 
+                                            busySlots={busySlots} 
+                                            workingDays={workingDays} 
+                                        />
+                                    )}
+
+                                    {step === 4 && (
+                                        <>
+                                            {/* Show step 3 in background behind the slide-up modal */}
+                                            <StepDateTime 
+                                                formData={formData} 
+                                                setFormData={setFormData} 
+                                                onConfirm={() => setStep(4)} 
+                                                onBack={() => setStep(2)} 
+                                                allTimeSlots={allTimeSlots} 
+                                                busySlots={busySlots} 
+                                                workingDays={workingDays} 
+                                            />
+                                            <ClientInfoSheet 
+                                                isOpen={true} 
+                                                onClose={() => setStep(3)} 
+                                                formData={formData} 
+                                                setFormData={setFormData} 
+                                                onSubmit={handleSubmitBooking} 
+                                                loading={loading} 
+                                            />
+                                        </>
+                                    )}
+
+                                    {step === 5 && (
+                                        <StepSuccess 
+                                            formData={formData} 
+                                            onNewBooking={handleNewBooking} 
+                                        />
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Floating bottom capsule navbar visible on both Landing and Services steps, floating fixed at the bottom */}
+                        {(page === 'home' || (page === 'booking' && step === 1)) && (
+                            <BottomNavigation 
+                                activeTab={page === 'home' ? 'home' : 'services'} 
+                                onTabSelect={(tab) => {
+                                    if (tab === 'home') {
+                                        setPage('home');
+                                    } else if (tab === 'services') {
+                                        handleNewBooking();
+                                    } else if (tab === 'contact') {
+                                        setShowContact(true);
+                                    }
+                                }} 
+                            />
+                        )}
+
+                        {/* Contact Information popup slide-up sheet */}
+                        <ContactSheet isOpen={showContact} onClose={() => setShowContact(false)} />
+
+                        {/* Toast Notification popups */}
+                        {toast && (
+                            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-[100] animate-slide-up">
+                                <div className={`px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2 border text-[10px] font-black uppercase tracking-wider
+                                    ${toast.type === 'success' 
+                                        ? 'bg-white border-green-500/20 text-emerald-700' 
+                                        : 'bg-white border-red-500/20 text-red-650'
+                                    }`}
+                                >
+                                    {toast.type === 'success' ? (
+                                        <Icons.CheckCircle className="w-4 h-4 text-emerald-600" />
+                                    ) : (
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4 text-red-500">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <line x1="12" y1="8" x2="12" y2="12" />
+                                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                                        </svg>
+                                    )}
+                                    {toast.message}
+                                </div>
+                            </div>
+                        )}
+
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
