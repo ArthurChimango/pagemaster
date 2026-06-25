@@ -26,25 +26,28 @@ export default function Home() {
   return (
     <>
       <nav
-        className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-2xl bg-white/90 backdrop-blur-xl border border-brand-border rounded-full px-6 py-3 flex justify-between items-center shadow-soft transition-all">
+        className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-4xl bg-white/90 backdrop-blur-xl border border-brand-border rounded-full px-6 py-3 flex justify-between items-center shadow-soft transition-all">
         <div className="font-extrabold text-xl tracking-tighter text-brand-secondary cursor-pointer"
             onClick={() => window.scrollTo({top: 0, behavior: "smooth"})} data-analytics-id="nav-logo-pm">
             <span className="text-brand-primary">P</span>M.
         </div>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
             <a href="#solucoes"
                 className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors"
                 data-analytics-id="nav-link-solucoes">Soluções</a>
+            <a href="/catalogo"
+                className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors"
+                data-analytics-id="nav-link-catalogo">Catálogo</a>
+            <a href="/agendamento"
+                className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors"
+                data-analytics-id="nav-link-agendamento">Agendamento</a>
             <a href="#portfolio"
                 className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors"
                 data-analytics-id="nav-link-projetos">Projetos</a>
             <a href="#planos"
                 className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors"
                 data-analytics-id="nav-link-engenharia">Engenharia</a>
-
-            {/* Link Laboratório Menu (Novo) */}
-
         </div>
         <a href="/laboratorio"
             className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-primary bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-full hover:bg-brand-primary hover:text-white transition-colors"
@@ -99,39 +102,45 @@ export default function Home() {
                 enquanto você dorme.
             </p>
 
-            {/* BOTÃO DO LABORATÓRIO (Em grande destaque) */}
-            <div className="flex justify-center relative z-30 mb-16">
-                <a href="/laboratorio"
-                    className="group relative inline-flex items-center gap-4 px-8 py-5 bg-brand-secondary text-white rounded-full overflow-hidden shadow-[0_0_40px_rgba(15,23,42,0.4)] hover:shadow-[0_0_60px_rgba(6,182,212,0.6)] hover:-translate-y-1 transition-all duration-300"
-                    data-analytics-id="btn-hero-acessar-laboratorio">
-                    {/* Efeito luminoso de fundo no botão */}
-                    <div
-                        className="absolute inset-0 bg-gradient-to-r from-brand-secondary via-[#06b6d4] to-brand-secondary opacity-0 group-hover:opacity-20 transition-opacity duration-500">
-                    </div>
-
-                    {/* Ícone Laboratório */}
-                    <svg className="w-8 h-8 text-[#06b6d4] group-hover:animate-pulse relative z-10" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
-                        </path>
-                    </svg>
-
-                    <div className="flex flex-col text-left relative z-10">
-                        <span
-                            className="text-[10px] text-[#06b6d4] font-mono font-bold uppercase tracking-widest leading-none mb-1">Crie
-                            a sua estrutura</span>
-                        <span className="text-lg font-extrabold uppercase tracking-widest leading-none">Acessar
-                            Laboratório</span>
-                    </div>
-
-                    {/* Seta */}
-                    <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform relative z-10"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                </a>
+            {/* BOTÕES DE CTAS E DEMOS */}
+            <div className="flex flex-col items-center gap-6 relative z-30 mb-16">
+                <div className="flex flex-wrap justify-center gap-4">
+                    <a href="/laboratorio"
+                        className="group relative inline-flex items-center gap-4 px-8 py-5 bg-brand-secondary text-white rounded-full overflow-hidden shadow-[0_0_40px_rgba(15,23,42,0.4)] hover:shadow-[0_0_60px_rgba(6,182,212,0.6)] hover:-translate-y-1 transition-all duration-300"
+                        data-analytics-id="btn-hero-acessar-laboratorio">
+                        <div className="absolute inset-0 bg-gradient-to-r from-brand-secondary via-[#06b6d4] to-brand-secondary opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
+                        <svg className="w-8 h-8 text-[#06b6d4] group-hover:animate-pulse relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                        </svg>
+                        <div className="flex flex-col text-left relative z-10">
+                            <span className="text-[10px] text-[#06b6d4] font-mono font-bold uppercase tracking-widest leading-none mb-1">Crie a sua estrutura</span>
+                            <span className="text-lg font-extrabold uppercase tracking-widest leading-none">Acessar Laboratório</span>
+                        </div>
+                        <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                </div>
+                
+                {/* Demos Rápidas de Serviços */}
+                <div className="flex flex-wrap justify-center gap-4">
+                    <a href="/catalogo"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-md hover:-translate-y-0.5 duration-200"
+                        data-analytics-id="btn-hero-catalogo">
+                        <svg className="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                        Simulador Catálogo
+                    </a>
+                    <a href="/agendamento"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-md hover:-translate-y-0.5 duration-200"
+                        data-analytics-id="btn-hero-agendamento">
+                        <svg className="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Simulador Agendamento
+                    </a>
+                </div>
             </div>
 
         </div>
