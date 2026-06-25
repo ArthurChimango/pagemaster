@@ -196,6 +196,12 @@ export default function Home() {
                         de
                         27% das plataformas. Implementamos o seu próprio cardápio digital de alto desempenho integrado
                         diretamente com o seu WhatsApp.</p>
+                    <a href="/catalogo" className="inline-flex items-center gap-2 text-brand-primary hover:text-brand-primaryDark font-bold text-sm tracking-wider uppercase transition-colors">
+                        Conhecer Solução 
+                        <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
                 </div>
 
                 {/* Serviço 2: Saúde */}
@@ -214,6 +220,12 @@ export default function Home() {
                         sua
                         consulta antes mesmo do paciente chegar. Páginas de autoridade extrema combinadas com sistemas
                         de agendamento automático.</p>
+                    <a href="/agendamento" className="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 font-bold text-sm tracking-wider uppercase transition-colors">
+                        Conhecer Solução 
+                        <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
                 </div>
 
                 {/* Serviço 3: Varejo */}
@@ -232,6 +244,12 @@ export default function Home() {
                     <p className="text-brand-muted font-medium text-lg mb-8 leading-relaxed">Automatize o envio de preços e
                         fotografias. Desenvolvemos montras digitais geríveis por si, proporcionando uma experiência de
                         compra sem fricção.</p>
+                    <a href="/catalogo" className="inline-flex items-center gap-2 text-indigo-500 hover:text-indigo-600 font-bold text-sm tracking-wider uppercase transition-colors">
+                        Conhecer Solução 
+                        <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
                 </div>
 
             </div>
