@@ -131,17 +131,25 @@ export default function EjClient() {
   return (
     <>
       {/* 1. Navegação */}
-      <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-2xl bg-white/90 backdrop-blur-xl border border-brand-border rounded-full px-6 py-3 flex justify-between items-center shadow-soft transition-all">
+      <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-3xl bg-white/90 backdrop-blur-xl border border-brand-border rounded-full px-6 py-3 flex justify-between items-center shadow-soft transition-all">
         <div className="font-extrabold text-xl tracking-tighter text-brand-secondary cursor-pointer"
             onClick={() => window.location.href = "/"}>
             <span className="text-brand-primary">P</span>M.
         </div>
-        <a href="/" className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors flex items-center gap-2">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Voltar
-        </a>
+        <div className="flex items-center gap-4">
+          <a href="https://pagemasternexus.netlify.app" target="_blank" rel="noopener noreferrer" className="text-xs font-extrabold uppercase tracking-widest text-brand-primary hover:text-brand-primaryDark transition-colors flex items-center gap-1.5 bg-blue-50 border border-blue-100 px-3.5 py-2 rounded-full shadow-sm">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              Acessar Sistema
+          </a>
+          <a href="/" className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Voltar
+          </a>
+        </div>
       </nav>
 
       {/* 2. Hero Section */}
@@ -157,11 +165,14 @@ export default function EjClient() {
                 O ERP e CRM definitivo projetado sob medida para o ecossistema de Empresas Juniores. Controle vendas, projetos, membros, metas de OKR e finanças em uma única plataforma moderna.
             </p>
             <div className="flex flex-wrap justify-center gap-4 pt-4">
-              <a href="#interativo" className="bg-brand-primary hover:bg-brand-primaryDark text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-xl transition-all shadow-lg shadow-blue-500/20">
-                Experimentar Simulador
+              <a href="https://pagemasternexus.netlify.app" target="_blank" rel="noopener noreferrer" className="bg-brand-primary hover:bg-brand-primaryDark text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-xl transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Criar Conta Teste (Acessar Sistema)
               </a>
-              <a href="#investimento" className="bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-xl transition-all">
-                Ver Preço Promocional
+              <a href="#interativo" className="bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-xl transition-all">
+                Ver Simulador Rápido
               </a>
             </div>
         </div>
@@ -196,10 +207,15 @@ export default function EjClient() {
       {/* 4. Simulador Interativo */}
       <section id="interativo" className="py-24 bg-white border-t border-b border-brand-border px-6">
         <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-16 max-w-2xl mx-auto">
+          <div className="text-center mb-16 max-w-2xl mx-auto space-y-4">
             <span className="text-brand-primary font-mono text-xs font-bold tracking-[0.2em] uppercase mb-3 block">// Demonstração Prática</span>
             <h2 className="text-3xl md:text-4xl font-extrabold text-brand-secondary tracking-tight">Sinta o Painel em Ação</h2>
-            <p className="text-brand-muted mt-4 font-medium">Interaja com a maquete funcional do sistema abaixo. Explore a precificação do CRM, o painel de metas e a gamificação dos membros.</p>
+            <p className="text-brand-muted font-medium">Interaja com a maquete funcional do sistema abaixo. Explore a precificação do CRM, o painel de metas e a gamificação dos membros.</p>
+            <div className="inline-block bg-blue-50 border border-blue-200 rounded-2xl p-4 mt-2">
+              <p className="text-xs text-brand-secondary font-bold">
+                💡 Quer testar na prática? <a href="https://pagemasternexus.netlify.app" target="_blank" rel="noopener noreferrer" className="text-brand-primary underline hover:text-brand-primaryDark font-black">Clique aqui para acessar o sistema real</a>, onde você pode criar uma conta gratuita e experimentar o Nexus Suite!
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
