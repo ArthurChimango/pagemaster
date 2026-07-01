@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Suite — CRM & ERP Inteligente para Empresas Juniores</title>
+  <meta name="description" content="Apresentação do Nexus Suite: o sistema definitivo de CRM, PMO, Gestão de Membros, OKRs e Financeiro feito sob medida para impulsionar sua Empresa Júnior.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ── DESIGN SYSTEM & VARIABLE TOKENS ── */
+    :root {
+      --bg-primary: #070a13;
+      --bg-secondary: #0d1222;
+      --bg-card: rgba(18, 24, 45, 0.7);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      
+      --color-primary: #3b82f6;     /* Blue */
+      --color-secondary: #6366f1;   /* Indigo */
+      --color-accent: #d946ef;      /* Pink/Magenta */
+      --color-emerald: #10b981;     /* Emerald */
+      
+      --font-title: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+
+    /* ── LAYOUT UTILITIES ── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    section {
+      padding: 8rem 0;
+      position: relative;
+    }
+
+    /* ── DECORATIVE BLUR BACKGROUNDS ── */
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(150px);
+      z-index: 0;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .orb-1 {
+      top: 10%;
+      left: -10%;
+      width: 500px;
+      height: 500px;
+      background: var(--color-primary);
+    }
+    .orb-2 {
+      top: 40%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: var(--color-accent);
+    }
+    .orb-3 {
+      bottom: 5%;
+      left: 10%;
+      width: 450px;
+      height: 450px;
+      background: var(--color-secondary);
+    }
+
+    /* ── HEADER & NAVIGATION ── */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(7, 10, 19, 0.8);
+      transition: all 0.3s;
+    }
+    .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 5rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .logo-img {
+      height: 2.75rem;
+      width: auto;
+      border-radius: 8px;
+    }
+    .logo-text {
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: var(--text-main);
+      letter-spacing: -0.025em;
+    }
+    .logo-text span {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    nav {
+      display: none;
+      gap: 2rem;
+    }
+    @media (min-width: 768px) {
+      nav { display: flex; }
+    }
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-link:hover {
+      color: var(--text-main);
+    }
+    .btn-cta-nav {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      color: white;
+      text-decoration: none;
+      padding: 0.625rem 1.25rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+      transition: all 0.3s;
+    }
+    .btn-cta-nav:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    /* ── HERO SECTION ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 8rem;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    @media (min-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+    }
+    .hero-content {
+      position: relative;
+      z-index: 10;
+    }
+    .tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      color: #a5b4fc;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .hero-title {
+      font-family: var(--font-title);
+      font-size: 3rem;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+    @media (min-width: 640px) {
+      .hero-title { font-size: 4rem; }
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+      max-width: 520px;
+    }
+    .hero-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.35);
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(59, 130, 246, 0.5);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    /* Glassmorphic Presentation Widget */
+    .hero-widget {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 1.5rem;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      z-index: 10;
+    }
+    .widget-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+    .widget-dots {
+      display: flex;
+      gap: 0.375rem;
+    }
+    .widget-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #eab308; }
+    .dot-green { background: #22c55e; }
+    .widget-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    /* Mockup CRM pipeline inside Hero widget */
+    .mock-pipeline {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+    .mock-col {
+      flex: 1;
+      min-width: 140px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 12px;
+      padding: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    .mock-col-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text-muted);
+    }
+    .mock-card {
+      background: rgba(7, 10, 19, 0.6);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 0.625rem;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .mock-card-name {
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .mock-card-val {
+      font-size: 0.7rem;
+      color: var(--color-primary);
+      font-weight: 900;
+    }
+
+    /* ── SECTION TITLE ── */
+    .sec-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 5rem auto;
+      position: relative;
+      z-index: 10;
+    }
+    .sec-title {
+      font-family: var(--font-title);
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 1rem;
+    }
+    .sec-title span {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .sec-desc {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* ── FEATURES MODULES GRID ── */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      position: relative;
+      z-index: 10;
+    }
+    @media (min-width: 640px) {
+      .modules-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .modules-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .mod-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.3s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    .mod-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .mod-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+    }
+    .mod-card:hover::before {
+      opacity: 1;
+    }
+    .mod-icon-wrapper {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .mod-title {
+      font-family: var(--font-title);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text-main);
+    }
+    .mod-desc {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .mod-badge {
+      align-self: flex-start;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.375rem 0.75rem;
+      border-radius: 6px;
+      color: var(--text-main);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── LIVE INTERACTIVE PLAYGROUND ── */
+    .playground {
+      background: rgba(13, 18, 34, 0.4);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .play-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      align-items: center;
+      z-index: 10;
+      position: relative;
+    }
+    @media (min-width: 1024px) {
+      .play-layout {
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+    }
+    .play-tab-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .play-tab-btn {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      color: var(--text-muted);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: left;
+      font-family: var(--font-title);
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .play-tab-btn:hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-main);
+    }
+    .play-tab-btn.active {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.3);
+      color: var(--text-main);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
+    }
+    .play-screen {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      min-height: 380px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+    .screen-tab-content {
+      display: none;
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+    .screen-tab-content.active {
+      display: block;
+    }
+
+    /* Progress bar for mockups */
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 0.4s ease-in-out;
+    }
+
+    /* ── BENEFIT/INFO CARDS ── */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      z-index: 10;
+      position: relative;
+    }
+    @media (min-width: 768px) {
+      .benefits-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .benefit-item {
+      text-align: center;
+    }
+    .benefit-icon-box {
+      width: 4rem;
+      height: 4rem;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(217, 70, 239, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem auto;
+      font-size: 1.5rem;
+    }
+    .benefit-title {
+      font-family: var(--font-title);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .benefit-desc {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    /* ── CALL TO ACTION ── */
+    .cta {
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-card {
+      background: linear-gradient(135deg, #0d1222, #161233);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 32px;
+      padding: 4rem 2rem;
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+      margin: 0 auto;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+    }
+    .cta-title {
+      font-family: var(--font-title);
+      font-size: 2.25rem;
+      font-weight: 900;
+      margin-bottom: 1.25rem;
+      line-height: 1.2;
+    }
+    @media (min-width: 640px) {
+      .cta-title { font-size: 3rem; }
+    }
+    .cta-desc {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 580px;
+      margin: 0 auto 2.5rem auto;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 4rem 0;
+      background: #04060b;
+      position: relative;
+      z-index: 10;
+    }
+    .footer-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    @media (min-width: 768px) {
+      .footer-wrapper {
+        flex-direction: row;
+      }
+    }
+    .copyright {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Orbs -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="glow-orb orb-3"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav-wrapper">
+      <a href="#" class="logo">
+        <span class="logo-text">Nexus <span>Suite</span></span>
+      </a>
+      <nav>
+        <a href="#modulos" class="nav-link">Módulos</a>
+        <a href="#interativo" class="nav-link">Demonstração</a>
+        <a href="#beneficios" class="nav-link">Vantagens</a>
+      </nav>
+      <a href="https://wa.me/5534999778403" target="_blank" rel="noopener noreferrer" class="btn-cta-nav">Falar Conosco</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="tagline">
+          <span>🚀 Sistema Integrado de Gestão</span>
+        </div>
+        <h1 class="hero-title">O ERP e CRM definitivo para a sua <span>Empresa Júnior</span></h1>
+        <p class="hero-desc">Esqueça planilhas soltas e ferramentas confusas. Gerencie vendas, membros, financeiro, marketing e metas estratégicas em uma única plataforma integrada e inteligente.</p>
+        <div class="hero-btns">
+          <a href="#interativo" class="btn-primary">
+            Experimentar Demonstração
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </a>
+          <a href="#modulos" class="btn-outline">Ver Recursos</a>
+        </div>
+      </div>
+
+      <!-- Interactive Mini Widget Mockup -->
+      <div class="hero-widget">
+        <div class="widget-header">
+          <div class="widget-dots">
+            <span class="widget-dot dot-red"></span>
+            <span class="widget-dot dot-yellow"></span>
+            <span class="widget-dot dot-green"></span>
+          </div>
+          <span class="widget-title">Visualização CRM</span>
+          <span class="widget-dots"></span>
+        </div>
+        <div class="mock-pipeline">
+          <div class="mock-col">
+            <p class="mock-col-title">Prospecção</p>
+            <div class="mock-card">
+              <p class="mock-card-name">Indústria Metal</p>
+              <p class="mock-card-val">R$ 5.400</p>
+            </div>
+            <div class="mock-card">
+              <p class="mock-card-name">Loja de Roupas</p>
+              <p class="mock-card-val">R$ 3.200</p>
+            </div>
+          </div>
+          <div class="mock-col">
+            <p class="mock-col-title">Proposta</p>
+            <div class="mock-card">
+              <p class="mock-card-name">Restaurante Sabor</p>
+              <p class="mock-card-val">R$ 8.900</p>
+            </div>
+          </div>
+          <div class="mock-col">
+            <p class="mock-col-title">Ganho 🎉</p>
+            <div class="mock-card" style="border-color: var(--color-emerald)">
+              <p class="mock-card-name">Hospital Geral</p>
+              <p class="mock-card-val" style="color: var(--color-emerald)">R$ 15.000</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Módulos Section -->
+  <section id="modulos">
+    <div class="container">
+      <div class="sec-header">
+        <h2 class="sec-title">Os 7 Pilares do <span>Nexus Suite</span></h2>
+        <p class="sec-desc">Módulos integrados projetados especificamente para a realidade operacional de uma Empresa Júnior de alto crescimento.</p>
+      </div>
+
+      <div class="modules-grid">
+        <!-- 1. CRM -->
+        <div class="mod-card">
+          <div>
+            <div class="mod-icon-wrapper" style="background: rgba(59, 130, 246, 0.1); color: var(--color-primary)">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            </div>
+            <h3 class="mod-title">Comercial & CRM</h3>
+            <p class="mod-desc">Funil de vendas visual no modelo Kanban, cadastro de leads, precificador de propostas inteligente e conversão automatizada em projetos.</p>
+          </div>
+          <span class="mod-badge">Vendas</span>
+        </div>
+
+        <!-- 2. Projetos -->
+        <div class="mod-card">
+          <div>
+            <div class="mod-icon-wrapper" style="background: rgba(99, 102, 241, 0.1); color: var(--color-secondary)">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+            </div>
+            <h3 class="mod-title">Gestão de Projetos (PMO)</h3>
+            <p class="mod-desc">Quadro Kanban de tarefas do projeto, apontamento de horas (Timesheet) integrado e progresso em barras dinâmicas por squads.</p>
+          </div>
+          <span class="mod-badge">Operações</span>
+        </div>
+
+        <!-- 3. Financeiro -->
+        <div class="mod-card">
+          <div>
+            <div class="mod-icon-wrapper" style="background: rgba(16, 185, 129, 0.1); color: var(--color-emerald)">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 class="mod-title">Fluxo de Caixa & Planejamento</h3>
+            <p class="mod-desc">Lançamento de receitas e despesas, controle de caixa atualizado via contratos comerciais e planejamento mensal de orçamentos.</p>
+          </div>
+          <span class="mod-badge">Finanças</span>
+        </div>
+
+        <!-- 4. Estratégia -->
+        <div class="mod-card">
+          <div>
+            <div class="mod-icon-wrapper" style="background: rgba(217, 70, 239, 0.1); color: var(--color-accent)">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            </div>
+            <h3 class="mod-title">Estratégia & OKRs</h3>
+            <p class="mod-desc">Controle unificado de metas anuais de Alto Crescimento, progresso de OKRs por diretoria e coleta automática de NPS.</p>
+          </div>
+          <span class="mod-badge">Estratégia</span>
+        </div>
+
+        <!-- 5. Membros -->
+        <div class="mod-card">
+          <div>
+            <div class="mod-icon-wrapper" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            </div>
+            <h3 class="mod-title">RH & Gamificação</h3>
+            <p class="mod-desc">Diretório de membros completo, cadastro de disponibilidade semanal e ranking de XP com pódio dinâmico.</p>
+          </div>
+          <span class="mod-badge">Pessoas</span>
+        </div>
+
+        <!-- 6. Marketing -->
+        <div class="mod-card">
+          <div>
+            <div class="mod-icon-wrapper" style="background: rgba(244, 63, 94, 0.1); color: #f43f5e">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+            </div>
+            <h3 class="mod-title">Gestão de Marketing</h3>
+            <p class="mod-desc">Calendário editorial interativo para posts de redes sociais, controle de status das artes e mural de insights criativos.</p>
+          </div>
+          <span class="mod-badge">Marketing</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Sandbox/Demo Playground -->
+  <section class="playground" id="interativo">
+    <div class="container play-layout">
+      <div>
+        <h2 class="sec-title" style="text-align: left; margin-bottom: 1.5rem">Veja em <span>Ação</span></h2>
+        <p class="sec-desc" style="margin-bottom: 3rem">Navegue pelas telas simuladas abaixo para interagir com os recursos exclusivos da plataforma e entender seu potencial.</p>
+        
+        <div class="play-tab-buttons">
+          <button class="play-tab-btn active" onclick="switchPlayTab('play-crm')">
+            <span>📊 CRM Comercial</span>
+            <span>➔</span>
+          </button>
+          <button class="play-tab-btn" onclick="switchPlayTab('play-okrs')">
+            <span>🎯 OKRs por Diretoria</span>
+            <span>➔</span>
+          </button>
+          <button class="play-tab-btn" onclick="switchPlayTab('play-xp')">
+            <span>🏆 Gamificação de RH</span>
+            <span>➔</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Simulated Screen -->
+      <div class="play-screen">
+        
+        <!-- Tab 1: CRM -->
+        <div class="screen-tab-content active" id="play-crm">
+          <p class="mock-col-title" style="margin-bottom: 1.5rem; text-transform: uppercase;">Simulação de Precificação de Proposta</p>
+          <div style="background: rgba(255,255,255,0.02); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 1rem;">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem; font-size: 0.8rem;">
+              <span class="text-slate-400">Horas Estimadas:</span>
+              <span class="font-bold">60h</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem; font-size: 0.8rem;">
+              <span class="text-slate-400">Margem Desejada:</span>
+              <span class="font-bold text-indigo-400">20%</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; border-top: 1px solid var(--border-color); padding-top: 0.5rem; margin-top: 0.5rem; font-size: 0.95rem;">
+              <span class="font-bold">Preço Final Recomendado:</span>
+              <span class="font-bold text-emerald-400">R$ 5.340,00</span>
+            </div>
+          </div>
+          <span style="font-size: 0.75rem; color: var(--text-muted)">* A calculadora calcula automaticamente impostos e lucros da EJ em tempo real antes do envio da proposta ao cliente.</span>
+        </div>
+
+        <!-- Tab 2: OKRs -->
+        <div class="screen-tab-content" id="play-okrs">
+          <p class="mock-col-title" style="margin-bottom: 1.5rem; text-transform: uppercase;">Metas Atuais — Presidência</p>
+          <div style="margin-bottom: 1rem;">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem; font-size: 0.8rem;">
+              <span>Atingir Faturamento de R$ 50k</span>
+              <span class="text-emerald-400 font-bold">84%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" style="width: 84%; background: var(--color-emerald)"></div>
+            </div>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem; font-size: 0.8rem;">
+              <span>Índice de NPS acima de 75</span>
+              <span class="text-indigo-400 font-bold">78%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" style="width: 78%; background: var(--color-secondary)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: XP -->
+        <div class="screen-tab-content" id="play-xp">
+          <p class="mock-col-title" style="margin-bottom: 1.5rem; text-transform: uppercase;">Líderes de Engajamento (XP)</p>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); padding: 0.5rem 1rem; border-radius: 8px;">
+              <span style="font-size: 0.8rem; font-weight: 700;">👑 1. Ana Carolina (Projetos)</span>
+              <span style="font-size: 0.8rem; font-weight: 900; color: #f59e0b">2.840 XP</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); padding: 0.5rem 1rem; border-radius: 8px;">
+              <span style="font-size: 0.8rem; font-weight: 700;">🥈 2. Mateus Silva (Comercial)</span>
+              <span style="font-size: 0.8rem; font-weight: 900; color: var(--text-muted)">2.410 XP</span>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); padding: 0.5rem 1rem; border-radius: 8px;">
+              <span style="font-size: 0.8rem; font-weight: 700;">🥉 3. Gabriel Lins (Marketing)</span>
+              <span style="font-size: 0.8rem; font-weight: 900; color: #b45309">1.950 XP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen footer -->
+        <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 0.7rem; color: var(--text-muted)">Sincronizado com Firebase Firestore</span>
+          <span style="font-size: 0.7rem; color: var(--color-primary); font-weight: 700;">Nexus Live</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefícios Section -->
+  <section id="beneficios">
+    <div class="container">
+      <div class="sec-header">
+        <h2 class="sec-title">Principais <span>Benefícios</span></h2>
+        <p class="sec-desc">Acelere a maturidade e a execução operacional dos seus projetos e acelere o crescimento da EJ.</p>
+      </div>
+
+      <div class="benefits-grid">
+        <div class="benefit-item">
+          <div class="benefit-icon-box">⚡</div>
+          <h4 class="benefit-title">Centralizado e Conectado</h4>
+          <p class="benefit-desc">Os dados fluem livremente. O fechamento de um lead gera automaticamente o projeto no PMO e a entrada correspondente no caixa financeiro.</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon-box">🔐</div>
+          <h4 class="benefit-title">Níveis de Permissão (RBAC)</h4>
+          <p class="benefit-desc">Atribua cargos específicos para os membros da sua EJ. Visitantes têm acessos limitados e coordenadores contam com visão administrativa total.</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon-box">🎓</div>
+          <h4 class="benefit-title">Onboarding Facilitado</h4>
+          <p class="benefit-desc">Cada nova conta tem um assistente virtual com spotlight guide interativo nas páginas e trilhas POPs, reduzindo a curva de aprendizado.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call To Action -->
+  <section class="cta" id="contato">
+    <div class="container">
+      <div class="cta-card">
+        <h2 class="cta-title">Pronto para transformar a gestão da sua <span>EJ</span>?</h2>
+        <p class="cta-desc">Consolide os seus dados operacionais hoje e traga profissionalismo, segurança e eficiência no controle de processos.</p>
+        <a href="https://wa.me/5534999778403" target="_blank" rel="noopener noreferrer" class="btn-primary">
+          Solicitar Demonstração Completa
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-wrapper">
+      <a href="#" class="logo">
+        <span class="logo-text">Nexus <span>Suite</span></span>
+      </a>
+      <p class="copyright">© 2026 Nexus Suite. Desenvolvido para Empresas Juniores do ecossistema.</p>
+    </div>
+  </footer>
+
+  <!-- Script for interactive tabs -->
+  <script>
+    function switchPlayTab(tabId) {
+      // Deactivate all buttons
+      document.querySelectorAll('.play-tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      // Deactivate all tab contents
+      document.querySelectorAll('.screen-tab-content').forEach(content => content.classList.remove('active'));
+      
+      // Find event target or button manually
+      const targetBtn = Array.from(document.querySelectorAll('.play-tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabId));
+      if (targetBtn) targetBtn.classList.add('active');
+      
+      // Activate content
+      document.getElementById(tabId).classList.add('active');
+    }
+  </script>
+</body>
+</html>

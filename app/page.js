@@ -42,6 +42,9 @@ export default function Home() {
             <a href="/agendamento"
                 className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors"
                 data-analytics-id="nav-link-agendamento">Agendamento</a>
+            <a href="/ej"
+                className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors"
+                data-analytics-id="nav-link-ej">Nexus Suite (EJ)</a>
             <a href="#portfolio"
                 className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors"
                 data-analytics-id="nav-link-projetos">Projetos</a>
@@ -139,6 +142,14 @@ export default function Home() {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                         Simulador Agendamento
+                    </a>
+                    <a href="/ej"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-md hover:-translate-y-0.5 duration-200"
+                        data-analytics-id="btn-hero-ej">
+                        <svg className="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Nexus Suite (EJ)
                     </a>
                 </div>
             </div>
@@ -255,6 +266,28 @@ export default function Home() {
                         compra sem fricção.</p>
                     <a href="/catalogo" className="inline-flex items-center gap-2 text-indigo-500 hover:text-indigo-600 font-bold text-sm tracking-wider uppercase transition-colors">
                         Conhecer Solução 
+                        <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+
+                {/* Serviço 4: Empresas Juniores / Nexus Suite */}
+                <div
+                    className="group bg-brand-surface border border-brand-border p-10 md:p-14 rounded-[2rem] hover:border-blue-500/50 transition-colors shadow-soft hover:shadow-floating">
+                    <div className="w-20 h-20 mb-8 text-blue-500">
+                        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"
+                            className="w-full h-full transform group-hover:scale-110 transition-transform duration-500">
+                            <circle cx="50" cy="50" r="40" stroke-dasharray="4 4" className="animate-[spin_20s_linear_infinite]"></circle>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <h3 className="text-3xl font-extrabold text-brand-secondary mb-4">Empresas Juniores (ERP/CRM)</h3>
+                    <p className="text-brand-muted font-medium text-lg mb-8 leading-relaxed font-semibold">
+                        Profissionalize a gestão da sua EJ. Um ERP e CRM completo e integrado (Projetos, Vendas, OKRs, Financeiro e Membros) por apenas <span className="text-brand-primary font-extrabold">R$ 600 (pagamento único)</span>, parcelado e sem mensalidades.
+                    </p>
+                    <a href="/ej" className="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 font-bold text-sm tracking-wider uppercase transition-colors">
+                        Conhecer Nexus Suite
                         <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                         </svg>
