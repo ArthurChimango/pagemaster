@@ -6,6 +6,7 @@ import Link from 'next/link';
 export default function Home() {
   const [isDictOpen, setIsDictOpen] = useState(false);
   const [formData, setFormData] = useState({ nome: '', area: '', ideia: '' });
+  const [isMuted, setIsMuted] = useState(true);
 
   const toggleDictionary = () => {
     setIsDictOpen(!isDictOpen);
@@ -42,9 +43,6 @@ export default function Home() {
             <a href="/agendamento"
                 className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors"
                 data-analytics-id="nav-link-agendamento">Agendamento</a>
-            <a href="/ej"
-                className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors"
-                data-analytics-id="nav-link-ej">Nexus Suite (EJ)</a>
             <a href="#portfolio"
                 className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors"
                 data-analytics-id="nav-link-projetos">Projetos</a>
@@ -52,16 +50,6 @@ export default function Home() {
                 className="text-xs font-bold uppercase tracking-widest text-brand-muted hover:text-brand-primary transition-colors"
                 data-analytics-id="nav-link-engenharia">Engenharia</a>
         </div>
-        <a href="/laboratorio"
-            className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-primary bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-full hover:bg-brand-primary hover:text-white transition-colors"
-            data-analytics-id="nav-link-laboratorio">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
-                </path>
-            </svg>
-            Laboratório
-        </a>
         <a href="#contato"
             className="bg-brand-primary text-white text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded-full hover:bg-brand-primaryDark hover:scale-105 transition-all shadow-lg shadow-blue-500/30"
             data-analytics-id="btn-nav-iniciar">
@@ -69,18 +57,27 @@ export default function Home() {
         </a>
     </nav>
 
-    {/* 2. Hero Section (Design System Azul com Imagem Sobreposta) */}
+    {/* 2. Hero Section (Design System Azul com Video de Fundo) */}
     <section
-        className="relative pt-40 px-6 flex flex-col items-center overflow-visible bg-brand-primary rounded-b-[3rem] shadow-2xl">
+        className="relative pt-40 pb-40 px-6 flex flex-col items-center overflow-hidden bg-brand-primary rounded-b-[3.5rem] shadow-2xl">
 
-        {/* Grid Pattern (Fundo Tech) */}
-        <div className="absolute inset-0 z-0 bg-grid-pattern opacity-40 rounded-b-[3rem]"></div>
+        {/* Video de Fundo */}
+        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden rounded-b-[3.5rem]">
+            <video 
+                src="assets/video.mp4" 
+                autoPlay 
+                muted={isMuted} 
+                loop 
+                playsInline 
+                className="w-full h-full object-cover" 
+            />
+        </div>
 
         {/* Círculos decorativos estilo imagem referência */}
-        <div className="absolute top-1/4 left-10 w-4 h-4 rounded-full border-2 border-white/40 hidden md:block z-0"></div>
-        <div className="absolute top-20 right-32 w-3 h-3 rounded-full bg-white hidden md:block z-0"></div>
+        <div className="absolute top-1/4 left-10 w-4 h-4 rounded-full border-2 border-white/40 hidden md:block z-10"></div>
+        <div className="absolute top-20 right-32 w-3 h-3 rounded-full bg-white hidden md:block z-10"></div>
         <div
-            className="absolute bottom-1/3 right-[15%] w-3 h-3 rounded-full border-2 border-[#60A5FA]/80 hidden lg:block z-0">
+            className="absolute bottom-1/3 right-[15%] w-3 h-3 rounded-full border-2 border-[#60A5FA]/80 hidden lg:block z-10">
         </div>
 
         <div className="relative z-10 text-center w-full max-w-[1400px] mx-auto">
@@ -108,16 +105,16 @@ export default function Home() {
             {/* BOTÕES DE CTAS E DEMOS */}
             <div className="flex flex-col items-center gap-6 relative z-30 mb-16">
                 <div className="flex flex-wrap justify-center gap-4">
-                    <a href="/laboratorio"
+                    <a href="#contato"
                         className="group relative inline-flex items-center gap-4 px-8 py-5 bg-brand-secondary text-white rounded-full overflow-hidden shadow-[0_0_40px_rgba(15,23,42,0.4)] hover:shadow-[0_0_60px_rgba(6,182,212,0.6)] hover:-translate-y-1 transition-all duration-300"
-                        data-analytics-id="btn-hero-acessar-laboratorio">
+                        data-analytics-id="btn-hero-acessar-contato">
                         <div className="absolute inset-0 bg-gradient-to-r from-brand-secondary via-[#06b6d4] to-brand-secondary opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
                         <svg className="w-8 h-8 text-[#06b6d4] group-hover:animate-pulse relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
                         <div className="flex flex-col text-left relative z-10">
-                            <span className="text-[10px] text-[#06b6d4] font-mono font-bold uppercase tracking-widest leading-none mb-1">Crie a sua estrutura</span>
-                            <span className="text-lg font-extrabold uppercase tracking-widest leading-none">Acessar Laboratório</span>
+                            <span className="text-[10px] text-[#06b6d4] font-mono font-bold uppercase tracking-widest leading-none mb-1">Fale Conosco</span>
+                            <span className="text-lg font-extrabold uppercase tracking-widest leading-none">Iniciar Projeto</span>
                         </div>
                         <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -143,32 +140,33 @@ export default function Home() {
                         </svg>
                         Simulador Agendamento
                     </a>
-                    <a href="/ej"
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-md hover:-translate-y-0.5 duration-200"
-                        data-analytics-id="btn-hero-ej">
-                        <svg className="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                        Nexus Suite (EJ)
-                    </a>
                 </div>
             </div>
 
         </div>
 
-        <div
-            className="relative w-full max-w-5xl mx-auto z-20 -mb-24 md:-mb-40 lg:-mb-56 px-4 flex justify-center drop-shadow-2xl">
-
-
-            <img src="assets/fundo.png" alt="Celulares" className="w-full h-auto object-contain" />
-
-        </div>
+        {/* Controle de Som do Vídeo de Fundo */}
+        <button 
+            onClick={() => setIsMuted(!isMuted)}
+            className="absolute bottom-6 right-6 bg-black/60 hover:bg-black/80 backdrop-blur-md text-white p-3.5 rounded-full transition-all duration-200 shadow-lg border border-white/10 z-30 flex items-center justify-center"
+            title={isMuted ? "Ativar som" : "Desativar som"}
+        >
+            {isMuted ? (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                </svg>
+            ) : (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                </svg>
+            )}
+        </button>
 
     </section>
 
     {/* 3. Manifesto / Declaração */}
-    {/* O padding-top (pt-40 md:pt-56 lg:pt-72) foi MUITO AUMENTADO para dar espaço à imagem de cima que sobrepõe */}
-    <section className="pt-40 md:pt-56 lg:pt-72 pb-32 px-6 bg-brand-background border-b border-brand-border">
+    <section className="py-32 px-6 bg-brand-background border-b border-brand-border">
         <div className="max-w-[1200px] mx-auto text-center md:text-left">
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-medium leading-tight text-brand-muted">
                 A maioria dos sites na internet são <span className="text-brand-secondary font-extrabold">panfletos digitais
@@ -264,30 +262,8 @@ export default function Home() {
                     <p className="text-brand-muted font-medium text-lg mb-8 leading-relaxed">Automatize o envio de preços e
                         fotografias. Desenvolvemos montras digitais geríveis por si, proporcionando uma experiência de
                         compra sem fricção.</p>
-                    <a href="/catalogo" className="inline-flex items-center gap-2 text-indigo-500 hover:text-indigo-600 font-bold text-sm tracking-wider uppercase transition-colors">
+                    <a href="/catalogo" className="inline-flex items-center gap-2 text-indigo-500 hover:text-indigo-650 font-bold text-sm tracking-wider uppercase transition-colors">
                         Conhecer Solução 
-                        <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </a>
-                </div>
-
-                {/* Serviço 4: Empresas Juniores / Nexus Suite */}
-                <div
-                    className="group bg-brand-surface border border-brand-border p-10 md:p-14 rounded-[2rem] hover:border-blue-500/50 transition-colors shadow-soft hover:shadow-floating">
-                    <div className="w-20 h-20 mb-8 text-blue-500">
-                        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"
-                            className="w-full h-full transform group-hover:scale-110 transition-transform duration-500">
-                            <circle cx="50" cy="50" r="40" stroke-dasharray="4 4" className="animate-[spin_20s_linear_infinite]"></circle>
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                    </div>
-                    <h3 className="text-3xl font-extrabold text-brand-secondary mb-4">Empresas Juniores (ERP/CRM)</h3>
-                    <p className="text-brand-muted font-medium text-lg mb-8 leading-relaxed font-semibold">
-                        Profissionalize a gestão da sua EJ. Um ERP e CRM completo e integrado (Projetos, Vendas, OKRs, Financeiro e Membros) por apenas <span className="text-brand-primary font-extrabold">R$ 600 (pagamento único)</span>, parcelado e sem mensalidades.
-                    </p>
-                    <a href="/ej" className="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600 font-bold text-sm tracking-wider uppercase transition-colors">
-                        Conhecer Nexus Suite
                         <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                         </svg>
@@ -314,55 +290,112 @@ export default function Home() {
                 </a>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                {/* Projeto Maior */}
-                <a href="templates/Cardapio.html" target="_blank"
-                    className="product-card group block md:col-span-2 relative overflow-hidden rounded-[2rem] shadow-soft aspect-[16/9] md:aspect-[21/9] bg-brand-surface border border-brand-border"
-                    data-product-id="port-delivery" data-product-name="Plataforma Delivery"
-                    data-analytics-id="btn-ver-portfolio-delivery">
-                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&amp;fit=crop&amp;w=1600&amp;q=80"
-                        alt="Projeto" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {/* 1. Carlos Alberto Arquitetura */}
+                <a href="https://carlosalbertoarquitetura.com.br" target="_blank" rel="noopener noreferrer"
+                    className="product-card group block relative overflow-hidden rounded-[2rem] shadow-soft aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 transition-all">
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
+                        alt="Carlos Alberto Arquitetura" className="w-full h-full object-cover img-reveal absolute inset-0" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-85 group-hover:opacity-95 transition-opacity"></div>
+                    <div className="absolute top-6 right-6 z-20">
+                        <span className="bg-brand-primary text-white text-[10px] uppercase font-bold px-3.5 py-1.5 rounded-full shadow-md tracking-widest">
+                            Cliente Real
+                        </span>
                     </div>
-                    <div className="absolute bottom-0 left-0 p-10 md:p-14 z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Plataforma
-                            Delivery</p>
-                        <h3 className="text-3xl md:text-5xl font-extrabold text-white">Sistema de Pedidos</h3>
+                    <div className="absolute bottom-0 left-0 p-8 z-10">
+                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-2">Site Institucional</p>
+                        <h3 className="text-2xl font-extrabold text-white mb-2">Carlos Alberto Arquitetura</h3>
+                        <p className="text-xs text-blue-100 font-medium line-clamp-2">Site institucional para apresentação do portfólio de projetos de arquitetura.</p>
                     </div>
                 </a>
 
-                {/* Projeto Metade */}
-                <a href="templates/Agendamento.html" target="_blank"
-                    className="product-card group block relative overflow-hidden rounded-[2rem] shadow-soft aspect-square md:aspect-[4/5] bg-brand-surface border border-brand-border"
-                    data-product-id="port-agendamento" data-product-name="Agenda Automática"
-                    data-analytics-id="btn-ver-portfolio-agendamento">
+                {/* 2. CR Buffet */}
+                <a href="https://crbuffet.com.br" target="_blank" rel="noopener noreferrer"
+                    className="product-card group block relative overflow-hidden rounded-[2rem] shadow-soft aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 transition-all">
+                    <img src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
+                        alt="CR Buffet" className="w-full h-full object-cover img-reveal absolute inset-0" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-85 group-hover:opacity-95 transition-opacity"></div>
+                    <div className="absolute top-6 right-6 z-20">
+                        <span className="bg-brand-primary text-white text-[10px] uppercase font-bold px-3.5 py-1.5 rounded-full shadow-md tracking-widest">
+                            Cliente Real
+                        </span>
+                    </div>
+                    <div className="absolute bottom-0 left-0 p-8 z-10">
+                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-2">Institucional + Cardápio</p>
+                        <h3 className="text-2xl font-extrabold text-white mb-2">CR Buffet</h3>
+                        <p className="text-xs text-blue-100 font-medium line-clamp-2">Site institucional completo com cardápio online interativo.</p>
+                    </div>
+                </a>
+
+                {/* 3. Ecap Jr */}
+                <a href="https://ecapjr.com.br" target="_blank" rel="noopener noreferrer"
+                    className="product-card group block relative overflow-hidden rounded-[2rem] shadow-soft aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 transition-all">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
+                        alt="Ecap Jr" className="w-full h-full object-cover img-reveal absolute inset-0" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-85 group-hover:opacity-95 transition-opacity"></div>
+                    <div className="absolute top-6 right-6 z-20">
+                        <span className="bg-brand-primary text-white text-[10px] uppercase font-bold px-3.5 py-1.5 rounded-full shadow-md tracking-widest">
+                            Cliente Real
+                        </span>
+                    </div>
+                    <div className="absolute bottom-0 left-0 p-8 z-10">
+                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-2">Landing Page</p>
+                        <h3 className="text-2xl font-extrabold text-white mb-2">Ecap Jr</h3>
+                        <p className="text-xs text-blue-100 font-medium line-clamp-2">Landing page institucional desenvolvida para a Empresa Júnior.</p>
+                    </div>
+                </a>
+
+                {/* 4. Casa Pronta Udi - Catálogo Interativo */}
+                <a href="templates/catalogo.html" target="_blank" rel="noopener noreferrer"
+                    className="product-card group block relative overflow-hidden rounded-[2rem] shadow-soft aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 transition-all">
+                    <img src="https://www.paulomauro.com.br/wp-content/uploads/2023/02/paulomauro-blog-capa-como-economizar-em-moveis-planejados.jpg"
+                        alt="Casa Pronta Udi" className="w-full h-full object-cover img-reveal absolute inset-0" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-85 group-hover:opacity-95 transition-opacity"></div>
+                    <div className="absolute top-6 right-6 z-20">
+                        <span className="bg-brand-primary text-white text-[10px] uppercase font-bold px-3.5 py-1.5 rounded-full shadow-md tracking-widest">
+                            Casa Pronta Udi
+                        </span>
+                    </div>
+                    <div className="absolute bottom-0 left-0 p-8 z-10">
+                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-2">Case Real — Casa Pronta Udi</p>
+                        <h3 className="text-2xl font-extrabold text-white mb-2">Catálogo Interativo</h3>
+                        <p className="text-xs text-blue-100 font-medium line-clamp-2">Catálogo interativo desenvolvido sob medida para a Casa Pronta Udi.</p>
+                    </div>
+                </a>
+
+                {/* 5. Agenda Automática */}
+                <a href="templates/Agendamento.html" target="_blank" rel="noopener noreferrer"
+                    className="product-card group block relative overflow-hidden rounded-[2rem] shadow-soft aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 transition-all">
                     <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
-                        alt="Projeto" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity">
+                        alt="Agenda Automática" className="w-full h-full object-cover img-reveal absolute inset-0" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-85 group-hover:opacity-95 transition-opacity"></div>
+                    <div className="absolute top-6 right-6 z-20">
+                        <span className="bg-brand-primary text-white text-[10px] uppercase font-bold px-3.5 py-1.5 rounded-full shadow-md tracking-widest">
+                            Sistema Web
+                        </span>
                     </div>
-                    <div className="absolute bottom-0 left-0 p-8 md:p-10 z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Beleza &amp;
-                            Estética</p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white">Agenda Automática</h3>
+                    <div className="absolute bottom-0 left-0 p-8 z-10">
+                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-2">Automação 24h</p>
+                        <h3 className="text-2xl font-extrabold text-white mb-2">Agenda Automática</h3>
+                        <p className="text-xs text-blue-100 font-medium line-clamp-2">Sistema de agendamento online com confirmações em tempo real.</p>
                     </div>
                 </a>
 
-                {/* Projeto Metade */}
-                <a href="templates/consultoria.html" target="_blank"
-                    className="product-card group block relative overflow-hidden rounded-[2rem] shadow-soft aspect-square md:aspect-[4/5] bg-brand-surface border border-brand-border"
-                    data-product-id="port-consultoria" data-product-name="Captacao de Leads B2B"
-                    data-analytics-id="btn-ver-portfolio-consultoria">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
-                        alt="Projeto" className="w-full h-full object-cover img-reveal absolute inset-0" />
-                    <div
-                        className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity">
+                {/* 6. Cardápio Digital */}
+                <a href="templates/Cardapio.html" target="_blank" rel="noopener noreferrer"
+                    className="product-card group block relative overflow-hidden rounded-[2rem] shadow-soft aspect-[4/5] bg-brand-surface border border-brand-border hover:border-brand-primary/50 transition-all">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
+                        alt="Cardápio Digital" className="w-full h-full object-cover img-reveal absolute inset-0" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/60 to-transparent opacity-85 group-hover:opacity-95 transition-opacity"></div>
+                    <div className="absolute top-6 right-6 z-20">
+                        <span className="bg-brand-primary text-white text-[10px] uppercase font-bold px-3.5 py-1.5 rounded-full shadow-md tracking-widest">
+                            Cardápio Online
+                        </span>
                     </div>
-                    <div className="absolute bottom-0 left-0 p-8 md:p-10 z-10">
-                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-3">Serviços B2B
-                        </p>
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white">Captação de Leads</h3>
+                    <div className="absolute bottom-0 left-0 p-8 z-10">
+                        <p className="text-blue-300 font-mono text-xs font-bold uppercase tracking-widest mb-2">Gastronomia &amp; Delivery</p>
+                        <h3 className="text-2xl font-extrabold text-white mb-2">Cardápio Digital</h3>
+                        <p className="text-xs text-blue-100 font-medium line-clamp-2">Cardápio interativo e pedidos diretos no WhatsApp sem comissões.</p>
                     </div>
                 </a>
             </div>
