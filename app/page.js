@@ -6,7 +6,6 @@ import Link from 'next/link';
 export default function Home() {
   const [isDictOpen, setIsDictOpen] = useState(false);
   const [formData, setFormData] = useState({ nome: '', area: '', ideia: '' });
-  const [isMuted, setIsMuted] = useState(true);
 
   const toggleDictionary = () => {
     setIsDictOpen(!isDictOpen);
@@ -57,27 +56,18 @@ export default function Home() {
         </a>
     </nav>
 
-    {/* 2. Hero Section (Design System Azul com Video de Fundo) */}
+    {/* 2. Hero Section (Design System Azul com Imagem Sobreposta) */}
     <section
-        className="relative pt-40 pb-40 px-6 flex flex-col items-center overflow-hidden bg-brand-primary rounded-b-[3.5rem] shadow-2xl">
+        className="relative pt-40 px-6 flex flex-col items-center overflow-visible bg-brand-primary rounded-b-[3rem] shadow-2xl">
 
-        {/* Video de Fundo */}
-        <div className="absolute inset-0 z-0 w-full h-full overflow-hidden rounded-b-[3.5rem]">
-            <video 
-                src="assets/video.mp4" 
-                autoPlay 
-                muted={isMuted} 
-                loop 
-                playsInline 
-                className="w-full h-full object-cover" 
-            />
-        </div>
+        {/* Grid Pattern (Fundo Tech) */}
+        <div className="absolute inset-0 z-0 bg-grid-pattern opacity-40 rounded-b-[3rem]"></div>
 
         {/* Círculos decorativos estilo imagem referência */}
-        <div className="absolute top-1/4 left-10 w-4 h-4 rounded-full border-2 border-white/40 hidden md:block z-10"></div>
-        <div className="absolute top-20 right-32 w-3 h-3 rounded-full bg-white hidden md:block z-10"></div>
+        <div className="absolute top-1/4 left-10 w-4 h-4 rounded-full border-2 border-white/40 hidden md:block z-0"></div>
+        <div className="absolute top-20 right-32 w-3 h-3 rounded-full bg-white hidden md:block z-0"></div>
         <div
-            className="absolute bottom-1/3 right-[15%] w-3 h-3 rounded-full border-2 border-[#60A5FA]/80 hidden lg:block z-10">
+            className="absolute bottom-1/3 right-[15%] w-3 h-3 rounded-full border-2 border-[#60A5FA]/80 hidden lg:block z-0">
         </div>
 
         <div className="relative z-10 text-center w-full max-w-[1400px] mx-auto">
@@ -145,28 +135,14 @@ export default function Home() {
 
         </div>
 
-        {/* Controle de Som do Vídeo de Fundo */}
-        <button 
-            onClick={() => setIsMuted(!isMuted)}
-            className="absolute bottom-6 right-6 bg-black/60 hover:bg-black/80 backdrop-blur-md text-white p-3.5 rounded-full transition-all duration-200 shadow-lg border border-white/10 z-30 flex items-center justify-center"
-            title={isMuted ? "Ativar som" : "Desativar som"}
-        >
-            {isMuted ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                </svg>
-            ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                </svg>
-            )}
-        </button>
+        <div className="relative w-full max-w-5xl mx-auto z-20 -mb-24 md:-mb-40 lg:-mb-56 px-4 flex justify-center drop-shadow-2xl">
+            <img src="assets/fundo.png" alt="Celulares" className="w-full h-auto object-contain" />
+        </div>
 
     </section>
 
     {/* 3. Manifesto / Declaração */}
-    <section className="py-32 px-6 bg-brand-background border-b border-brand-border">
+    <section className="pt-40 md:pt-56 lg:pt-72 pb-32 px-6 bg-brand-background border-b border-brand-border">
         <div className="max-w-[1200px] mx-auto text-center md:text-left">
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-medium leading-tight text-brand-muted">
                 A maioria dos sites na internet são <span className="text-brand-secondary font-extrabold">panfletos digitais
