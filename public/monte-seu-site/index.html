@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -205,45 +205,375 @@ textarea.form-input{resize:vertical;min-height:100px}
     <div class="sheet-inner" id="sheetInner"></div>
   </div>
 </div>
-<script>
-const PRICES={landingPage:649,institucional:899,portfolio:749,personalizado:null,sec4:0,sec6:120,sec8:220,sec10:340,sec10p:480,whatsapp:0,formulario:60,mapa:45,galeria:80,depoimentos:50,faq:55,instagram:90,analytics:80,pixel:80,leads:120,agendamento:220,chat:140,designEssencial:0,designPersonalizado:150,designPremium:380,textos:220,revisao:90,tratamento:70,pesquisa:55,cadastro:80,dominio:70,hospedagem:90};
-const WHATSAPP_NUMBER='553499778403';
-let state={currentStep:0,siteType:null,siteSize:null,features:[],design:null,extras:[],nome:'',empresa:'',whatsapp:'',email:'',descricao:'',temLogo:null,referencia:''};
-const STEPS=[{id:'tipo',label:'Tipo'},{id:'tamanho',label:'Tamanho'},{id:'funcionalidades',label:'Funcoes'},{id:'visual',label:'Visual'},{id:'adicionais',label:'Extras'},{id:'dados',label:'Seus dados'}];
-const SVG_CHECK='<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const fmt=v=>v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-function calcTotal(){if(state.siteType==='personalizado')return null;let t=0;if(state.siteType)t+=PRICES[state.siteType]||0;if(state.siteSize)t+=PRICES[state.siteSize]||0;state.features.forEach(f=>t+=PRICES[f]||0);if(state.design)t+=PRICES[state.design]||0;state.extras.forEach(e=>t+=PRICES[e]||0);return t}
-function totalDisplay(){const t=calcTotal();if(t===null)return{custom:true};return{value:t,str:fmt(t)}}
-function esc(s){return(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function renderProgress(){const stepsEl=document.getElementById('progressSteps'),labelsEl=document.getElementById('progressLabels'),fillEl=document.getElementById('progressFill');fillEl.style.width=(state.currentStep/(STEPS.length-1)*100)+'%';let sH='',lH='';STEPS.forEach((s,i)=>{const done=i<state.currentStep,active=i===state.currentStep,cls=done?'done':(active?'active':'');sH+='<div class="progress-step"><div class="step-circle '+cls+'">'+(done?SVG_CHECK:(i+1))+'</div>'+(i<STEPS.length-1?'<div class="step-line '+(done?'done':'')+'"></div>':'')+'</div>';lH+='<div class="progress-label '+(active?'active':'')+'">'+s.label+'</div>'});stepsEl.innerHTML=sH;labelsEl.innerHTML=lH}
-function renderStep0(){const types=[{key:'landingPage',icon:'🚀',name:'Landing Page',desc:'Uma pagina estrategica para apresentar um negocio, servico, produto ou campanha e direcionar visitantes para uma acao.',badge:null},{key:'institucional',icon:'🏢',name:'Site Institucional',desc:'Site completo para apresentar sua empresa, servicos, diferenciais, contato e outras informacoes importantes.',badge:{cls:'badge-popular',txt:'Mais solicitado'}},{key:'portfolio',icon:'🎨',name:'Portfolio',desc:'Ideal para profissionais, fotografos, designers, arquitetos e empresas que desejam apresentar seus trabalhos.',badge:null},{key:'personalizado',icon:'⚙️',name:'Projeto Personalizado',desc:'Para projetos com funcionalidades especificas ou necessidades fora dos formatos tradicionais.',badge:{cls:'badge-rec',txt:'Sob analise'}}];const cards=types.map(t=>{const sel=state.siteType===t.key?'selected':'';const price=t.key==='personalizado'?'<span class="card-price">Valor sob analise</span>':'<span class="card-price">A partir de R$ '+fmt(PRICES[t.key])+'</span>';const badge=t.badge?'<span class="card-badge '+t.badge.cls+'">'+t.badge.txt+'</span>':'';return'<div class="option-card '+sel+'" onclick="selectType(\''+t.key+'\')"><div class="card-check">'+SVG_CHECK+'</div><div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap"><div class="card-icon">'+t.icon+'</div>'+badge+'</div><div class="card-name">'+t.name+'</div><div class="card-desc">'+t.desc+'</div>'+price+'</div>'}).join('');const ci=state.siteType==='personalizado'?'<div class="custom-info"><div class="custom-info-icon"><svg width="20" height="20" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div><div style="font-weight:700;font-size:.875rem;color:var(--secondary);margin-bottom:.25rem">Projeto sob analise</div><div style="font-size:.8rem;color:var(--muted);line-height:1.55">Para projetos personalizados, o valor sera definido apos uma conversa sobre as necessidades especificas. Continue para nos contar mais!</div></div></div>':'';return'<div class="step-panel" id="step-0"><div class="step-header"><div class="step-eyebrow">Etapa 1 de '+STEPS.length+'</div><h1 class="step-title">Qual site voce precisa?</h1><p class="step-subtitle">Escolha a opcao que mais combina com o seu projeto. Voce podera personalizar tudo nas proximas etapas.</p></div><div class="cards-grid">'+cards+'</div>'+ci+'</div>'}
-function renderStep1(){const sizes=[{key:'sec4',label:'Ate 4 secoes',extra:'Incluso no projeto',note:'Ideal para campanhas rapidas'},{key:'sec6',label:'Ate 6 secoes',extra:'+ R$ '+fmt(PRICES.sec6),note:'Mais popular para landing pages'},{key:'sec8',label:'Ate 8 secoes',extra:'+ R$ '+fmt(PRICES.sec8),note:'Recomendado para sites completos'},{key:'sec10',label:'Ate 10 secoes',extra:'+ R$ '+fmt(PRICES.sec10),note:'Ideal para sites institucionais'},{key:'sec10p',label:'Mais de 10 secoes',extra:'+ R$ '+fmt(PRICES.sec10p),note:'Para projetos mais robustos'}];const opts=sizes.map(s=>'<div class="size-option '+(state.siteSize===s.key?'selected':'')+'" onclick="selectSize(\''+s.key+'\')"><div><div class="size-name">'+s.label+'</div><div class="size-desc">'+s.note+'</div></div><div class="size-extra">'+s.extra+'</div></div>').join('');return'<div class="step-panel" id="step-1"><div class="step-header"><div class="step-eyebrow">Etapa 2 de '+STEPS.length+'</div><h1 class="step-title">Qual sera o tamanho do seu site?</h1><p class="step-subtitle">Uma <strong>secao</strong> e cada bloco de conteudo da pagina, como apresentacao, servicos, depoimentos ou contato.</p></div><div class="size-options">'+opts+'</div><div class="example-box"><div class="example-box-title">Exemplo de secoes</div><ul class="example-list"><li>Apresentacao principal (hero)</li><li>Sobre a empresa ou profissional</li><li>Servicos ou produtos oferecidos</li><li>Diferenciais e beneficios</li><li>Depoimentos de clientes</li><li>Perguntas frequentes (FAQ)</li><li>Contato e localizacao</li></ul></div></div>'}
-function renderStep2(){const features=[{key:'whatsapp',icon:'💬',name:'Botao de WhatsApp',desc:'Permite que visitantes iniciem uma conversa com sua empresa com um clique.',isFree:true,badge:null},{key:'formulario',icon:'📋',name:'Formulario de contato',desc:'Facilite o contato de potenciais clientes mesmo quando voce nao estiver disponivel.',isFree:false,badge:{cls:'badge-rec',txt:'Recomendado'}},{key:'mapa',icon:'📍',name:'Google Maps',desc:'Mostre sua localizacao e ajude clientes a encontrarem seu negocio.',isFree:false,badge:{cls:'badge-local',txt:'Negocios locais'}},{key:'galeria',icon:'🖼️',name:'Galeria de fotos',desc:'Apresente produtos, servicos ou ambiente em um layout visual organizado.',isFree:false,badge:null},{key:'depoimentos',icon:'⭐',name:'Depoimentos',desc:'Destaque avaliacoes de clientes para aumentar a confianca em sua empresa.',isFree:false,badge:{cls:'badge-popular',txt:'Mais escolhido'}},{key:'faq',icon:'❓',name:'FAQ - Perguntas frequentes',desc:'Organize as principais duvidas dos seus clientes de forma interativa.',isFree:false,badge:null},{key:'instagram',icon:'📸',name:'Integracao Instagram',desc:'Conecte seus conteudos do Instagram diretamente ao site.',isFree:false,badge:null},{key:'analytics',icon:'📊',name:'Google Analytics',desc:'Entenda quantas pessoas visitam seu site e quais paginas despertam mais interesse.',isFree:false,badge:{cls:'badge-rec',txt:'Recomendado'}},{key:'pixel',icon:'🎯',name:'Meta Pixel',desc:'Acompanhe resultados de anuncios e crie publicos qualificados para campanhas.',isFree:false,badge:{cls:'badge-ads',txt:'Ideal para anuncios'}},{key:'leads',icon:'🧲',name:'Captura de Leads',desc:'Crie formularios estrategicos para captar contatos de potenciais clientes.',isFree:false,badge:null},{key:'agendamento',icon:'📅',name:'Agendamento online',desc:'Permita que clientes solicitem ou agendem horarios diretamente pelo site.',isFree:false,badge:{cls:'badge-popular',txt:'Mais escolhido'}},{key:'chat',icon:'🗨️',name:'Chat online',desc:'Disponibilize um canal adicional de atendimento em tempo real para os visitantes.',isFree:false,badge:null}];const cards=features.map(f=>{const sel=state.features.includes(f.key)?'selected':'';const price=f.isFree?'<span class="feature-price free">Incluso gratuitamente</span>':'<span class="feature-price">Adicionar + R$ '+fmt(PRICES[f.key])+'</span>';const badge=f.badge?'<span class="card-badge '+f.badge.cls+'" style="font-size:.6rem;padding:.15rem .5rem">'+f.badge.txt+'</span>':'';return'<div class="feature-card '+sel+'" onclick="toggleFeature(\''+f.key+'\')"><div class="feature-checkbox">'+SVG_CHECK+'</div><div class="feature-info"><div class="feature-name"><span style="font-size:1rem">'+f.icon+'</span> '+f.name+' '+badge+'</div><div class="feature-desc">'+f.desc+'</div>'+price+'</div></div>'}).join('');const leadsNote='<div class="info-note" id="leadsNote" style="'+(state.features.includes('leads')?'display:flex':'display:none')+'"><span>💡</span><span>Com captura de leads, recomendamos tambem ativar <strong>Google Analytics</strong> ou <strong>Meta Pixel</strong> para acompanhar o desempenho.</span></div>';return'<div class="step-panel" id="step-2"><div class="step-header"><div class="step-eyebrow">Etapa 3 de '+STEPS.length+'</div><h1 class="step-title">O que voce gostaria de incluir?</h1><p class="step-subtitle">Escolha apenas os recursos que fazem sentido para o seu negocio. Todos sao opcionais.</p></div><div class="feature-grid">'+cards+'</div>'+leadsNote+'</div>'}
-function renderStep3(){const designs=[{key:'designEssencial',icon:'✨',name:'Essencial',desc:'Visual profissional, limpo e adaptado a identidade da empresa. Responsivo e bem acabado.',extra:'Incluso no projeto',badge:null},{key:'designPersonalizado',icon:'🎨',name:'Personalizado',desc:'Design desenvolvido com maior nivel de personalizacao visual e detalhes exclusivos.',extra:'+ R$ '+fmt(PRICES.designPersonalizado),badge:{cls:'badge-popular',txt:'Mais escolhido'}},{key:'designPremium',icon:'💎',name:'Premium',desc:'Projeto visual mais elaborado, com animacoes, elementos personalizados e maior nivel de acabamento.',extra:'+ R$ '+fmt(PRICES.designPremium),badge:{cls:'badge-rec',txt:'Para impressionar'}}];const cards=designs.map(d=>'<div class="option-card '+(state.design===d.key?'selected':'')+'" onclick="selectDesign(\''+d.key+'\')"><div class="card-check">'+SVG_CHECK+'</div><div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap"><div class="card-icon">'+d.icon+'</div>'+(d.badge?'<span class="card-badge '+d.badge.cls+'">'+d.badge.txt+'</span>':'')+'</div><div class="card-name">'+d.name+'</div><div class="card-desc">'+d.desc+'</div><div class="card-price">'+d.extra+'</div></div>').join('');return'<div class="step-panel" id="step-3"><div class="step-header"><div class="step-eyebrow">Etapa 4 de '+STEPS.length+'</div><h1 class="step-title">Como voce quer o visual do seu site?</h1><p class="step-subtitle">O nivel de personalizacao define o quanto o design sera exclusivo e elaborado para a sua marca.</p></div><div class="cards-grid cards-grid-3">'+cards+'</div></div>'}
-function renderStep4(){const extras=[{key:'textos',icon:'✍️',name:'Criacao dos textos',desc:'Desenvolvimento e organizacao dos textos para as principais areas do site.'},{key:'revisao',icon:'🔍',name:'Revisao dos textos',desc:'Revisao e melhoria dos textos que voce nos enviar.'},{key:'tratamento',icon:'🖼️',name:'Tratamento de imagens',desc:'Ajustes basicos para deixar suas imagens mais adequadas ao site.'},{key:'pesquisa',icon:'🔎',name:'Pesquisa de imagens',desc:'Selecao de imagens profissionais adequadas ao projeto.'},{key:'cadastro',icon:'📂',name:'Cadastro de conteudo',desc:'Organizacao e insercao de conteudos adicionais no site.'},{key:'dominio',icon:'🌐',name:'Configuracao de dominio',desc:'Auxilio na conexao e configuracao do endereco do seu site.'},{key:'hospedagem',icon:'☁️',name:'Configuracao de hospedagem',desc:'Auxilio na configuracao do ambiente onde o site ficara publicado.'}];const cards=extras.map(e=>'<div class="feature-card '+(state.extras.includes(e.key)?'selected':'')+'" onclick="toggleExtra(\''+e.key+'\')"><div class="feature-checkbox">'+SVG_CHECK+'</div><div class="feature-info"><div class="feature-name"><span style="font-size:1rem">'+e.icon+'</span> '+e.name+'</div><div class="feature-desc">'+e.desc+'</div><span class="feature-price">+ R$ '+fmt(PRICES[e.key])+'</span></div></div>').join('');return'<div class="step-panel" id="step-4"><div class="step-header"><div class="step-eyebrow">Etapa 5 de '+STEPS.length+'</div><h1 class="step-title">Precisa de ajuda com o conteudo?</h1><p class="step-subtitle">Servicos complementares para deixar o projeto mais completo, sem precisar contratar fornecedores separados.</p></div><div class="feature-grid">'+cards+'</div></div>'}
-function renderStep5(){return'<div class="step-panel" id="step-5"><div class="final-hero"><span class="final-hero-emoji">🚀</span><h2>Seu projeto esta quase pronto!</h2><p>Preencha seus dados para receber o orcamento completo e personalizado.</p></div><div class="step-header"><div class="step-eyebrow">Etapa 6 de '+STEPS.length+'</div><h1 class="step-title">Sobre voce</h1><p class="step-subtitle">Precisamos de algumas informacoes para enviar seu orcamento.</p></div><div class="form-row"><div class="form-group"><label class="form-label">Seu nome *</label><input class="form-input" type="text" id="inputNome" placeholder="Como podemos te chamar?" value="'+esc(state.nome)+'" oninput="state.nome=this.value;renderSummary()" /></div><div class="form-group"><label class="form-label">Empresa <span>(opcional)</span></label><input class="form-input" type="text" id="inputEmpresa" placeholder="Nome da sua empresa" value="'+esc(state.empresa)+'" oninput="state.empresa=this.value;renderSummary()" /></div></div><div class="form-row"><div class="form-group"><label class="form-label">WhatsApp *</label><input class="form-input" type="tel" id="inputWA" placeholder="(34) 99999-9999" value="'+esc(state.whatsapp)+'" oninput="state.whatsapp=this.value;renderSummary()" /></div><div class="form-group"><label class="form-label">E-mail <span>(opcional)</span></label><input class="form-input" type="email" id="inputEmail" placeholder="seu@email.com" value="'+esc(state.email)+'" oninput="state.email=this.value;renderSummary()" /></div></div><div class="form-group"><label class="form-label">Conte sobre seu projeto <span>(opcional)</span></label><textarea class="form-input" id="inputDesc" placeholder="Descreva o objetivo do site, publico-alvo, prazo..." oninput="state.descricao=this.value;renderSummary()">'+esc(state.descricao)+'</textarea></div><div class="divider"></div><div class="form-group"><label class="form-label">Voce ja possui identidade visual / logotipo?</label><div class="radio-group"><div class="radio-opt '+(state.temLogo==="sim"?"selected":"")+'" onclick="selectLogo(\'sim\')">Sim, ja tenho</div><div class="radio-opt '+(state.temLogo==="nao"?"selected":"")+'" onclick="selectLogo(\'nao\')">Ainda nao</div></div></div><div class="form-group"><label class="form-label">Site de referencia <span>(opcional)</span></label><input class="form-input" type="url" id="inputRef" placeholder="https://exemplo.com.br" value="'+esc(state.referencia)+'" oninput="state.referencia=this.value" /></div><div style="margin-top:1.5rem"><button class="btn btn-whatsapp" onclick="sendWhatsApp()"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>Solicitar orcamento pelo WhatsApp</button></div><p style="font-size:.75rem;color:#94A3B8;text-align:center;margin-top:1rem;line-height:1.5">Ao clicar, voce sera redirecionado para o WhatsApp com a sua configuracao completa.<br>O orcamento final sera confirmado apos analise do projeto.</p></div>'}
-function renderSummaryHTML(){const typeName={landingPage:'Landing Page',institucional:'Site Institucional',portfolio:'Portfolio',personalizado:'Projeto Personalizado'};const sizeName={sec4:'Ate 4 secoes',sec6:'Ate 6 secoes',sec8:'Ate 8 secoes',sec10:'Ate 10 secoes',sec10p:'Mais de 10 secoes'};const designName={designEssencial:'Essencial',designPersonalizado:'Personalizado',designPremium:'Premium'};const featureNames={whatsapp:'WhatsApp',formulario:'Formulario',mapa:'Google Maps',galeria:'Galeria',depoimentos:'Depoimentos',faq:'FAQ',instagram:'Instagram',analytics:'Analytics',pixel:'Meta Pixel',leads:'Captura de leads',agendamento:'Agendamento',chat:'Chat online'};const extraNames={textos:'Criacao de textos',revisao:'Revisao de textos',tratamento:'Tratamento de imagens',pesquisa:'Pesquisa de imagens',cadastro:'Cadastro de conteudo',dominio:'Conf. de dominio',hospedagem:'Conf. de hospedagem'};const td=totalDisplay();const priceHtml=td.custom?'<div class="summary-price-custom">Sob analise</div>':'<div class="summary-price"><span class="currency">R$&nbsp;</span>'+td.str+'</div>';const ft=state.features.map(f=>'<span class="summary-tag">'+(featureNames[f]||f)+'</span>').join('');const et=state.extras.map(e=>'<span class="summary-tag" style="background:#F1F5F9;color:var(--muted)">'+(extraNames[e]||e)+'</span>').join('');return'<div class="summary-header"><div class="summary-header-icon"><svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div><div><h3>Seu projeto</h3><p>Estimativa em tempo real</p></div></div><div class="summary-body"><div class="summary-item"><div class="summary-item-label">Tipo de site</div><div class="summary-item-value '+(state.siteType?'':'empty')+'">'+(state.siteType?typeName[state.siteType]:'Nao selecionado')+'</div></div><div class="summary-item"><div class="summary-item-label">Tamanho</div><div class="summary-item-value '+(state.siteSize?'':'empty')+'">'+(state.siteSize?sizeName[state.siteSize]:'Nao selecionado')+'</div></div><div class="summary-item"><div class="summary-item-label">Funcionalidades</div>'+(ft?'<div class="summary-tags">'+ft+'</div>':'<div class="summary-item-value empty">Nenhuma selecionada</div>')+'</div><div class="summary-item"><div class="summary-item-label">Personalizacao visual</div><div class="summary-item-value '+(state.design?'':'empty')+'">'+(state.design?designName[state.design]:'Nao selecionada')+'</div></div><div class="summary-item"><div class="summary-item-label">Servicos adicionais</div>'+(et?'<div class="summary-tags">'+et+'</div>':'<div class="summary-item-value empty">Nenhum selecionado</div>')+'</div></div><div class="summary-footer"><div class="summary-price-label">Estimativa atual</div>'+priceHtml+'<p class="summary-disclaimer">Valor estimado com base nas opcoes selecionadas. O orcamento final sera confirmado apos analise do projeto.</p></div>'}
-function renderSummary(){const card=document.getElementById('summaryCard'),sheet=document.getElementById('sheetInner');const html=renderSummaryHTML();if(card)card.innerHTML=html;if(sheet&&document.getElementById('mobileSummarySheet').classList.contains('open'))sheet.innerHTML=html;const td=totalDisplay(),badge=document.getElementById('mobileBadgePrice');if(badge)badge.textContent=td.custom?'Sob analise':'R$ '+td.str}
-function renderSteps(){document.getElementById('stepsContainer').innerHTML=renderStep0()+renderStep1()+renderStep2()+renderStep3()+renderStep4()+renderStep5()}
-function showCurrentStep(){document.querySelectorAll('.step-panel').forEach(el=>el.classList.remove('active'));const panel=document.getElementById('step-'+state.currentStep);if(panel)panel.classList.add('active');const pg=document.getElementById('progressWrapper'),nb=document.getElementById('navButtons'),ss=document.getElementById('successScreen'),mb=document.getElementById('mobileSummaryBtn');if(state.currentStep===-1){pg.style.display='none';nb.style.display='none';if(mb)mb.style.display='none';ss.classList.add('active')}else{pg.style.display='';nb.style.display='';if(mb)mb.style.display='';ss.classList.remove('active');renderProgress();renderSummary();renderNavButtons();window.scrollTo({top:0,behavior:'smooth'})}}
-function renderNavButtons(){const nav=document.getElementById('navButtons'),isFirst=state.currentStep===0,isLast=state.currentStep===STEPS.length-1;let h='';h+=isFirst?'<div></div>':'<button class="btn btn-secondary" onclick="goBack()">&#8592; Voltar</button>';h+=isLast?'<div></div>':'<button class="btn btn-primary" onclick="goNext()">Proximo &#8594;</button>';nav.innerHTML=h}
-function goNext(){if(state.currentStep===0&&!state.siteType){showToast('Selecione o tipo de site para continuar.');return}if(state.currentStep===1&&!state.siteSize&&state.siteType!=='personalizado'){showToast('Selecione o tamanho do site para continuar.');return}if(state.currentStep===3&&!state.design){showToast('Selecione uma opcao de personalizacao visual.');return}if(state.currentStep===0&&state.siteType==='personalizado')state.currentStep=2;else state.currentStep++;reRenderCurrentStep();showCurrentStep()}
-function goBack(){if(state.currentStep===2&&state.siteType==='personalizado')state.currentStep=0;else state.currentStep--;reRenderCurrentStep();showCurrentStep()}
-function reRenderCurrentStep(){const tmp=document.createElement('div');tmp.innerHTML=renderStep0()+renderStep1()+renderStep2()+renderStep3()+renderStep4()+renderStep5();STEPS.forEach((_,i)=>{const old=document.getElementById('step-'+i),nw=tmp.querySelector('#step-'+i);if(old&&nw)old.replaceWith(nw)})}
-function selectType(key){state.siteType=key;if(key==='personalizado')state.siteSize=null;reRenderCurrentStep();renderSummary()}
-function selectSize(key){state.siteSize=key;document.querySelectorAll('#step-1 .size-option').forEach(el=>el.classList.toggle('selected',el.getAttribute('onclick').includes("'"+key+"'")));renderSummary()}
-function toggleFeature(key){if(state.features.includes(key))state.features=state.features.filter(f=>f!==key);else state.features.push(key);const card=document.querySelector('#step-2 .feature-card[onclick*="\''+key+'\'"]');if(card)card.classList.toggle('selected',state.features.includes(key));const ln=document.getElementById('leadsNote');if(ln)ln.style.display=state.features.includes('leads')?'flex':'none';renderSummary()}
-function toggleExtra(key){if(state.extras.includes(key))state.extras=state.extras.filter(e=>e!==key);else state.extras.push(key);const card=document.querySelector('#step-4 .feature-card[onclick*="\''+key+'\'"]');if(card)card.classList.toggle('selected',state.extras.includes(key));renderSummary()}
-function selectDesign(key){state.design=key;document.querySelectorAll('#step-3 .option-card').forEach(el=>{const k=el.getAttribute('onclick').match(/'([^']+)'/)?.[1];el.classList.toggle('selected',k===key)});renderSummary()}
-function selectLogo(val){state.temLogo=val;document.querySelectorAll('.radio-opt').forEach(el=>el.classList.toggle('selected',el.getAttribute('onclick').includes("'"+val+"'")))}
-function sendWhatsApp(){if(!state.nome.trim()){showToast('Por favor, informe seu nome.');document.getElementById('inputNome')?.focus();return}if(!state.whatsapp.trim()){showToast('Por favor, informe seu WhatsApp.');document.getElementById('inputWA')?.focus();return}const typeName={landingPage:'Landing Page',institucional:'Site Institucional',portfolio:'Portfolio',personalizado:'Projeto Personalizado'};const sizeName={sec4:'Ate 4 secoes',sec6:'Ate 6 secoes',sec8:'Ate 8 secoes',sec10:'Ate 10 secoes',sec10p:'Mais de 10 secoes'};const designName={designEssencial:'Essencial',designPersonalizado:'Personalizado',designPremium:'Premium'};const featureNames={whatsapp:'Botao de WhatsApp',formulario:'Formulario de contato',mapa:'Google Maps',galeria:'Galeria de fotos',depoimentos:'Depoimentos',faq:'FAQ',instagram:'Integracao Instagram',analytics:'Google Analytics',pixel:'Meta Pixel',leads:'Captura de leads',agendamento:'Agendamento online',chat:'Chat online'};const extraNames={textos:'Criacao de textos',revisao:'Revisao de textos',tratamento:'Tratamento de imagens',pesquisa:'Pesquisa de imagens',cadastro:'Cadastro de conteudo',dominio:'Configuracao de dominio',hospedagem:'Configuracao de hospedagem'};const td=totalDisplay(),priceStr=td.custom?'Sob analise':'R$ '+td.str;const fl=state.features.length?state.features.map(f=>'• '+(featureNames[f]||f)).join('\n'):'• Nenhuma';const el=state.extras.length?state.extras.map(e=>'• '+(extraNames[e]||e)).join('\n'):'• Nenhum';let msg='Ola! Montei uma estimativa para meu site atraves da plataforma *Monte seu Site* da PageMaster.\n\n';msg+='*Tipo de projeto:*\n'+(typeName[state.siteType]||'Nao informado')+'\n\n';if(state.siteType!=='personalizado')msg+='*Quantidade de secoes:*\n'+(sizeName[state.siteSize]||'Nao informado')+'\n\n';msg+='*Funcionalidades:*\n'+fl+'\n\n';msg+='*Personalizacao visual:*\n'+(designName[state.design]||'Nao informado')+'\n\n';msg+='*Servicos adicionais:*\n'+el+'\n\n';msg+='*Estimativa apresentada:*\n'+priceStr+'\n\n';msg+='*Nome:*\n'+state.nome+'\n\n';if(state.empresa)msg+='*Empresa:*\n'+state.empresa+'\n\n';msg+='*WhatsApp:*\n'+state.whatsapp+'\n\n';if(state.email)msg+='*E-mail:*\n'+state.email+'\n\n';if(state.descricao)msg+='*Sobre o projeto:*\n'+state.descricao+'\n\n';if(state.temLogo)msg+='*Possui logo:*\n'+(state.temLogo==='sim'?'Sim':'Nao')+'\n\n';if(state.referencia)msg+='*Site de referencia:*\n'+state.referencia+'\n\n';msg+='Gostaria de receber mais informacoes para dar continuidade ao projeto.';window.open('https://wa.me/'+WHATSAPP_NUMBER+'?text='+encodeURIComponent(msg),'_blank');state.currentStep=-1;showCurrentStep()}
-function confirmReset(){if(confirm('Tem certeza que deseja recomecar? Todas as escolhas serao perdidas.'))fullReset()}
-function fullReset(){state={currentStep:0,siteType:null,siteSize:null,features:[],design:null,extras:[],nome:'',empresa:'',whatsapp:'',email:'',descricao:'',temLogo:null,referencia:''};renderSteps();showCurrentStep();window.scrollTo({top:0,behavior:'smooth'})}
-function openMobileSheet(){const sh=document.getElementById('sheetInner');if(sh)sh.innerHTML=renderSummaryHTML();document.getElementById('mobileSummarySheet').classList.add('open');document.body.style.overflow='hidden'}
-function closeMobileSheet(){document.getElementById('mobileSummarySheet').classList.remove('open');document.body.style.overflow=''}
-function showToast(msg){const ex=document.querySelector('.toast-msg');if(ex)ex.remove();const t=document.createElement('div');t.className='toast-msg';t.textContent=msg;Object.assign(t.style,{position:'fixed',bottom:'5rem',left:'50%',transform:'translateX(-50%)',background:'#0F172A',color:'#fff',padding:'.875rem 1.5rem',borderRadius:'9999px',fontSize:'.875rem',fontWeight:'600',zIndex:'999',whiteSpace:'nowrap',boxShadow:'0 8px 32px rgba(0,0,0,.25)',animation:'fadeIn .3s ease'});document.body.appendChild(t);setTimeout(()=>t.remove(),3500)}
-document.addEventListener('DOMContentLoaded',()=>{renderSteps();showCurrentStep()});
-
+<<script>
+const PRICES = {
+  landingPage: 349,
+  portfolio: 349,
+  institucional: 749,
+  cardapio: 749,
+  catalogo: 749,
+  personalizado: null,
+  sec4: 0,
+  sec6: 120,
+  sec8: 220,
+  sec10: 340,
+  sec10p: 480,
+  whatsapp: 0,
+  formulario: 30,
+  mapa: 20,
+  galeria: 40,
+  depoimentos: 25,
+  faq: 25,
+  instagram: 45,
+  analytics: 40,
+  pixel: 40,
+  leads: 60,
+  agendamento: 110,
+  chat: 70,
+  designEssencial: 0,
+  designPersonalizado: 100,
+  designPremium: 200,
+  textos: 60,
+  revisao: 20,
+  tratamento: 35,
+  pesquisa: 20,
+  cadastro: 40,
+  dominio: 60,
+  hospedagem: 0
+};
+const WHATSAPP_NUMBER = '553499778403';
+let state = {
+  currentStep: 0,
+  siteType: null,
+  siteSize: null,
+  features: [],
+  design: null,
+  extras: [],
+  nome: '',
+  empresa: '',
+  whatsapp: '',
+  email: '',
+  descricao: '',
+  temLogo: null,
+  referencia: ''
+};
+const STEPS = [
+  { id: 'tipo', label: 'Tipo' },
+  { id: 'tamanho', label: 'Tamanho' },
+  { id: 'funcionalidades', label: 'Funções' },
+  { id: 'visual', label: 'Visual' },
+  { id: 'adicionais', label: 'Extras' },
+  { id: 'dados', label: 'Seus dados' }
+];
+const SVG_CHECK = '<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const fmt = v => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function calcTotal() {
+  if (state.siteType === 'personalizado') return null;
+  let t = 0;
+  if (state.siteType) t += PRICES[state.siteType] || 0;
+  if (state.siteSize) t += PRICES[state.siteSize] || 0;
+  state.features.forEach(f => t += PRICES[f] || 0);
+  if (state.design) t += PRICES[state.design] || 0;
+  state.extras.forEach(e => t += PRICES[e] || 0);
+  return t;
+}
+function totalDisplay() {
+  const t = calcTotal();
+  if (t === null) return { custom: true };
+  return { value: t, str: fmt(t) };
+}
+function esc(s) {
+  return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function renderProgress() {
+  const stepsEl = document.getElementById('progressSteps');
+  const labelsEl = document.getElementById('progressLabels');
+  const fillEl = document.getElementById('progressFill');
+  const pct = (state.currentStep / (STEPS.length - 1)) * 100;
+  fillEl.style.width = pct + '%';
+  let sH = '', lH = '';
+  STEPS.forEach((s, i) => {
+    const done = i < state.currentStep;
+    const active = i === state.currentStep;
+    const cls = done ? 'done' : (active ? 'active' : '');
+    sH += '<div class="progress-step"><div class="step-circle ' + cls + '">' + (done ? SVG_CHECK : (i + 1)) + '</div>' + (i < STEPS.length - 1 ? '<div class="step-line ' + (done ? 'done' : '') + '"></div>' : '') + '</div>';
+    lH += '<div class="progress-label ' + (active ? 'active' : '') + '">' + s.label + '</div>';
+  });
+  stepsEl.innerHTML = sH;
+  labelsEl.innerHTML = lH;
+}
+function renderStep0() {
+  const types = [
+    { key: 'landingPage', icon: '🚀', name: 'Landing Page', desc: 'Página estratégica de alta conversão para negócio, produto ou campanha com foco em resultados.', badge: { cls: 'badge-rec', txt: 'Alta conversão' } },
+    { key: 'portfolio', icon: '🎨', name: 'Portfólio', desc: 'Ideal para profissionais liberais, designers, arquitetos, fotógrafos e criadores apresentarem seus trabalhos.', badge: null },
+    { key: 'institucional', icon: '🏢', name: 'Site Institucional', desc: 'Site completo para apresentar sua empresa, serviços, história, diferenciais e contato.', badge: { cls: 'badge-popular', txt: 'Mais solicitado' } },
+    { key: 'cardapio', icon: '🍕', name: 'Cardápio Online', desc: 'Cardápio interativo e moderno para restaurantes, lanchonetes e delivery receberem pedidos.', badge: { cls: 'badge-local', txt: 'Negócios locais' } },
+    { key: 'catalogo', icon: '📦', name: 'Catálogo Online', desc: 'Vitrine digital para expor produtos e coleções de forma organizada, atrativa e moderna.', badge: null },
+    { key: 'personalizado', icon: '⚙️', name: 'Projeto Personalizado', desc: 'Para sistemas web, portais, integrações específicas ou necessidades sob medida.', badge: { cls: 'badge-rec', txt: 'Sob análise' } }
+  ];
+  const cards = types.map(t => {
+    const sel = state.siteType === t.key ? 'selected' : '';
+    const price = t.key === 'personalizado' ? '<span class="card-price">Valor sob análise</span>' : '<span class="card-price">A partir de R$ ' + fmt(PRICES[t.key]) + '</span>';
+    const badge = t.badge ? '<span class="card-badge ' + t.badge.cls + '">' + t.badge.txt + '</span>' : '';
+    return '<div class="option-card ' + sel + '" data-type="' + t.key + '" onclick="selectType(\'' + t.key + '\')"><div class="card-check">' + SVG_CHECK + '</div><div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap"><div class="card-icon">' + t.icon + '</div>' + badge + '</div><div class="card-name">' + t.name + '</div><div class="card-desc">' + t.desc + '</div>' + price + '</div>';
+  }).join('');
+  const ci = state.siteType === 'personalizado' ? '<div class="custom-info"><div class="custom-info-icon"><svg width="20" height="20" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div><div style="font-weight:700;font-size:.875rem;color:var(--secondary);margin-bottom:.25rem">Projeto sob análise</div><div style="font-size:.8rem;color:var(--muted);line-height:1.55">Para projetos personalizados, o valor será definido após alinharmos suas necessidades específicas. Avance para nos contar mais!</div></div></div>' : '';
+  return '<div class="step-panel" id="step-0"><div class="step-header"><div class="step-eyebrow">Etapa 1 de ' + STEPS.length + '</div><h1 class="step-title">Qual site você precisa?</h1><p class="step-subtitle">Escolha a opção que mais combina com seu projeto. Clique para selecionar e avançar automaticamente.</p></div><div class="cards-grid">' + cards + '</div>' + ci + '</div>';
+}
+function renderStep1() {
+  const sizes = [
+    { key: 'sec4', label: 'Até 4 seções', extra: 'Incluso no projeto', note: 'Ideal para campanhas rápidas e diretas' },
+    { key: 'sec6', label: 'Até 6 seções', extra: '+ R$ ' + fmt(PRICES.sec6), note: 'Mais popular para landing pages completas' },
+    { key: 'sec8', label: 'Até 8 seções', extra: '+ R$ ' + fmt(PRICES.sec8), note: 'Recomendado para sites com mais conteúdo' },
+    { key: 'sec10', label: 'Até 10 seções', extra: '+ R$ ' + fmt(PRICES.sec10), note: 'Ideal para sites institucionais completos' },
+    { key: 'sec10p', label: 'Mais de 10 seções', extra: '+ R$ ' + fmt(PRICES.sec10p), note: 'Para projetos mais robustos ou catálogos' }
+  ];
+  const opts = sizes.map(s => '<div class="size-option ' + (state.siteSize === s.key ? 'selected' : '') + '" onclick="selectSize(\'' + s.key + '\')"><div><div class="size-name">' + s.label + '</div><div class="size-desc">' + s.note + '</div></div><div class="size-extra">' + s.extra + '</div></div>').join('');
+  return '<div class="step-panel" id="step-1"><div class="step-header"><div class="step-eyebrow">Etapa 2 de ' + STEPS.length + '</div><h1 class="step-title">Qual será o tamanho do seu site?</h1><p class="step-subtitle">Uma <strong>seção</strong> é cada bloco de conteúdo da página — apresentação, serviços, sobre, depoimentos ou contato.</p></div><div class="size-options">' + opts + '</div><div class="example-box"><div class="example-box-title">Exemplo de seções recomendadas</div><ul class="example-list"><li>Apresentação principal (hero) com chamada para ação</li><li>Sobre a empresa ou profissional</li><li>Serviços, produtos ou itens do cardápio</li><li>Diferenciais e benefícios</li><li>Depoimentos de clientes satisfeitos</li><li>Perguntas frequentes (FAQ)</li><li>Contato e localização</li></ul></div></div>';
+}
+function renderStep2() {
+  const features = [
+    { key: 'whatsapp', icon: '💬', name: 'Botão de WhatsApp', desc: 'Permite que visitantes iniciem uma conversa com sua empresa com um clique.', isFree: true, badge: null },
+    { key: 'formulario', icon: '📋', name: 'Formulário de contato', desc: 'Facilite o contato de potenciais clientes mesmo quando você não estiver disponível.', isFree: false, badge: { cls: 'badge-rec', txt: 'Recomendado' } },
+    { key: 'mapa', icon: '📍', name: 'Google Maps', desc: 'Mostre sua localização e ajude clientes a encontrarem seu negócio.', isFree: false, badge: { cls: 'badge-local', txt: 'Negócios locais' } },
+    { key: 'galeria', icon: '🖼️', name: 'Galeria de fotos', desc: 'Apresente produtos, serviços ou ambiente em um layout visual organizado.', isFree: false, badge: null },
+    { key: 'depoimentos', icon: '⭐', name: 'Depoimentos', desc: 'Destaque avaliações de clientes para aumentar a confiança em sua empresa.', isFree: false, badge: { cls: 'badge-popular', txt: 'Mais escolhido' } },
+    { key: 'faq', icon: '❓', name: 'FAQ — Perguntas frequentes', desc: 'Organize as principais dúvidas dos seus clientes de forma interativa.', isFree: false, badge: null },
+    { key: 'instagram', icon: '📸', name: 'Integração Instagram', desc: 'Conecte seus conteúdos do Instagram diretamente ao site.', isFree: false, badge: null },
+    { key: 'analytics', icon: '📊', name: 'Google Analytics', desc: 'Entenda quantas pessoas visitam seu site e quais páginas despertam mais interesse.', isFree: false, badge: { cls: 'badge-rec', txt: 'Recomendado' } },
+    { key: 'pixel', icon: '🎯', name: 'Meta Pixel', desc: 'Acompanhe resultados de anúncios e crie públicos qualificados para campanhas.', isFree: false, badge: { cls: 'badge-ads', txt: 'Ideal para anúncios' } },
+    { key: 'leads', icon: '🧲', name: 'Captura de Leads', desc: 'Crie formulários estratégicos para captar contatos de potenciais clientes.', isFree: false, badge: null },
+    { key: 'agendamento', icon: '📅', name: 'Agendamento online', desc: 'Permita que clientes solicitem ou agendem horários diretamente pelo site.', isFree: false, badge: { cls: 'badge-popular', txt: 'Mais escolhido' } },
+    { key: 'chat', icon: '🗨️', name: 'Chat online', desc: 'Disponibilize um canal adicional de atendimento em tempo real para os visitantes.', isFree: false, badge: null }
+  ];
+  const cards = features.map(f => {
+    const sel = state.features.includes(f.key) ? 'selected' : '';
+    const price = f.isFree ? '<span class="feature-price free">✓ Incluso gratuitamente</span>' : '<span class="feature-price">Adicionar + R$ ' + fmt(PRICES[f.key]) + '</span>';
+    const badge = f.badge ? '<span class="card-badge ' + f.badge.cls + '" style="font-size:.6rem;padding:.15rem .5rem">' + f.badge.txt + '</span>' : '';
+    return '<div class="feature-card ' + sel + '" onclick="toggleFeature(\'' + f.key + '\')"><div class="feature-checkbox">' + SVG_CHECK + '</div><div class="feature-info"><div class="feature-name"><span style="font-size:1rem">' + f.icon + '</span> ' + f.name + ' ' + badge + '</div><div class="feature-desc">' + f.desc + '</div>' + price + '</div></div>';
+  }).join('');
+  const leadsNote = '<div class="info-note" id="leadsNote" style="' + (state.features.includes('leads') ? 'display:flex' : 'display:none') + '"><span>💡</span><span>Com captura de leads, recomendamos também ativar <strong>Google Analytics</strong> ou <strong>Meta Pixel</strong> para acompanhar o desempenho.</span></div>';
+  return '<div class="step-panel" id="step-2"><div class="step-header"><div class="step-eyebrow">Etapa 3 de ' + STEPS.length + '</div><h1 class="step-title">O que você gostaria de incluir?</h1><p class="step-subtitle">Escolha apenas os recursos que fazem sentido para o seu negócio. Todos são opcionais.</p></div><div class="feature-grid">' + cards + '</div>' + leadsNote + '</div>';
+}
+function renderStep3() {
+  const designs = [
+    { key: 'designEssencial', icon: '✨', name: 'Essencial', desc: 'Visual profissional, limpo e adaptado à identidade da empresa. Responsivo e bem acabado.', extra: 'Incluso no projeto', badge: null },
+    { key: 'designPersonalizado', icon: '🎨', name: 'Personalizado', desc: 'Design desenvolvido com maior nível de personalização visual e detalhes exclusivos.', extra: '+ R$ ' + fmt(PRICES.designPersonalizado), badge: { cls: 'badge-popular', txt: 'Mais escolhido' } },
+    { key: 'designPremium', icon: '💎', name: 'Premium', desc: 'Projeto visual refinado com animações leves, elementos personalizados e alto acabamento.', extra: '+ R$ ' + fmt(PRICES.designPremium), badge: { cls: 'badge-rec', txt: 'Para impressionar' } }
+  ];
+  const cards = designs.map(d => '<div class="option-card ' + (state.design === d.key ? 'selected' : '') + '" onclick="selectDesign(\'' + d.key + '\')"><div class="card-check">' + SVG_CHECK + '</div><div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap"><div class="card-icon">' + d.icon + '</div>' + (d.badge ? '<span class="card-badge ' + d.badge.cls + '">' + d.badge.txt + '</span>' : '') + '</div><div class="card-name">' + d.name + '</div><div class="card-desc">' + d.desc + '</div><div class="card-price">' + d.extra + '</div></div>').join('');
+  return '<div class="step-panel" id="step-3"><div class="step-header"><div class="step-eyebrow">Etapa 4 de ' + STEPS.length + '</div><h1 class="step-title">Como você quer o visual do seu site?</h1><p class="step-subtitle">O nível de personalização define o quanto o design será exclusivo e trabalhado para a sua marca.</p></div><div class="cards-grid cards-grid-3">' + cards + '</div></div>';
+}
+function renderStep4() {
+  const extras = [
+    { key: 'textos', icon: '✍️', name: 'Criação dos textos', desc: 'Desenvolvimento e organização dos textos para as principais áreas do site.', price: PRICES.textos },
+    { key: 'revisao', icon: '🔍', name: 'Revisão dos textos', desc: 'Revisão e melhoria dos textos que você nos enviar.', price: PRICES.revisao },
+    { key: 'tratamento', icon: '🖼️', name: 'Tratamento de imagens', desc: 'Ajustes básicos para deixar suas imagens mais adequadas ao site.', price: PRICES.tratamento },
+    { key: 'pesquisa', icon: '🔎', name: 'Pesquisa de imagens', desc: 'Seleção de imagens profissionais de alta qualidade para o projeto.', price: PRICES.pesquisa },
+    { key: 'cadastro', icon: '📂', name: 'Cadastro de conteúdo', desc: 'Organização e inserção de conteúdos adicionais no site.', price: PRICES.cadastro },
+    { key: 'dominio', icon: '🌐', name: 'Configuração de domínio (1 ano)', desc: 'Auxílio completo na conexão e registro do seu endereço oficial por 1 ano.', price: PRICES.dominio },
+    { key: 'hospedagem', icon: '☁️', name: 'Configuração de hospedagem', desc: 'Ambiente onde o site ficará publicado de forma rápida e segura.', isFree: true, price: 0 }
+  ];
+  const cards = extras.map(e => {
+    const sel = state.extras.includes(e.key) ? 'selected' : '';
+    const priceStr = e.isFree ? '<span class="feature-price free">✓ Incluso gratuitamente</span>' : '<span class="feature-price">+ R$ ' + fmt(e.price) + '</span>';
+    return '<div class="feature-card ' + sel + '" onclick="toggleExtra(\'' + e.key + '\')"><div class="feature-checkbox">' + SVG_CHECK + '</div><div class="feature-info"><div class="feature-name"><span style="font-size:1rem">' + e.icon + '</span> ' + e.name + '</div><div class="feature-desc">' + e.desc + '</div>' + priceStr + '</div></div>';
+  }).join('');
+  return '<div class="step-panel" id="step-4"><div class="step-header"><div class="step-eyebrow">Etapa 5 de ' + STEPS.length + '</div><h1 class="step-title">Precisa de ajuda com o conteúdo?</h1><p class="step-subtitle">Serviços complementares para deixar seu projeto 100% pronto sem dor de cabeça.</p></div><div class="feature-grid">' + cards + '</div></div>';
+}
+function renderStep5() {
+  return '<div class="step-panel" id="step-5"><div class="final-hero"><span class="final-hero-emoji">🚀</span><h2>Seu projeto está quase pronto!</h2><p>Preencha seus dados para receber o orçamento completo e personalizado.</p></div><div class="step-header"><div class="step-eyebrow">Etapa 6 de ' + STEPS.length + '</div><h1 class="step-title">Sobre você</h1><p class="step-subtitle">Precisamos de algumas informações para formalizar seu orçamento.</p></div><div class="form-row"><div class="form-group"><label class="form-label">Seu nome *</label><input class="form-input" type="text" id="inputNome" placeholder="Como podemos te chamar?" value="' + esc(state.nome) + '" oninput="state.nome=this.value;renderSummary()" /></div><div class="form-group"><label class="form-label">Empresa <span>(opcional)</span></label><input class="form-input" type="text" id="inputEmpresa" placeholder="Nome da sua empresa" value="' + esc(state.empresa) + '" oninput="state.empresa=this.value;renderSummary()" /></div></div><div class="form-row"><div class="form-group"><label class="form-label">WhatsApp *</label><input class="form-input" type="tel" id="inputWA" placeholder="(34) 99999-9999" value="' + esc(state.whatsapp) + '" oninput="state.whatsapp=this.value;renderSummary()" /></div><div class="form-group"><label class="form-label">E-mail <span>(opcional)</span></label><input class="form-input" type="email" id="inputEmail" placeholder="seu@email.com" value="' + esc(state.email) + '" oninput="state.email=this.value;renderSummary()" /></div></div><div class="form-group"><label class="form-label">Conte sobre seu projeto <span>(opcional)</span></label><textarea class="form-input" id="inputDesc" placeholder="Descreva o objetivo do site, público-alvo, detalhes especiais..." oninput="state.descricao=this.value;renderSummary()">' + esc(state.descricao) + '</textarea></div><div class="divider"></div><div class="form-group"><label class="form-label">Você já possui identidade visual / logotipo?</label><div class="radio-group"><div class="radio-opt ' + (state.temLogo === "sim" ? "selected" : "") + '" onclick="selectLogo(\'sim\')">✓ Sim, já tenho</div><div class="radio-opt ' + (state.temLogo === "nao" ? "selected" : "") + '" onclick="selectLogo(\'nao\')">✗ Ainda não</div></div></div><div class="form-group"><label class="form-label">Site de referência <span>(opcional)</span></label><input class="form-input" type="url" id="inputRef" placeholder="https://exemplo.com.br" value="' + esc(state.referencia) + '" oninput="state.referencia=this.value" /></div><div style="margin-top:1.5rem"><button class="btn btn-whatsapp" onclick="sendWhatsApp()"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>Solicitar orçamento pelo WhatsApp</button></div><p style="font-size:.75rem;color:#94A3B8;text-align:center;margin-top:1rem;line-height:1.5">Ao clicar, você será redirecionado para o WhatsApp com a sua configuração completa.<br>O orçamento final será confirmado após análise do projeto.</p></div>';
+}
+function renderSummaryHTML() {
+  const typeName = { landingPage: 'Landing Page', portfolio: 'Portfólio', institucional: 'Site Institucional', cardapio: 'Cardápio Online', catalogo: 'Catálogo Online', personalizado: 'Projeto Personalizado' };
+  const sizeName = { sec4: 'Até 4 seções', sec6: 'Até 6 seções', sec8: 'Até 8 seções', sec10: 'Até 10 seções', sec10p: 'Mais de 10 seções' };
+  const designName = { designEssencial: 'Essencial', designPersonalizado: 'Personalizado', designPremium: 'Premium' };
+  const featureNames = { whatsapp: 'WhatsApp', formulario: 'Formulário', mapa: 'Google Maps', galeria: 'Galeria', depoimentos: 'Depoimentos', faq: 'FAQ', instagram: 'Instagram', analytics: 'Analytics', pixel: 'Meta Pixel', leads: 'Captura de leads', agendamento: 'Agendamento', chat: 'Chat online' };
+  const extraNames = { textos: 'Criação de textos', revisao: 'Revisão de textos', tratamento: 'Tratamento de imagens', pesquisa: 'Pesquisa de imagens', cadastro: 'Cadastro de conteúdo', dominio: 'Domínio (1 ano)', hospedagem: 'Hospedagem inclusa' };
+  const td = totalDisplay();
+  const priceHtml = td.custom ? '<div class="summary-price-custom">Sob análise</div>' : '<div class="summary-price"><span class="currency">R$&nbsp;</span>' + td.str + '</div>';
+  const ft = state.features.map(f => '<span class="summary-tag">' + (featureNames[f] || f) + '</span>').join('');
+  const et = state.extras.map(e => '<span class="summary-tag" style="background:#F1F5F9;color:var(--muted)">' + (extraNames[e] || e) + '</span>').join('');
+  return '<div class="summary-header"><div class="summary-header-icon"><svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div><div><h3>Seu projeto</h3><p>Estimativa em tempo real</p></div></div><div class="summary-body"><div class="summary-item"><div class="summary-item-label">Tipo de site</div><div class="summary-item-value ' + (state.siteType ? '' : 'empty') + '">' + (state.siteType ? typeName[state.siteType] : 'Não selecionado') + '</div></div><div class="summary-item"><div class="summary-item-label">Tamanho</div><div class="summary-item-value ' + (state.siteSize ? '' : 'empty') + '">' + (state.siteSize ? sizeName[state.siteSize] : 'Não selecionado') + '</div></div><div class="summary-item"><div class="summary-item-label">Funcionalidades</div>' + (ft ? '<div class="summary-tags">' + ft + '</div>' : '<div class="summary-item-value empty">Nenhuma selecionada</div>') + '</div><div class="summary-item"><div class="summary-item-label">Personalização visual</div><div class="summary-item-value ' + (state.design ? '' : 'empty') + '">' + (state.design ? designName[state.design] : 'Não selecionada') + '</div></div><div class="summary-item"><div class="summary-item-label">Serviços adicionais</div>' + (et ? '<div class="summary-tags">' + et + '</div>' : '<div class="summary-item-value empty">Nenhum selecionado</div>') + '</div></div><div class="summary-footer"><div class="summary-price-label">Estimativa atual</div>' + priceHtml + '<p class="summary-disclaimer">Valor estimado com base nas opções selecionadas. O orçamento final será confirmado após análise do projeto.</p></div>';
+}
+function renderSummary() {
+  const card = document.getElementById('summaryCard'), sheet = document.getElementById('sheetInner');
+  const html = renderSummaryHTML();
+  if (card) card.innerHTML = html;
+  if (sheet && document.getElementById('mobileSummarySheet').classList.contains('open')) sheet.innerHTML = html;
+  const td = totalDisplay(), badge = document.getElementById('mobileBadgePrice');
+  if (badge) badge.textContent = td.custom ? 'Sob análise' : 'R$ ' + td.str;
+}
+function renderAllPanels() {
+  document.getElementById('stepsContainer').innerHTML = renderStep0() + renderStep1() + renderStep2() + renderStep3() + renderStep4() + renderStep5();
+}
+function showCurrentStep() {
+  document.querySelectorAll('.step-panel').forEach(el => el.classList.remove('active'));
+  const panel = document.getElementById('step-' + state.currentStep);
+  if (panel) panel.classList.add('active');
+  const pg = document.getElementById('progressWrapper'), nb = document.getElementById('navButtons'), ss = document.getElementById('successScreen'), mb = document.getElementById('mobileSummaryBtn');
+  if (state.currentStep === -1) {
+    pg.style.display = 'none';
+    nb.style.display = 'none';
+    if (mb) mb.style.display = 'none';
+    ss.classList.add('active');
+  } else {
+    pg.style.display = '';
+    nb.style.display = '';
+    if (mb) mb.style.display = '';
+    ss.classList.remove('active');
+    renderProgress();
+    renderSummary();
+    renderNavButtons();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+function renderNavButtons() {
+  const nav = document.getElementById('navButtons'), isFirst = state.currentStep === 0, isLast = state.currentStep === STEPS.length - 1;
+  let h = '';
+  h += isFirst ? '<div></div>' : '<button class="btn btn-secondary" onclick="goBack()">&#8592; Voltar</button>';
+  h += isLast ? '<div></div>' : '<button class="btn btn-primary" onclick="goNext()">Próximo &#8594;</button>';
+  nav.innerHTML = h;
+}
+function goNext() {
+  if (state.currentStep === 0 && !state.siteType) { showToast('Selecione o tipo de site para continuar.'); return; }
+  if (state.currentStep === 1 && !state.siteSize && state.siteType !== 'personalizado') { showToast('Selecione o tamanho do site para continuar.'); return; }
+  if (state.currentStep === 3 && !state.design) { showToast('Selecione uma opção de personalização visual.'); return; }
+  if (state.currentStep === 0 && state.siteType === 'personalizado') state.currentStep = 2;
+  else state.currentStep++;
+  showCurrentStep();
+}
+function goBack() {
+  if (state.currentStep === 2 && state.siteType === 'personalizado') state.currentStep = 0;
+  else state.currentStep--;
+  showCurrentStep();
+}
+function selectType(key) {
+  state.siteType = key;
+  document.querySelectorAll('#step-0 .option-card').forEach(el => {
+    el.classList.toggle('selected', el.getAttribute('data-type') === key);
+  });
+  renderSummary();
+  setTimeout(() => {
+    if (key === 'personalizado') {
+      state.siteSize = null;
+      state.currentStep = 2;
+    } else {
+      state.currentStep = 1;
+    }
+    showCurrentStep();
+  }, 160);
+}
+function selectSize(key) {
+  state.siteSize = key;
+  document.querySelectorAll('#step-1 .size-option').forEach(el => {
+    el.classList.toggle('selected', el.getAttribute('onclick').includes("'" + key + "'"));
+  });
+  renderSummary();
+  setTimeout(() => {
+    state.currentStep = 2;
+    showCurrentStep();
+  }, 160);
+}
+function toggleFeature(key) {
+  if (state.features.includes(key)) state.features = state.features.filter(f => f !== key);
+  else state.features.push(key);
+  const card = document.querySelector('#step-2 .feature-card[onclick*="\'' + key + '\'"]');
+  if (card) card.classList.toggle('selected', state.features.includes(key));
+  const ln = document.getElementById('leadsNote');
+  if (ln) ln.style.display = state.features.includes('leads') ? 'flex' : 'none';
+  renderSummary();
+}
+function toggleExtra(key) {
+  if (state.extras.includes(key)) state.extras = state.extras.filter(e => e !== key);
+  else state.extras.push(key);
+  const card = document.querySelector('#step-4 .feature-card[onclick*="\'' + key + '\'"]');
+  if (card) card.classList.toggle('selected', state.extras.includes(key));
+  renderSummary();
+}
+function selectDesign(key) {
+  state.design = key;
+  document.querySelectorAll('#step-3 .option-card').forEach(el => {
+    const k = el.getAttribute('onclick').match(/'([^']+)'/)?.[1];
+    el.classList.toggle('selected', k === key);
+  });
+  renderSummary();
+  setTimeout(() => {
+    state.currentStep = 4;
+    showCurrentStep();
+  }, 160);
+}
+function selectLogo(val) {
+  state.temLogo = val;
+  document.querySelectorAll('.radio-opt').forEach(el => {
+    el.classList.toggle('selected', el.getAttribute('onclick').includes("'" + val + "'"));
+  });
+}
+function sendWhatsApp() {
+  if (!state.nome.trim()) { showToast('Por favor, informe seu nome.'); document.getElementById('inputNome')?.focus(); return; }
+  if (!state.whatsapp.trim()) { showToast('Por favor, informe seu WhatsApp.'); document.getElementById('inputWA')?.focus(); return; }
+  const typeName = { landingPage: 'Landing Page', portfolio: 'Portfólio', institucional: 'Site Institucional', cardapio: 'Cardápio Online', catalogo: 'Catálogo Online', personalizado: 'Projeto Personalizado' };
+  const sizeName = { sec4: 'Até 4 seções', sec6: 'Até 6 seções', sec8: 'Até 8 seções', sec10: 'Até 10 seções', sec10p: 'Mais de 10 seções' };
+  const designName = { designEssencial: 'Essencial', designPersonalizado: 'Personalizado', designPremium: 'Premium' };
+  const featureNames = { whatsapp: 'Botão de WhatsApp', formulario: 'Formulário de contato', mapa: 'Google Maps', galeria: 'Galeria de fotos', depoimentos: 'Depoimentos', faq: 'FAQ (Perguntas Frequentes)', instagram: 'Integração Instagram', analytics: 'Google Analytics', pixel: 'Meta Pixel', leads: 'Captura de leads', agendamento: 'Agendamento online', chat: 'Chat online' };
+  const extraNames = { textos: 'Criação dos textos', revisao: 'Revisão dos textos', tratamento: 'Tratamento de imagens', pesquisa: 'Pesquisa de imagens', cadastro: 'Cadastro de conteúdo', dominio: 'Configuração de domínio (1 ano)', hospedagem: 'Hospedagem inclusa' };
+  const td = totalDisplay(), priceStr = td.custom ? 'Sob análise' : 'R$ ' + td.str;
+  const fl = state.features.length ? state.features.map(f => '• ' + (featureNames[f] || f)).join('\n') : '• Nenhuma';
+  const el = state.extras.length ? state.extras.map(e => '• ' + (extraNames[e] || e)).join('\n') : '• Nenhum';
+  let msg = 'Olá! Montei uma estimativa para meu site através da plataforma *Monte seu Site* da PageMaster.\n\n';
+  msg += '*Tipo de projeto:*\n' + (typeName[state.siteType] || 'Não informado') + '\n\n';
+  if (state.siteType !== 'personalizado') {
+    msg += '*Quantidade de seções:*\n' + (sizeName[state.siteSize] || 'Não informado') + '\n\n';
+  }
+  msg += '*Funcionalidades:*\n' + fl + '\n\n';
+  msg += '*Personalização visual:*\n' + (designName[state.design] || 'Não informado') + '\n\n';
+  msg += '*Serviços adicionais:*\n' + el + '\n\n';
+  msg += '*Estimativa apresentada:*\n' + priceStr + '\n\n';
+  msg += '*Nome:*\n' + state.nome + '\n\n';
+  if (state.empresa) msg += '*Empresa:*\n' + state.empresa + '\n\n';
+  msg += '*WhatsApp:*\n' + state.whatsapp + '\n\n';
+  if (state.email) msg += '*E-mail:*\n' + state.email + '\n\n';
+  if (state.descricao) msg += '*Sobre o projeto:*\n' + state.descricao + '\n\n';
+  if (state.temLogo) msg += '*Possui identidade visual / logo:*\n' + (state.temLogo === 'sim' ? 'Sim' : 'Não') + '\n\n';
+  if (state.referencia) msg += '*Site de referência:*\n' + state.referencia + '\n\n';
+  msg += 'Gostaria de receber mais informações para dar continuidade ao projeto.';
+  window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
+  state.currentStep = -1;
+  showCurrentStep();
+}
+function confirmReset() {
+  if (confirm('Tem certeza que deseja recomeçar? Todas as escolhas serão reiniciadas.')) fullReset();
+}
+function fullReset() {
+  state = { currentStep: 0, siteType: null, siteSize: null, features: [], design: null, extras: [], nome: '', empresa: '', whatsapp: '', email: '', descricao: '', temLogo: null, referencia: '' };
+  renderAllPanels();
+  showCurrentStep();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function openMobileSheet() {
+  const sh = document.getElementById('sheetInner');
+  if (sh) sh.innerHTML = renderSummaryHTML();
+  document.getElementById('mobileSummarySheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMobileSheet() {
+  document.getElementById('mobileSummarySheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function showToast(msg) {
+  const ex = document.querySelector('.toast-msg');
+  if (ex) ex.remove();
+  const t = document.createElement('div');
+  t.className = 'toast-msg';
+  t.textContent = msg;
+  Object.assign(t.style, { position: 'fixed', bottom: '5rem', left: '50%', transform: 'translateX(-50%)', background: '#0F172A', color: '#fff', padding: '0.875rem 1.5rem', borderRadius: '9999px', fontSize: '0.875rem', fontWeight: '600', zIndex: '999', whiteSpace: 'nowrap', boxShadow: '0 8px 32px rgba(0,0,0,0.25)', animation: 'fadeIn 0.3s ease' });
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  renderAllPanels();
+  showCurrentStep();
+});
 </script>
 </body>
 </html>
