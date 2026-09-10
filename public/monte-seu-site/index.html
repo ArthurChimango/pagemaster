@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Monte seu Site | PageMaster</title>
   <meta name="description" content="Configure o site que voce precisa e receba uma estimativa de valor instantanea. Simples, rapido e transparente." />
-  <link rel="icon" href="../favicon.png" />
+  <link rel="icon" href="favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -172,6 +172,24 @@ textarea.form-input{resize:vertical;min-height:100px}
 .counter-input{width:60px;text-align:center;border:1px solid var(--border);background:#fff;border-radius:6px;padding:0.25rem;font-weight:700;font-size:0.875rem;color:var(--secondary);outline:none}
 .counter-input:focus{border-color:var(--primary)}
 .svg-icon{width:22px;height:22px;stroke:var(--primary);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;fill:none;display:inline-block}
+.header-actions{display:flex;align-items:center;gap:.4rem}
+.market-switch{padding:.4rem .65rem;border:1px solid var(--border);border-radius:9999px;font-size:.75rem;color:var(--muted);cursor:pointer;white-space:nowrap}
+.market-switch:hover{border-color:var(--primary);color:var(--primary)}
+.market-gate{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:1.25rem;background:rgba(15,23,42,.62);backdrop-filter:blur(9px)}
+.market-gate[hidden]{display:none}
+.market-dialog{width:min(100%,560px);background:var(--surface);border:1px solid rgba(255,255,255,.28);border-radius:var(--radius-xl);padding:clamp(1.5rem,5vw,2.5rem);box-shadow:0 24px 80px rgba(15,23,42,.32);text-align:center}
+.market-kicker{font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:.65rem}
+.market-dialog h1{font-family:'Outfit',sans-serif;font-size:clamp(1.65rem,5vw,2.35rem);line-height:1.1;letter-spacing:-.04em;margin-bottom:.7rem}
+.market-dialog p{font-size:.95rem;color:var(--muted);line-height:1.6;max-width:410px;margin:0 auto}
+.market-choices{display:grid;grid-template-columns:1fr;gap:.8rem;margin-top:1.75rem;text-align:left}
+@media(min-width:500px){.market-choices{grid-template-columns:repeat(2,1fr)}}
+.market-choice{position:relative;width:100%;padding:1.15rem;border:2px solid var(--border);border-radius:var(--radius-md);background:var(--surface);color:var(--secondary);font:inherit;text-align:left;transition:var(--transition)}
+.market-choice:hover,.market-choice:focus-visible{border-color:var(--primary);box-shadow:0 0 0 4px rgba(41,98,255,.1);transform:translateY(-2px);outline:none}
+.market-choice-symbol{display:block;font-family:'Outfit',sans-serif;font-size:1.6rem;font-weight:800;color:var(--primary);margin-bottom:.25rem}
+.market-choice strong{display:block;font-size:.95rem;margin-bottom:.25rem}
+.market-choice small{display:block;font-size:.76rem;line-height:1.45;color:var(--muted)}
+.market-note{font-size:.73rem!important;margin-top:1rem!important;color:#94A3B8!important}
+@media(max-width:520px){.site-header{padding:.65rem .85rem}.header-actions{gap:.25rem}.market-switch,.header-actions .btn{font-size:.68rem!important;padding:.35rem .5rem!important}}
   </style>
 </head>
 <body class="bg-grid">
@@ -179,7 +197,10 @@ textarea.form-input{resize:vertical;min-height:100px}
   <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.1rem;color:var(--secondary);letter-spacing:-0.03em">
     Monte seu <span style="color:var(--primary)">Site</span>
   </div>
-  <button class="btn btn-ghost" onclick="confirmReset()" style="padding:.4rem .85rem;border:1px solid var(--border);border-radius:9999px;font-size:.75rem;color:var(--muted);cursor:pointer">&#8634; Recomeçar</button>
+  <div class="header-actions">
+    <button class="market-switch" id="marketSwitch" type="button" onclick="openMarketPicker()" aria-label="Alterar país e moeda">Brasil · R$</button>
+    <button class="btn btn-ghost" onclick="confirmReset()" style="padding:.4rem .65rem;border:1px solid var(--border);border-radius:9999px;font-size:.75rem;color:var(--muted);cursor:pointer">&#8634; Recomeçar</button>
+  </div>
 </header>
 <div id="app">
   <main class="main-content">
@@ -191,8 +212,8 @@ textarea.form-input{resize:vertical;min-height:100px}
     <div id="stepsContainer"></div>
     <div class="success-screen" id="successScreen">
       <div class="success-icon">&#10003;</div>
-      <h2 style="font-family:'Outfit',sans-serif;font-size:1.75rem;font-weight:800;color:var(--secondary);letter-spacing:-.03em;margin-bottom:.5rem">Mensagem enviada!</h2>
-      <p style="color:var(--muted);font-size:.9375rem;line-height:1.6;max-width:380px;margin-bottom:2rem">Sua configuracao foi enviada pelo WhatsApp. Em breve entraremos em contato para confirmar seu orcamento.</p>
+      <h2 id="successTitle" style="font-family:'Outfit',sans-serif;font-size:1.75rem;font-weight:800;color:var(--secondary);letter-spacing:-.03em;margin-bottom:.5rem">Mensagem enviada!</h2>
+      <p id="successText" style="color:var(--muted);font-size:.9375rem;line-height:1.6;max-width:380px;margin-bottom:2rem">Sua configuração foi enviada pelo WhatsApp. Em breve entraremos em contacto para confirmar o seu orçamento.</p>
       <button class="btn btn-primary" onclick="fullReset()">&#8592; Fazer uma nova estimativa</button>
     </div>
     <div class="nav-buttons" id="navButtons"></div>
@@ -210,6 +231,18 @@ textarea.form-input{resize:vertical;min-height:100px}
     <div class="sheet-handle"></div>
     <button class="sheet-close" onclick="closeMobileSheet()">&#x2715;</button>
     <div class="sheet-inner" id="sheetInner"></div>
+  </div>
+</div>
+<div class="market-gate" id="marketGate" role="dialog" aria-modal="true" aria-labelledby="marketTitle">
+  <div class="market-dialog">
+    <div class="market-kicker">Bem-vindo à PageMaster</div>
+    <h1 id="marketTitle">Onde está o seu negócio?</h1>
+    <p>Escolha o mercado para ver valores e termos adequados à sua realidade.</p>
+    <div class="market-choices">
+      <button class="market-choice" type="button" onclick="selectMarket('br')"><span class="market-choice-symbol">R$</span><strong>Brasil</strong><small>Valores em reais e comunicação em português do Brasil.</small></button>
+      <button class="market-choice" type="button" onclick="selectMarket('pt')"><span class="market-choice-symbol">€</span><strong>Portugal / Europa</strong><small>Valores em euros e comunicação adaptada para Portugal.</small></button>
+    </div>
+    <p class="market-note">Pode alterar esta escolha a qualquer momento no topo da página.</p>
   </div>
 </div>
 <script>
@@ -391,8 +424,25 @@ const PRICES = {
 
 const WHATSAPP_NUMBER = '553499778403';
 
+const MARKETS = {
+  br: { locale: 'pt-BR', label: 'Brasil · R$', messageLabel: 'Brasil / Real (R$)' },
+  pt: { locale: 'pt-PT', label: 'Portugal · €', messageLabel: 'Portugal / Euro (€)' }
+};
+
+// Valores próprios para Portugal: posicionamento profissional de entrada,
+// em vez de uma simples conversão cambial dos preços em reais.
+const EURO_PRICES = {
+  landingPage: 349, portfolio: 399, institucional: 899, cardapio: 599, catalogo: 699,
+  sec4: 0, sec6: 95, sec8: 165, sec10: 245, sec10p: 345,
+  designEssencial: 0, designPersonalizado: 149, designPremium: 299,
+  textos: 59, revisao: 49, tratamento: 79, pesquisa: 49, dominio: 49, hospedagem: 0,
+  cadastroUnit: 1.25, flowAnalytic: 29
+};
+const EURO_BY_BRL_PRICE = { 0: 0, 20: 49, 25: 59, 30: 69, 35: 79, 40: 89, 45: 99, 60: 119, 100: 149, 200: 299, 400: 649 };
+
 let state = {
   currentStep: 0,
+  market: null,
   siteType: null,
   siteSize: null,
   features: [],
@@ -409,7 +459,18 @@ let state = {
 };
 
 const SVG_CHECK = '<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const fmt = v => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function currentMarket() { return MARKETS[state.market || 'br']; }
+function isPortugal() { return state.market === 'pt'; }
+function textForMarket(br, pt) { return isPortugal() ? pt : br; }
+function priceValue(brlValue, priceKey) {
+  if (!isPortugal()) return brlValue;
+  if (priceKey && Object.prototype.hasOwnProperty.call(EURO_PRICES, priceKey)) return EURO_PRICES[priceKey];
+  return EURO_BY_BRL_PRICE[brlValue] ?? brlValue;
+}
+function monthlyValue() { return isPortugal() ? EURO_PRICES.flowAnalytic : 25; }
+const fmt = v => Number(v || 0).toLocaleString(currentMarket().locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const money = v => Number(v || 0).toLocaleString(currentMarket().locale, { style: 'currency', currency: isPortugal() ? 'EUR' : 'BRL', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const monthlyMoney = () => money(monthlyValue()) + '/mês';
 
 function skipsSize(type) {
   return !!(type && TYPE_CONFIGS[type] && TYPE_CONFIGS[type].skipsSize);
@@ -419,19 +480,19 @@ function getActiveSteps() {
   if (skipsSize(state.siteType)) {
     return [
       { id: 'tipo', label: 'Tipo', panelIndex: 0 },
-      { id: 'funcionalidades', label: 'Funções', panelIndex: 2 },
+      { id: 'funcionalidades', label: textForMarket('Funções', 'Funcionalidades'), panelIndex: 2 },
       { id: 'visual', label: 'Visual', panelIndex: 3 },
       { id: 'adicionais', label: 'Extras', panelIndex: 4 },
-      { id: 'dados', label: 'Seus dados', panelIndex: 5 }
+      { id: 'dados', label: textForMarket('Seus dados', 'Os seus dados'), panelIndex: 5 }
     ];
   }
   return [
     { id: 'tipo', label: 'Tipo', panelIndex: 0 },
     { id: 'tamanho', label: 'Tamanho', panelIndex: 1 },
-    { id: 'funcionalidades', label: 'Funções', panelIndex: 2 },
+    { id: 'funcionalidades', label: textForMarket('Funções', 'Funcionalidades'), panelIndex: 2 },
     { id: 'visual', label: 'Visual', panelIndex: 3 },
     { id: 'adicionais', label: 'Extras', panelIndex: 4 },
-    { id: 'dados', label: 'Seus dados', panelIndex: 5 }
+    { id: 'dados', label: textForMarket('Seus dados', 'Os seus dados'), panelIndex: 5 }
   ];
 }
 
@@ -439,7 +500,7 @@ function getStepEyebrow(panelIndex) {
   const activeSteps = getActiveSteps();
   const idx = activeSteps.findIndex(s => s.panelIndex === panelIndex);
   if (idx < 0) return '';
-  return 'Etapa ' + (idx + 1) + ' de ' + activeSteps.length;
+  return textForMarket('Etapa ', 'Passo ') + (idx + 1) + ' de ' + activeSteps.length;
 }
 
 function isFeatureIncluded(key) {
@@ -465,8 +526,8 @@ function getFeaturePriceStr(key) {
     const found = TYPE_CONFIGS[state.siteType].features.find(f => f.key === key);
     if (found) {
       if (found.isIncluded) return 'Incluso';
-      if (found.isMonthly) return '+ R$ 25,00/mês';
-      return '+ R$ ' + fmt(found.price);
+      if (found.isMonthly) return '+ ' + monthlyMoney();
+      return '+ ' + money(priceValue(found.price));
     }
   }
   return '';
@@ -494,31 +555,31 @@ function calcCadastro() {
   if (!state.extras.includes('cadastro')) return 0;
   const q = parseInt(state.qtdProdutos, 10) || 0;
   const excedente = Math.max(0, q - 20);
-  return Math.round(excedente * 0.8 * 100) / 100;
+  return Math.round(excedente * priceValue(0.8, 'cadastroUnit') * 100) / 100;
 }
 
 function calcTotal() {
   if (!state.siteType || state.siteType === 'personalizado') return null;
   const cfg = TYPE_CONFIGS[state.siteType];
   if (!cfg) return 0;
-  let t = cfg.basePrice || 0;
+  let t = priceValue(cfg.basePrice || 0, state.siteType);
   if (!cfg.skipsSize && state.siteSize) {
-    t += PRICES[state.siteSize] || 0;
+    t += priceValue(PRICES[state.siteSize] || 0, state.siteSize);
   }
   state.features.forEach(fKey => {
     const fDef = cfg.features.find(f => f.key === fKey);
     if (fDef && !fDef.isIncluded && !fDef.isMonthly) {
-      t += fDef.price || 0;
+      t += priceValue(fDef.price || 0);
     }
   });
   if (state.design) {
-    t += PRICES[state.design] || 0;
+    t += priceValue(PRICES[state.design] || 0, state.design);
   }
   state.extras.forEach(e => {
     if (e === 'cadastro') {
       t += calcCadastro();
     } else {
-      t += PRICES[e] || 0;
+      t += priceValue(PRICES[e] || 0, e);
     }
   });
   return t;
@@ -567,26 +628,27 @@ function renderStep0() {
   ];
   const cards = types.map(t => {
     const sel = state.siteType === t.key ? 'selected' : '';
-    const price = t.key === 'personalizado' ? '<span class="card-price">Valor sob análise</span>' : '<span class="card-price">A partir de R$ ' + fmt(PRICES[t.key]) + '</span>';
+    const price = t.key === 'personalizado' ? '<span class="card-price">' + textForMarket('Valor sob análise', 'Valor sob consulta') + '</span>' : '<span class="card-price">' + textForMarket('A partir de ', 'Desde ') + money(priceValue(PRICES[t.key], t.key)) + '</span>';
     const badge = t.badge ? '<span class="card-badge ' + t.badge.cls + '">' + t.badge.txt + '</span>' : '';
     return '<div class="option-card ' + sel + '" data-type="' + t.key + '" onclick="selectType(\'' + t.key + '\')"><div class="card-check">' + SVG_CHECK + '</div><div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap"><div class="card-icon">' + ICONS[t.key] + '</div>' + badge + '</div><div class="card-name">' + t.name + '</div><div class="card-desc">' + t.desc + '</div>' + price + '</div>';
   }).join('');
-  const ci = state.siteType === 'personalizado' ? '<div class="custom-info"><div class="custom-info-icon"><svg width="20" height="20" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div><div style="font-weight:700;font-size:.875rem;color:var(--secondary);margin-bottom:.25rem">Projeto sob análise</div><div style="font-size:.8rem;color:var(--muted);line-height:1.55">Para projetos personalizados, o valor será definido após alinharmos suas necessidades específicas. Avance para nos contar mais!</div></div></div>' : '';
+  const ci = state.siteType === 'personalizado' ? '<div class="custom-info"><div class="custom-info-icon"><svg width="20" height="20" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><div><div style="font-weight:700;font-size:.875rem;color:var(--secondary);margin-bottom:.25rem">' + textForMarket('Projeto sob análise', 'Projeto sob consulta') + '</div><div style="font-size:.8rem;color:var(--muted);line-height:1.55">' + textForMarket('Para projetos personalizados, o valor será definido após alinharmos suas necessidades específicas. Avance para nos contar mais!', 'Para projetos personalizados, o valor será definido depois de alinharmos as necessidades específicas. Avance para nos contar mais.') + '</div></div></div>' : '';
   const eyebrow = getStepEyebrow(0);
-  return '<div class="step-panel" id="step-0"><div class="step-header"><div class="step-eyebrow">' + eyebrow + '</div><h1 class="step-title">Qual site você precisa?</h1><p class="step-subtitle">Escolha a opção que mais combina com seu projeto. Clique para selecionar e avançar automaticamente.</p></div><div class="cards-grid">' + cards + '</div>' + ci + '</div>';
+  return '<div class="step-panel" id="step-0"><div class="step-header"><div class="step-eyebrow">' + eyebrow + '</div><h1 class="step-title">' + textForMarket('Qual site você precisa?', 'Que tipo de site precisa?') + '</h1><p class="step-subtitle">' + textForMarket('Escolha a opção que mais combina com seu projeto. Clique para selecionar e avançar automaticamente.', 'Escolha a opção que melhor se adequa ao seu projeto. Clique para selecionar e avançar automaticamente.') + '</p></div><div class="cards-grid">' + cards + '</div>' + ci + '</div>';
 }
 
 function renderStep1() {
   const eyebrow = getStepEyebrow(1);
+  const sectionWord = textForMarket('seções', 'secções');
   const sizes = [
-    { key: 'sec4', label: 'Até 4 seções', extra: 'Incluso no projeto', note: 'Ideal para campanhas rápidas e diretas' },
-    { key: 'sec6', label: 'Até 6 seções', extra: '+ R$ ' + fmt(PRICES.sec6), note: 'Mais popular para landing pages completas' },
-    { key: 'sec8', label: 'Até 8 seções', extra: '+ R$ ' + fmt(PRICES.sec8), note: 'Recomendado para sites com mais conteúdo' },
-    { key: 'sec10', label: 'Até 10 seções', extra: '+ R$ ' + fmt(PRICES.sec10), note: 'Ideal para sites corporativos completos' },
-    { key: 'sec10p', label: 'Mais de 10 seções', extra: '+ R$ ' + fmt(PRICES.sec10p), note: 'Para projetos robustos com muitas páginas' }
+    { key: 'sec4', label: 'Até 4 ' + sectionWord, extra: textForMarket('Incluso no projeto', 'Incluído no projeto'), note: 'Ideal para campanhas rápidas e diretas' },
+    { key: 'sec6', label: 'Até 6 ' + sectionWord, extra: '+ ' + money(priceValue(PRICES.sec6, 'sec6')), note: 'Mais popular para landing pages completas' },
+    { key: 'sec8', label: 'Até 8 ' + sectionWord, extra: '+ ' + money(priceValue(PRICES.sec8, 'sec8')), note: 'Recomendado para sites com mais conteúdo' },
+    { key: 'sec10', label: 'Até 10 ' + sectionWord, extra: '+ ' + money(priceValue(PRICES.sec10, 'sec10')), note: 'Ideal para sites corporativos completos' },
+    { key: 'sec10p', label: 'Mais de 10 ' + sectionWord, extra: '+ ' + money(priceValue(PRICES.sec10p, 'sec10p')), note: 'Para projetos robustos com muitas páginas' }
   ];
   const opts = sizes.map(s => '<div class="size-option ' + (state.siteSize === s.key ? 'selected' : '') + '" onclick="selectSize(\'' + s.key + '\')"><div><div class="size-name">' + s.label + '</div><div class="size-desc">' + s.note + '</div></div><div class="size-extra">' + s.extra + '</div></div>').join('');
-  return '<div class="step-panel" id="step-1"><div class="step-header"><div class="step-eyebrow">' + eyebrow + '</div><h1 class="step-title">Qual será o tamanho do seu site?</h1><p class="step-subtitle">Uma <strong>seção</strong> é cada bloco de conteúdo da página — apresentação, serviços, sobre, depoimentos ou contato.</p></div><div class="size-options">' + opts + '</div><div class="example-box"><div class="example-box-title">Exemplo de seções recomendadas</div><ul class="example-list"><li>Apresentação principal (hero) com chamada para ação</li><li>Sobre a empresa ou profissional</li><li>Serviços, diferenciais ou produtos</li><li>Depoimentos de clientes satisfeitos</li><li>Perguntas frequentes (FAQ)</li><li>Contato e localização</li></ul></div></div>';
+  return '<div class="step-panel" id="step-1"><div class="step-header"><div class="step-eyebrow">' + eyebrow + '</div><h1 class="step-title">' + textForMarket('Qual será o tamanho do seu site?', 'Qual será a dimensão do seu site?') + '</h1><p class="step-subtitle">' + textForMarket('Uma <strong>seção</strong> é cada bloco de conteúdo da página — apresentação, serviços, sobre, depoimentos ou contato.', 'Uma <strong>secção</strong> é cada bloco de conteúdo da página — apresentação, serviços, sobre, testemunhos ou contacto.') + '</p></div><div class="size-options">' + opts + '</div><div class="example-box"><div class="example-box-title">' + textForMarket('Exemplo de seções recomendadas', 'Exemplo de secções recomendadas') + '</div><ul class="example-list"><li>Apresentação principal (hero) com chamada para ação</li><li>Sobre a empresa ou profissional</li><li>Serviços, diferenciais ou produtos</li><li>' + textForMarket('Depoimentos de clientes satisfeitos', 'Testemunhos de clientes satisfeitos') + '</li><li>Perguntas frequentes (FAQ)</li><li>' + textForMarket('Contato e localização', 'Contacto e localização') + '</li></ul></div></div>';
 }
 
 function renderStep2() {
@@ -600,13 +662,14 @@ function renderStep2() {
     else if (isSel) cardCls += ' selected';
     let priceHtml = '';
     if (f.isIncluded) {
-      priceHtml = '<span class="feature-price free">✓ Incluso no pacote</span>';
+      priceHtml = '<span class="feature-price free">✓ ' + textForMarket('Incluso no pacote', 'Incluído no pacote') + '</span>';
     } else if (f.isMonthly) {
-      priceHtml = '<span class="feature-price" style="color:var(--primary)">Adicionar + R$ ' + fmt(f.monthlyPrice) + '/mês</span>';
+      priceHtml = '<span class="feature-price" style="color:var(--primary)">' + textForMarket('Adicionar ', 'Adicionar ') + '+ ' + monthlyMoney() + '</span>';
     } else {
-      priceHtml = '<span class="feature-price">Adicionar + R$ ' + fmt(f.price) + '</span>';
+      priceHtml = '<span class="feature-price">' + textForMarket('Adicionar ', 'Adicionar ') + '+ ' + money(priceValue(f.price)) + '</span>';
     }
-    const badge = f.badge ? '<span class="card-badge ' + f.badge.cls + '" style="font-size:.6rem;padding:.15rem .5rem">' + f.badge.txt + '</span>' : '';
+    const badgeText = f.key === 'flowAnalytic' ? monthlyMoney() : (f.badge ? f.badge.txt : '');
+    const badge = f.badge ? '<span class="card-badge ' + f.badge.cls + '" style="font-size:.6rem;padding:.15rem .5rem">' + badgeText + '</span>' : '';
     const iconSvg = ICONS[f.key] || '<svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>';
     return '<div class="' + cardCls + '" data-key="' + f.key + '" onclick="toggleFeature(\'' + f.key + '\')"><div class="feature-checkbox">' + SVG_CHECK + '</div><div class="feature-info"><div class="feature-name">' + iconSvg + ' <span>' + f.name + '</span> ' + badge + '</div><div class="feature-desc">' + f.desc + '</div>' + priceHtml + '</div></div>';
   }).join('');
@@ -624,12 +687,12 @@ function renderStep2() {
 function renderStep3() {
   const eyebrow = getStepEyebrow(3);
   const designs = [
-    { key: 'designEssencial', name: 'Essencial', desc: 'Visual profissional, limpo e adaptado à identidade da empresa. Responsivo e bem acabado.', extra: 'Incluso no projeto', badge: null },
-    { key: 'designPersonalizado', name: 'Personalizado', desc: 'Design desenvolvido com maior nível de personalização visual e detalhes exclusivos.', extra: '+ R$ ' + fmt(PRICES.designPersonalizado), badge: { cls: 'badge-popular', txt: 'Mais escolhido' } },
-    { key: 'designPremium', name: 'Premium', desc: 'Projeto visual refinado com animações leves, elementos personalizados e alto acabamento.', extra: '+ R$ ' + fmt(PRICES.designPremium), badge: { cls: 'badge-rec', txt: 'Para impressionar' } }
+    { key: 'designEssencial', name: 'Essencial', desc: 'Visual profissional, limpo e adaptado à identidade da empresa. Responsivo e bem acabado.', extra: textForMarket('Incluso no projeto', 'Incluído no projeto'), badge: null },
+    { key: 'designPersonalizado', name: 'Personalizado', desc: 'Design desenvolvido com maior nível de personalização visual e detalhes exclusivos.', extra: '+ ' + money(priceValue(PRICES.designPersonalizado, 'designPersonalizado')), badge: { cls: 'badge-popular', txt: 'Mais escolhido' } },
+    { key: 'designPremium', name: 'Premium', desc: 'Projeto visual refinado com animações leves, elementos personalizados e alto acabamento.', extra: '+ ' + money(priceValue(PRICES.designPremium, 'designPremium')), badge: { cls: 'badge-rec', txt: 'Para impressionar' } }
   ];
   const cards = designs.map(d => '<div class="option-card ' + (state.design === d.key ? 'selected' : '') + '" onclick="selectDesign(\'' + d.key + '\')"><div class="card-check">' + SVG_CHECK + '</div><div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap"><div class="card-icon">' + ICONS[d.key] + '</div>' + (d.badge ? '<span class="card-badge ' + d.badge.cls + '">' + d.badge.txt + '</span>' : '') + '</div><div class="card-name">' + d.name + '</div><div class="card-desc">' + d.desc + '</div><div class="card-price">' + d.extra + '</div></div>').join('');
-  return '<div class="step-panel" id="step-3"><div class="step-header"><div class="step-eyebrow">' + eyebrow + '</div><h1 class="step-title">Como você quer o visual do seu site?</h1><p class="step-subtitle">O nível de personalização define o quanto o design será exclusivo e trabalhado para a sua marca.</p></div><div class="cards-grid cards-grid-3">' + cards + '</div></div>';
+  return '<div class="step-panel" id="step-3"><div class="step-header"><div class="step-eyebrow">' + eyebrow + '</div><h1 class="step-title">' + textForMarket('Como você quer o visual do seu site?', 'Como pretende o visual do seu site?') + '</h1><p class="step-subtitle">' + textForMarket('O nível de personalização define o quanto o design será exclusivo e trabalhado para a sua marca.', 'O nível de personalização define o quão exclusivo e trabalhado será o design da sua marca.') + '</p></div><div class="cards-grid cards-grid-3">' + cards + '</div></div>';
 }
 
 function changeQtdProdutos(delta, event) {
@@ -653,8 +716,8 @@ function setQtdProdutos(val, event) {
   if (label) {
     const cost = calcCadastro();
     label.innerHTML = state.qtdProdutos <= 20
-      ? '<span style="color:var(--success);font-weight:700">Até 20 itens: Gratuito (R$ 0,00)</span>'
-      : '<span style="color:var(--primary);font-weight:700">20 grátis + ' + (state.qtdProdutos - 20) + ' adic. (+ R$ ' + fmt(cost) + ')</span>';
+      ? '<span style="color:var(--success);font-weight:700">' + textForMarket('Até 20 itens: Gratuito', 'Até 20 itens: Gratuito') + ' (' + money(0) + ')</span>'
+      : '<span style="color:var(--primary);font-weight:700">' + textForMarket('20 grátis + ', '20 gratuitos + ') + (state.qtdProdutos - 20) + ' ' + textForMarket('adic.', 'adicionais') + ' (+ ' + money(cost) + ')</span>';
   }
   renderSummary();
 }
@@ -663,7 +726,8 @@ function renderStep4() {
   const isFood = state.siteType === 'cardapio';
   const isCatalog = state.siteType === 'catalogo';
   const cadTitle = isFood ? 'Cadastro dos itens do cardápio' : (isCatalog ? 'Cadastro de produtos da loja' : 'Cadastro de conteúdo / itens');
-  const cadSubtitle = isFood ? 'Gratuito até 20 itens. Acima disso, R$ 0,80 por item excedente.' : (isCatalog ? 'Gratuito até 20 produtos. Acima disso, R$ 0,80 por item excedente.' : 'Gratuito até 20 itens. Acima disso, R$ 0,80 por item excedente.');
+  const itemKind = isCatalog ? 'produtos' : 'itens';
+  const cadSubtitle = textForMarket('Gratuito até 20 ' + itemKind + '. Acima disso, ' + money(priceValue(0.8, 'cadastroUnit')) + ' por item excedente.', 'Gratuito até 20 ' + itemKind + '. Depois disso, ' + money(priceValue(0.8, 'cadastroUnit')) + ' por cada item adicional.');
 
   const extras = [
     { key: 'textos', name: 'Criação dos textos', desc: 'Desenvolvimento e organização dos textos para as principais áreas do site.', price: PRICES.textos },
@@ -682,8 +746,8 @@ function renderStep4() {
     if (e.isCustomCalc) {
       const cost = calcCadastro();
       const calcText = state.qtdProdutos <= 20
-        ? '<span style="color:var(--success);font-weight:700">Até 20 itens: Gratuito (R$ 0,00)</span>'
-        : '<span style="color:var(--primary);font-weight:700">20 grátis + ' + (state.qtdProdutos - 20) + ' adic. (+ R$ ' + fmt(cost) + ')</span>';
+        ? '<span style="color:var(--success);font-weight:700">' + textForMarket('Até 20 itens: Gratuito', 'Até 20 itens: Gratuito') + ' (' + money(0) + ')</span>'
+        : '<span style="color:var(--primary);font-weight:700">' + textForMarket('20 grátis + ', '20 gratuitos + ') + (state.qtdProdutos - 20) + ' ' + textForMarket('adic.', 'adicionais') + ' (+ ' + money(cost) + ')</span>';
       priceStr = '<div style="font-size:0.75rem;margin-top:0.35rem" id="cadastroCalcLabel">' + calcText + '</div>' +
         '<div class="product-counter" onclick="event.stopPropagation()">' +
           '<span style="font-size:0.75rem;font-weight:600;color:var(--muted)">Qtd ' + (isFood ? 'itens' : (isCatalog ? 'produtos' : 'itens')) + ':</span>' +
@@ -692,14 +756,14 @@ function renderStep4() {
           '<button type="button" class="counter-btn" onclick="changeQtdProdutos(10, event)">+</button>' +
         '</div>';
     } else if (e.isFree) {
-      priceStr = '<span class="feature-price free">✓ Incluso gratuitamente</span>';
+      priceStr = '<span class="feature-price free">✓ ' + textForMarket('Incluso gratuitamente', 'Incluído gratuitamente') + '</span>';
     } else {
-      priceStr = '<span class="feature-price">+ R$ ' + fmt(e.price) + '</span>';
+      priceStr = '<span class="feature-price">+ ' + money(priceValue(e.price, e.key)) + '</span>';
     }
     return '<div class="feature-card ' + sel + '" data-extra="' + e.key + '" onclick="toggleExtra(\'' + e.key + '\')"><div class="feature-checkbox">' + SVG_CHECK + '</div><div class="feature-info"><div class="feature-name">' + (ICONS[e.key] || '') + ' <span>' + e.name + '</span></div><div class="feature-desc">' + e.desc + '</div>' + priceStr + '</div></div>';
   }).join('');
 
-  return '<div class="step-panel" id="step-4"><div class="step-header"><div class="step-eyebrow">' + eyebrow + '</div><h1 class="step-title">Precisa de ajuda com o conteúdo?</h1><p class="step-subtitle">Serviços complementares para deixar seu projeto 100% pronto sem dor de cabeça.</p></div><div class="feature-grid">' + cards + '</div></div>';
+  return '<div class="step-panel" id="step-4"><div class="step-header"><div class="step-eyebrow">' + eyebrow + '</div><h1 class="step-title">' + textForMarket('Precisa de ajuda com o conteúdo?', 'Precisa de ajuda com os conteúdos?') + '</h1><p class="step-subtitle">' + textForMarket('Serviços complementares para deixar seu projeto 100% pronto sem dor de cabeça.', 'Serviços complementares para deixar o seu projecto 100% pronto, sem complicações.') + '</p></div><div class="feature-grid">' + cards + '</div></div>';
 }
 
 function renderStep5() {
@@ -708,31 +772,31 @@ function renderStep5() {
 }
 
 function renderSummaryHTML() {
-  const typeName = { landingPage: 'Landing Page', portfolio: 'Portfólio', institucional: 'Site Institucional', cardapio: 'Cardápio Online', catalogo: 'Catálogo Online', personalizado: 'Projeto Personalizado' };
-  const sizeName = { sec4: 'Até 4 seções', sec6: 'Até 6 seções', sec8: 'Até 8 seções', sec10: 'Até 10 seções', sec10p: 'Mais de 10 seções' };
+  const typeName = { landingPage: 'Landing Page', portfolio: 'Portfólio', institucional: 'Site Institucional', cardapio: textForMarket('Cardápio Online', 'Menu Digital'), catalogo: 'Catálogo Online', personalizado: 'Projeto Personalizado' };
+  const sizeName = { sec4: 'Até 4 ' + textForMarket('seções', 'secções'), sec6: 'Até 6 ' + textForMarket('seções', 'secções'), sec8: 'Até 8 ' + textForMarket('seções', 'secções'), sec10: 'Até 10 ' + textForMarket('seções', 'secções'), sec10p: 'Mais de 10 ' + textForMarket('seções', 'secções') };
   const designName = { designEssencial: 'Essencial (Incluso)', designPersonalizado: 'Personalizado', designPremium: 'Premium' };
 
   const cadCost = calcCadastro();
   const isFood = state.siteType === 'cardapio';
   const isCatalog = state.siteType === 'catalogo';
   const cadLabel = isFood ? 'Cardápio' : (isCatalog ? 'Produtos' : 'Conteúdo');
-  const cadDesc = cadLabel + ' (' + state.qtdProdutos + ' itens: ' + (cadCost === 0 ? 'Grátis' : '+ R$ ' + fmt(cadCost)) + ')';
+  const cadDesc = cadLabel + ' (' + state.qtdProdutos + ' itens: ' + (cadCost === 0 ? textForMarket('Grátis', 'Gratuito') : '+ ' + money(cadCost)) + ')';
   const extraNames = { textos: 'Criação de textos', revisao: 'Revisão de textos', tratamento: 'Tratamento de imagens', pesquisa: 'Pesquisa de imagens', cadastro: cadDesc, dominio: 'Domínio (1 ano)', hospedagem: 'Hospedagem inclusa' };
 
   const td = totalDisplay();
   let priceHtml = '';
   if (td.custom) {
-    priceHtml = '<div class="summary-price-custom">Sob análise' + (td.hasFlow ? ' <span style="font-size:.85rem;color:var(--primary);display:block;margin-top:.25rem">+ R$ 25,00/mês (Flow Analytic)</span>' : '') + '</div>';
+    priceHtml = '<div class="summary-price-custom">' + textForMarket('Sob análise', 'Sob consulta') + (td.hasFlow ? ' <span style="font-size:.85rem;color:var(--primary);display:block;margin-top:.25rem">+ ' + monthlyMoney() + ' (Flow Analytic)</span>' : '') + '</div>';
   } else {
-    priceHtml = '<div class="summary-price"><span class="currency">R$&nbsp;</span>' + td.str + '</div>' +
-      (td.hasFlow ? '<div style="font-size:0.85rem;font-weight:700;color:var(--primary);margin-top:0.35rem">+ R$ 25,00/mês (Flow Analytic)</div>' : '');
+    priceHtml = '<div class="summary-price">' + money(td.value) + '</div>' +
+      (td.hasFlow ? '<div style="font-size:0.85rem;font-weight:700;color:var(--primary);margin-top:0.35rem">+ ' + monthlyMoney() + ' (Flow Analytic)</div>' : '');
   }
 
   let sizeDisplayHtml = '<div class="summary-item-value empty">Não selecionado</div>';
   if (state.siteType) {
     const cfg = TYPE_CONFIGS[state.siteType];
     if (cfg && cfg.skipsSize) {
-      sizeDisplayHtml = '<div class="summary-item-value">' + cfg.sizeLabel + ' <span style="font-size:.7rem;color:var(--success);font-weight:700;display:block">✓ Incluso no pacote</span></div>';
+      sizeDisplayHtml = '<div class="summary-item-value">' + cfg.sizeLabel + ' <span style="font-size:.7rem;color:var(--success);font-weight:700;display:block">✓ ' + textForMarket('Incluso no pacote', 'Incluído no pacote') + '</span></div>';
     } else if (state.siteSize) {
       sizeDisplayHtml = '<div class="summary-item-value">' + (sizeName[state.siteSize] || state.siteSize) + '</div>';
     }
@@ -755,7 +819,7 @@ function renderSummary() {
   if (card) card.innerHTML = html;
   if (sheet && document.getElementById('mobileSummarySheet').classList.contains('open')) sheet.innerHTML = html;
   const td = totalDisplay(), badge = document.getElementById('mobileBadgePrice');
-  if (badge) badge.textContent = td.custom ? 'Sob análise' : ('R$ ' + td.str + (td.hasFlow ? ' + R$ 25/mês' : ''));
+  if (badge) badge.textContent = td.custom ? textForMarket('Sob análise', 'Sob consulta') : (money(td.value) + (td.hasFlow ? ' + ' + monthlyMoney() : ''));
 }
 
 function renderAllPanels() {
@@ -792,7 +856,7 @@ function renderNavButtons() {
   const isLast = currentIdx === activeSteps.length - 1;
   let h = '';
   h += isFirst ? '<div></div>' : '<button class="btn btn-secondary" onclick="goBack()">&#8592; Voltar</button>';
-  h += isLast ? '<div></div>' : '<button class="btn btn-primary" onclick="goNext()">Próximo &#8594;</button>';
+  h += isLast ? '<div></div>' : '<button class="btn btn-primary" onclick="goNext()">' + textForMarket('Próximo', 'Seguinte') + ' &#8594;</button>';
   nav.innerHTML = h;
 }
 
@@ -898,20 +962,20 @@ function sendWhatsApp() {
   if (!state.whatsapp.trim()) { showToast('Por favor, informe seu WhatsApp.'); document.getElementById('inputWA')?.focus(); return; }
   const cfg = TYPE_CONFIGS[state.siteType];
   const typeName = cfg ? cfg.name : 'Não informado';
-  const sizeName = { sec4: 'Até 4 seções', sec6: 'Até 6 seções', sec8: 'Até 8 seções', sec10: 'Até 10 seções', sec10p: 'Mais de 10 seções' };
-  const designName = { designEssencial: 'Essencial (Incluso)', designPersonalizado: 'Personalizado (+ R$ 100,00)', designPremium: 'Premium (+ R$ 200,00)' };
+  const sizeName = { sec4: 'Até 4 ' + textForMarket('seções', 'secções'), sec6: 'Até 6 ' + textForMarket('seções', 'secções'), sec8: 'Até 8 ' + textForMarket('seções', 'secções'), sec10: 'Até 10 ' + textForMarket('seções', 'secções'), sec10p: 'Mais de 10 ' + textForMarket('seções', 'secções') };
+  const designName = { designEssencial: textForMarket('Essencial (Incluso)', 'Essencial (Incluído)'), designPersonalizado: 'Personalizado (+ ' + money(priceValue(PRICES.designPersonalizado, 'designPersonalizado')) + ')', designPremium: 'Premium (+ ' + money(priceValue(PRICES.designPremium, 'designPremium')) + ')' };
 
   const cadCost = calcCadastro();
   const isFood = state.siteType === 'cardapio';
   const isCatalog = state.siteType === 'catalogo';
   const cadLabel = isFood ? 'Cadastro de itens do cardápio' : (isCatalog ? 'Cadastro de produtos' : 'Cadastro de conteúdo');
-  const cadDesc = cadLabel + ': ' + state.qtdProdutos + ' itens (' + (cadCost === 0 ? 'Gratuito até 20 itens' : '+ R$ ' + fmt(cadCost)) + ')';
-  const extraNames = { textos: 'Criação dos textos (+ R$ 20,00)', revisao: 'Revisão dos textos (+ R$ 20,00)', tratamento: 'Tratamento de imagens (+ R$ 40,00)', pesquisa: 'Pesquisa de imagens (+ R$ 20,00)', cadastro: cadDesc, dominio: 'Configuração de domínio (1 ano) (+ R$ 60,00)', hospedagem: 'Hospedagem inclusa (Grátis)' };
+  const cadDesc = cadLabel + ': ' + state.qtdProdutos + ' itens (' + (cadCost === 0 ? textForMarket('Gratuito até 20 itens', 'Gratuito até 20 itens') : '+ ' + money(cadCost)) + ')';
+  const extraNames = { textos: 'Criação dos textos (+ ' + money(priceValue(PRICES.textos, 'textos')) + ')', revisao: 'Revisão dos textos (+ ' + money(priceValue(PRICES.revisao, 'revisao')) + ')', tratamento: 'Tratamento de imagens (+ ' + money(priceValue(PRICES.tratamento, 'tratamento')) + ')', pesquisa: 'Pesquisa de imagens (+ ' + money(priceValue(PRICES.pesquisa, 'pesquisa')) + ')', cadastro: cadDesc, dominio: 'Configuração de domínio (1 ano) (+ ' + money(priceValue(PRICES.dominio, 'dominio')) + ')', hospedagem: textForMarket('Hospedagem inclusa (Grátis)', 'Alojamento incluído (Gratuito)') };
 
   const td = totalDisplay();
-  let priceStr = td.custom ? 'Sob análise' : 'R$ ' + td.str;
+  let priceStr = td.custom ? textForMarket('Sob análise', 'Sob consulta') : money(td.value);
   if (td.hasFlow) {
-    priceStr += ' (+ R$ 25,00/mês Flow Analytic)';
+    priceStr += ' (+ ' + monthlyMoney() + ' Flow Analytic)';
   }
 
   let fl = '';
@@ -927,7 +991,8 @@ function sendWhatsApp() {
 
   const el = state.extras.length ? state.extras.map(e => '• ' + (extraNames[e] || e)).join('\n') : '• Nenhum';
 
-  let msg = 'Olá! Montei uma estimativa para meu site através da plataforma *Monte seu Site* da PageMaster.\n\n';
+  let msg = textForMarket('Olá! Montei uma estimativa para meu site através da plataforma *Monte seu Site* da PageMaster.\n\n', 'Olá! Preparei uma estimativa para o meu site através da plataforma *Monte seu Site* da PageMaster.\n\n');
+  msg += '*Mercado / moeda:*\n' + currentMarket().messageLabel + '\n\n';
   msg += '*Tipo de projeto:*\n' + typeName + '\n\n';
 
   if (cfg && cfg.skipsSize) {
@@ -954,13 +1019,58 @@ function sendWhatsApp() {
   showCurrentStep();
 }
 
+function applyMarketUI() {
+  const market = currentMarket();
+  document.documentElement.lang = isPortugal() ? 'pt-PT' : 'pt-BR';
+  const switcher = document.getElementById('marketSwitch');
+  if (switcher) switcher.textContent = market.label;
+
+  const successTitle = document.getElementById('successTitle');
+  const successText = document.getElementById('successText');
+  if (successTitle) successTitle.textContent = 'Mensagem enviada!';
+  if (successText) successText.textContent = textForMarket(
+    'Sua configuração foi enviada pelo WhatsApp. Em breve entraremos em contacto para confirmar o seu orçamento.',
+    'A sua configuração foi enviada pelo WhatsApp. Entraremos em contacto brevemente para confirmar o orçamento.'
+  );
+
+  const phone = document.getElementById('inputWA');
+  const reference = document.getElementById('inputRef');
+  if (phone) phone.placeholder = isPortugal() ? '+351 9xx xxx xxx' : '(34) 99999-9999';
+  if (reference) reference.placeholder = isPortugal() ? 'https://exemplo.pt' : 'https://exemplo.com.br';
+
+  const finalHeroTitle = document.querySelector('#step-5 .final-hero h2');
+  const finalHeroText = document.querySelector('#step-5 .final-hero p');
+  const finalHeading = document.querySelector('#step-5 .step-header h1');
+  const finalSubtitle = document.querySelector('#step-5 .step-header p');
+  if (finalHeroTitle) finalHeroTitle.textContent = textForMarket('Seu projeto está quase pronto!', 'O seu projecto está quase pronto!');
+  if (finalHeroText) finalHeroText.textContent = textForMarket('Preencha seus dados para receber o orçamento completo e personalizado.', 'Preencha os seus dados para receber o orçamento completo e personalizado.');
+  if (finalHeading) finalHeading.textContent = textForMarket('Sobre você', 'Sobre si');
+  if (finalSubtitle) finalSubtitle.textContent = textForMarket('Precisamos de algumas informações para formalizar seu orçamento.', 'Precisamos de algumas informações para formalizar o seu orçamento.');
+}
+
+function openMarketPicker() {
+  const gate = document.getElementById('marketGate');
+  if (gate) gate.hidden = false;
+}
+
+function selectMarket(market) {
+  if (!MARKETS[market]) return;
+  state.market = market;
+  const gate = document.getElementById('marketGate');
+  if (gate) gate.hidden = true;
+  renderAllPanels();
+  applyMarketUI();
+  showCurrentStep();
+}
+
 function confirmReset() {
-  if (confirm('Tem certeza que deseja recomeçar? Todas as escolhas serão reiniciadas.')) fullReset();
+  if (confirm(textForMarket('Tem certeza que deseja recomeçar? Todas as escolhas serão reiniciadas.', 'Tem a certeza de que pretende recomeçar? Todas as escolhas serão reiniciadas.'))) fullReset();
 }
 
 function fullReset() {
-  state = { currentStep: 0, siteType: null, siteSize: null, features: [], design: null, extras: [], qtdProdutos: 20, nome: '', empresa: '', whatsapp: '', email: '', descricao: '', temLogo: null, referencia: '' };
+  state = { currentStep: 0, market: state.market, siteType: null, siteSize: null, features: [], design: null, extras: [], qtdProdutos: 20, nome: '', empresa: '', whatsapp: '', email: '', descricao: '', temLogo: null, referencia: '' };
   renderAllPanels();
+  applyMarketUI();
   showCurrentStep();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -990,6 +1100,7 @@ function showToast(msg) {
 
 document.addEventListener('DOMContentLoaded', () => {
   renderAllPanels();
+  applyMarketUI();
   showCurrentStep();
 });
 </script>
