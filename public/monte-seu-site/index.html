@@ -253,6 +253,7 @@ const ICONS = {
   institucional: '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3M9 9h1M9 13h1M9 17h1M15 13h1M15 17h1"/></svg>',
   cardapio: '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM8 7h8M8 11h8M8 15h5"/></svg>',
   catalogo: '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>',
+  agendamentoSite: '<svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>',
   personalizado: '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
   whatsapp: '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
   formulario: '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>',
@@ -295,7 +296,7 @@ const TYPE_CONFIGS = {
     sizeDescription: 'seções de alta conversão',
     features: [
       { key: 'whatsapp', name: 'Botão de WhatsApp', desc: 'Permite que visitantes iniciem uma conversa rápida com você em 1 clique.', price: 0, isIncluded: true, badge: { cls: 'badge-included', txt: 'Incluso' } },
-      { key: 'formulario', name: 'Formulário de contato / Orçamento', desc: 'Receba dados e pedidos de contato direto no seu e-mail ou WhatsApp.', price: 30, badge: { cls: 'badge-rec', txt: 'Recomendado' } },
+      { key: 'formulario', name: 'Formulário de contato / Orçamento', desc: 'Receba dados e pedidos de contato direto no seu e-mail ou WhatsApp.', price: 0, isIncluded: true, badge: { cls: 'badge-included', txt: 'Incluso' } },
       { key: 'depoimentos', name: 'Depoimentos & Prova Social', desc: 'Avaliações reais para gerar alta confiança e credibilidade no visitante.', price: 25, badge: { cls: 'badge-popular', txt: 'Alta conversão' } },
       { key: 'faq', name: 'FAQ — Perguntas Frequentes', desc: 'Quebre as principais objeções e tire dúvidas do cliente antes do contato.', price: 25 },
       { key: 'temporizador', name: 'Temporizador de Oferta (Escassez)', desc: 'Contador regressivo para promoções ou vagas por tempo limitado.', price: 25, badge: { cls: 'badge-ads', txt: 'Vendas' } },
@@ -383,6 +384,19 @@ const TYPE_CONFIGS = {
       { key: 'flowAnalytic', name: 'Flow Analytic', desc: 'Descubra exatamente quais produtos e coleções estão sendo mais clicados.', price: 25, isMonthly: true, monthlyPrice: 25, badge: { cls: 'badge-rec', txt: 'R$ 25/mês' } }
     ]
   },
+  agendamentoSite: {
+    name: 'Sistema de Agendamento',
+    basePrice: null,
+    skipsSize: true,
+    sizeLabel: 'Sistema completo com painel de agendamentos',
+    features: [
+      { key: 'agendamento', name: 'Painel de Agendamento', desc: 'Agenda online com painel para gerir horários, disponibilidade e marcações.', price: 0, isIncluded: true, badge: { cls: 'badge-included', txt: 'Incluso no sistema' } },
+      { key: 'whatsapp', name: 'Botão de WhatsApp', desc: 'Canal direto para dúvidas e confirmação de horários.', price: 0, isIncluded: true, badge: { cls: 'badge-included', txt: 'Incluso' } },
+      { key: 'formulario', name: 'Formulário de contacto', desc: 'Receba pedidos de informação e contactos fora do horário de atendimento.', price: 30 },
+      { key: 'mapa', name: 'Google Maps integrado', desc: 'Mostre a localização do seu espaço ou escritório.', price: 20 },
+      { key: 'analytics', name: 'Google Analytics', desc: 'Acompanhe visitas e os pontos de maior interesse.', price: 40 }
+    ]
+  },
   personalizado: {
     name: 'Projeto Personalizado',
     basePrice: null,
@@ -406,6 +420,7 @@ const PRICES = {
   institucional: 749,
   cardapio: 749,
   catalogo: 749,
+  agendamentoSite: null,
   personalizado: null,
   sec4: 0,
   sec6: 120,
@@ -440,6 +455,7 @@ const EURO_PRICES = {
 };
 const EURO_BY_BRL_PRICE = { 0: 0, 20: 49, 25: 59, 30: 69, 35: 79, 40: 89, 45: 99, 60: 119, 100: 149, 200: 299, 400: 649 };
 const EURO_DISCOUNT_FACTOR = 0.7;
+const EURO_FINAL_PRICES = { institucional: 400, cardapio: 400, catalogo: 400, agendamentoSite: 400 };
 
 let state = {
   currentStep: 0,
@@ -469,8 +485,18 @@ function discountedEuro(value, keepCents = false) {
 }
 function priceValue(brlValue, priceKey) {
   if (!isPortugal()) return brlValue;
+  if (priceKey && Object.prototype.hasOwnProperty.call(EURO_FINAL_PRICES, priceKey)) return EURO_FINAL_PRICES[priceKey];
   if (priceKey && Object.prototype.hasOwnProperty.call(EURO_PRICES, priceKey)) return discountedEuro(EURO_PRICES[priceKey], priceKey === 'cadastroUnit');
   return discountedEuro(EURO_BY_BRL_PRICE[brlValue] ?? brlValue);
+}
+function featurePriceValue(brlValue, featureKey) {
+  const value = priceValue(brlValue);
+  return isPortugal() && featureKey !== 'agendamento' ? Math.round(value / 2) : value;
+}
+function extraPriceValue(brlValue, extraKey) {
+  const value = priceValue(brlValue, extraKey);
+  if (!isPortugal()) return value;
+  return extraKey === 'cadastroUnit' ? Math.round(value * 50) / 100 : Math.round(value / 2);
 }
 function monthlyValue() { return isPortugal() ? discountedEuro(EURO_PRICES.flowAnalytic) : 25; }
 const fmt = v => Number(v || 0).toLocaleString(currentMarket().locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -532,7 +558,7 @@ function getFeaturePriceStr(key) {
     if (found) {
       if (found.isIncluded) return 'Incluso';
       if (found.isMonthly) return '+ ' + monthlyMoney();
-      return '+ ' + money(priceValue(found.price));
+      return '+ ' + money(featurePriceValue(found.price, found.key));
     }
   }
   return '';
@@ -560,11 +586,11 @@ function calcCadastro() {
   if (!state.extras.includes('cadastro')) return 0;
   const q = parseInt(state.qtdProdutos, 10) || 0;
   const excedente = Math.max(0, q - 20);
-  return Math.round(excedente * priceValue(0.8, 'cadastroUnit') * 100) / 100;
+  return Math.round(excedente * extraPriceValue(0.8, 'cadastroUnit') * 100) / 100;
 }
 
 function calcTotal() {
-  if (!state.siteType || state.siteType === 'personalizado') return null;
+  if (!state.siteType || state.siteType === 'personalizado' || (state.siteType === 'agendamentoSite' && !isPortugal())) return null;
   const cfg = TYPE_CONFIGS[state.siteType];
   if (!cfg) return 0;
   let t = priceValue(cfg.basePrice || 0, state.siteType);
@@ -574,7 +600,7 @@ function calcTotal() {
   state.features.forEach(fKey => {
     const fDef = cfg.features.find(f => f.key === fKey);
     if (fDef && !fDef.isIncluded && !fDef.isMonthly) {
-      t += priceValue(fDef.price || 0);
+      t += featurePriceValue(fDef.price || 0, fDef.key);
     }
   });
   if (state.design) {
@@ -584,7 +610,7 @@ function calcTotal() {
     if (e === 'cadastro') {
       t += calcCadastro();
     } else {
-      t += priceValue(PRICES[e] || 0, e);
+      t += extraPriceValue(PRICES[e] || 0, e);
     }
   });
   return t;
@@ -629,11 +655,12 @@ function renderStep0() {
     { key: 'institucional', name: 'Site Institucional', desc: 'Site corporativo completo para apresentar sua empresa, serviços, equipe, diferenciais e contato.', badge: { cls: 'badge-popular', txt: 'Mais solicitado' } },
     { key: 'cardapio', name: 'Cardápio Online', desc: 'Cardápio digital moderno para restaurantes, hamburguerias e delivery receberem pedidos sem taxas.', badge: { cls: 'badge-local', txt: 'Negócios locais' } },
     { key: 'catalogo', name: 'Catálogo Online', desc: 'Vitrine digital para expor produtos, coleções e estoques de forma organizada e atrativa.', badge: null },
+    { key: 'agendamentoSite', name: 'Sistema de Agendamento', desc: 'Agenda online com painel para gerir horários, disponibilidade e marcações.', badge: { cls: 'badge-rec', txt: 'Com painel' } },
     { key: 'personalizado', name: 'Projeto Personalizado', desc: 'Para portais complexos, integrações específicas, sistemas ou necessidades sob medida.', badge: { cls: 'badge-rec', txt: 'Sob análise' } }
   ];
   const cards = types.map(t => {
     const sel = state.siteType === t.key ? 'selected' : '';
-    const price = t.key === 'personalizado' ? '<span class="card-price">' + textForMarket('Valor sob análise', 'Valor sob consulta') + '</span>' : '<span class="card-price">' + textForMarket('A partir de ', 'Desde ') + money(priceValue(PRICES[t.key], t.key)) + '</span>';
+    const price = t.key === 'personalizado' || (t.key === 'agendamentoSite' && !isPortugal()) ? '<span class="card-price">' + textForMarket('Valor sob análise', 'Valor sob consulta') + '</span>' : '<span class="card-price">' + textForMarket('A partir de ', 'Desde ') + money(priceValue(PRICES[t.key], t.key)) + '</span>';
     const badge = t.badge ? '<span class="card-badge ' + t.badge.cls + '">' + t.badge.txt + '</span>' : '';
     return '<div class="option-card ' + sel + '" data-type="' + t.key + '" onclick="selectType(\'' + t.key + '\')"><div class="card-check">' + SVG_CHECK + '</div><div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap"><div class="card-icon">' + ICONS[t.key] + '</div>' + badge + '</div><div class="card-name">' + t.name + '</div><div class="card-desc">' + t.desc + '</div>' + price + '</div>';
   }).join('');
@@ -658,7 +685,7 @@ function renderStep1() {
 
 function renderStep2() {
   const cfg = TYPE_CONFIGS[state.siteType] || TYPE_CONFIGS.landingPage;
-  const features = cfg.features;
+  const features = cfg.features.filter(f => f.key !== 'flowAnalytic');
   const eyebrow = getStepEyebrow(2);
   const cards = features.map(f => {
     const isSel = state.features.includes(f.key);
@@ -671,7 +698,7 @@ function renderStep2() {
     } else if (f.isMonthly) {
       priceHtml = '<span class="feature-price" style="color:var(--primary)">' + textForMarket('Adicionar ', 'Adicionar ') + '+ ' + monthlyMoney() + '</span>';
     } else {
-      priceHtml = '<span class="feature-price">' + textForMarket('Adicionar ', 'Adicionar ') + '+ ' + money(priceValue(f.price)) + '</span>';
+      priceHtml = '<span class="feature-price">' + textForMarket('Adicionar ', 'Adicionar ') + '+ ' + money(featurePriceValue(f.price, f.key)) + '</span>';
     }
     const badgeText = f.key === 'flowAnalytic' ? monthlyMoney() : (f.badge ? f.badge.txt : '');
     const badge = f.badge ? '<span class="card-badge ' + f.badge.cls + '" style="font-size:.6rem;padding:.15rem .5rem">' + badgeText + '</span>' : '';
@@ -732,7 +759,7 @@ function renderStep4() {
   const isCatalog = state.siteType === 'catalogo';
   const cadTitle = isFood ? 'Cadastro dos itens do cardápio' : (isCatalog ? 'Cadastro de produtos da loja' : 'Cadastro de conteúdo / itens');
   const itemKind = isCatalog ? 'produtos' : 'itens';
-  const cadSubtitle = textForMarket('Gratuito até 20 ' + itemKind + '. Acima disso, ' + money(priceValue(0.8, 'cadastroUnit')) + ' por item excedente.', 'Gratuito até 20 ' + itemKind + '. Depois disso, ' + money(priceValue(0.8, 'cadastroUnit')) + ' por cada item adicional.');
+  const cadSubtitle = textForMarket('Gratuito até 20 ' + itemKind + '. Acima disso, ' + money(extraPriceValue(0.8, 'cadastroUnit')) + ' por item excedente.', 'Gratuito até 20 ' + itemKind + '. Depois disso, ' + money(extraPriceValue(0.8, 'cadastroUnit')) + ' por cada item adicional.');
 
   const extras = [
     { key: 'textos', name: 'Criação dos textos', desc: 'Desenvolvimento e organização dos textos para as principais áreas do site.', price: PRICES.textos },
@@ -763,7 +790,7 @@ function renderStep4() {
     } else if (e.isFree) {
       priceStr = '<span class="feature-price free">✓ ' + textForMarket('Incluso gratuitamente', 'Incluído gratuitamente') + '</span>';
     } else {
-      priceStr = '<span class="feature-price">+ ' + money(priceValue(e.price, e.key)) + '</span>';
+      priceStr = '<span class="feature-price">+ ' + money(extraPriceValue(e.price, e.key)) + '</span>';
     }
     return '<div class="feature-card ' + sel + '" data-extra="' + e.key + '" onclick="toggleExtra(\'' + e.key + '\')"><div class="feature-checkbox">' + SVG_CHECK + '</div><div class="feature-info"><div class="feature-name">' + (ICONS[e.key] || '') + ' <span>' + e.name + '</span></div><div class="feature-desc">' + e.desc + '</div>' + priceStr + '</div></div>';
   }).join('');
@@ -777,7 +804,7 @@ function renderStep5() {
 }
 
 function renderSummaryHTML() {
-  const typeName = { landingPage: 'Landing Page', portfolio: 'Portfólio', institucional: 'Site Institucional', cardapio: textForMarket('Cardápio Online', 'Menu Digital'), catalogo: 'Catálogo Online', personalizado: 'Projeto Personalizado' };
+  const typeName = { landingPage: 'Landing Page', portfolio: 'Portfólio', institucional: 'Site Institucional', cardapio: textForMarket('Cardápio Online', 'Menu Digital'), catalogo: 'Catálogo Online', agendamentoSite: 'Sistema de Agendamento', personalizado: 'Projeto Personalizado' };
   const sizeName = { sec4: 'Até 4 ' + textForMarket('seções', 'secções'), sec6: 'Até 6 ' + textForMarket('seções', 'secções'), sec8: 'Até 8 ' + textForMarket('seções', 'secções'), sec10: 'Até 10 ' + textForMarket('seções', 'secções'), sec10p: 'Mais de 10 ' + textForMarket('seções', 'secções') };
   const designName = { designEssencial: 'Essencial (Incluso)', designPersonalizado: 'Personalizado', designPremium: 'Premium' };
 
@@ -975,7 +1002,7 @@ function sendWhatsApp() {
   const isCatalog = state.siteType === 'catalogo';
   const cadLabel = isFood ? 'Cadastro de itens do cardápio' : (isCatalog ? 'Cadastro de produtos' : 'Cadastro de conteúdo');
   const cadDesc = cadLabel + ': ' + state.qtdProdutos + ' itens (' + (cadCost === 0 ? textForMarket('Gratuito até 20 itens', 'Gratuito até 20 itens') : '+ ' + money(cadCost)) + ')';
-  const extraNames = { textos: 'Criação dos textos (+ ' + money(priceValue(PRICES.textos, 'textos')) + ')', revisao: 'Revisão dos textos (+ ' + money(priceValue(PRICES.revisao, 'revisao')) + ')', tratamento: 'Tratamento de imagens (+ ' + money(priceValue(PRICES.tratamento, 'tratamento')) + ')', pesquisa: 'Pesquisa de imagens (+ ' + money(priceValue(PRICES.pesquisa, 'pesquisa')) + ')', cadastro: cadDesc, dominio: 'Configuração de domínio (1 ano) (+ ' + money(priceValue(PRICES.dominio, 'dominio')) + ')', hospedagem: textForMarket('Hospedagem inclusa (Grátis)', 'Alojamento incluído (Gratuito)') };
+  const extraNames = { textos: 'Criação dos textos (+ ' + money(extraPriceValue(PRICES.textos, 'textos')) + ')', revisao: 'Revisão dos textos (+ ' + money(extraPriceValue(PRICES.revisao, 'revisao')) + ')', tratamento: 'Tratamento de imagens (+ ' + money(extraPriceValue(PRICES.tratamento, 'tratamento')) + ')', pesquisa: 'Pesquisa de imagens (+ ' + money(extraPriceValue(PRICES.pesquisa, 'pesquisa')) + ')', cadastro: cadDesc, dominio: 'Configuração de domínio (1 ano) (+ ' + money(extraPriceValue(PRICES.dominio, 'dominio')) + ')', hospedagem: textForMarket('Hospedagem inclusa (Grátis)', 'Alojamento incluído (Gratuito)') };
 
   const td = totalDisplay();
   let priceStr = td.custom ? textForMarket('Sob análise', 'Sob consulta') : money(td.value);
