@@ -190,6 +190,7 @@ textarea.form-input{resize:vertical;min-height:100px}
 .market-choice small{display:block;font-size:.76rem;line-height:1.45;color:var(--muted)}
 .market-note{font-size:.73rem!important;margin-top:1rem!important;color:#94A3B8!important}
 @media(max-width:520px){.site-header{padding:.65rem .85rem}.header-actions{gap:.25rem}.market-switch,.header-actions .btn{font-size:.68rem!important;padding:.35rem .5rem!important}}
+@media(max-width:600px){.progress-wrapper{margin-bottom:2rem}.progress-steps{margin-bottom:.5rem}.step-circle{width:28px;height:28px;font-size:.7rem}.progress-labels{justify-content:center;min-height:1.1rem}.progress-label{display:none}.progress-label.active{display:block;width:auto;font-size:.75rem;white-space:nowrap}.progress-bar-track{margin-top:.55rem}}
   </style>
 </head>
 <body class="bg-grid">
@@ -429,8 +430,7 @@ const MARKETS = {
   pt: { locale: 'pt-PT', label: 'Portugal · €', messageLabel: 'Portugal / Euro (€)' }
 };
 
-// Valores próprios para Portugal: posicionamento profissional de entrada,
-// em vez de uma simples conversão cambial dos preços em reais.
+// Valores próprios para Portugal, com 30% de desconto aplicado à tabela em euros.
 const EURO_PRICES = {
   landingPage: 349, portfolio: 399, institucional: 899, cardapio: 599, catalogo: 699,
   sec4: 0, sec6: 95, sec8: 165, sec10: 245, sec10p: 345,
@@ -439,6 +439,7 @@ const EURO_PRICES = {
   cadastroUnit: 1.25, flowAnalytic: 29
 };
 const EURO_BY_BRL_PRICE = { 0: 0, 20: 49, 25: 59, 30: 69, 35: 79, 40: 89, 45: 99, 60: 119, 100: 149, 200: 299, 400: 649 };
+const EURO_DISCOUNT_FACTOR = 0.7;
 
 let state = {
   currentStep: 0,
@@ -462,12 +463,16 @@ const SVG_CHECK = '<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><pa
 function currentMarket() { return MARKETS[state.market || 'br']; }
 function isPortugal() { return state.market === 'pt'; }
 function textForMarket(br, pt) { return isPortugal() ? pt : br; }
+function discountedEuro(value, keepCents = false) {
+  const discounted = Number(value || 0) * EURO_DISCOUNT_FACTOR;
+  return keepCents ? Math.round(discounted * 100) / 100 : Math.round(discounted);
+}
 function priceValue(brlValue, priceKey) {
   if (!isPortugal()) return brlValue;
-  if (priceKey && Object.prototype.hasOwnProperty.call(EURO_PRICES, priceKey)) return EURO_PRICES[priceKey];
-  return EURO_BY_BRL_PRICE[brlValue] ?? brlValue;
+  if (priceKey && Object.prototype.hasOwnProperty.call(EURO_PRICES, priceKey)) return discountedEuro(EURO_PRICES[priceKey], priceKey === 'cadastroUnit');
+  return discountedEuro(EURO_BY_BRL_PRICE[brlValue] ?? brlValue);
 }
-function monthlyValue() { return isPortugal() ? EURO_PRICES.flowAnalytic : 25; }
+function monthlyValue() { return isPortugal() ? discountedEuro(EURO_PRICES.flowAnalytic) : 25; }
 const fmt = v => Number(v || 0).toLocaleString(currentMarket().locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const money = v => Number(v || 0).toLocaleString(currentMarket().locale, { style: 'currency', currency: isPortugal() ? 'EUR' : 'BRL', minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const monthlyMoney = () => money(monthlyValue()) + '/mês';
