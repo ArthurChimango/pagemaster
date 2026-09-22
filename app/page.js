@@ -33,7 +33,7 @@ const projects = [
     title: 'Dr. Marcio Irber',
     category: 'Landing page médica',
     description: 'Autoridade profissional, serviços e agendamento organizados em uma jornada simples.',
-    image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=1200&q=82',
+    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=82',
     href: 'https://drmarcioirber.com.br/',
     featured: true,
   },

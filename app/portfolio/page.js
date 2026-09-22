@@ -20,7 +20,7 @@ const portfolioItems = [
         category: "saude",
         categoryLabel: "Landing Page Médica",
         badge: "Cliente Real",
-        image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=1200&q=82",
+        image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=82",
         link: "https://drmarcioirber.com.br/",
         description: "Landing page médica focada em autoridade profissional, serviços e agendamento de consultas."
     },
