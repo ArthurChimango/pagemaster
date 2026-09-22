@@ -267,6 +267,14 @@ a {
   text-decoration: none;
 }
 
+.legacy-hero a {
+  color: #ffffff;
+}
+
+.legacy-hero .legacy-hero-kicker {
+  color: #06b6d4;
+}
+
 .site-header {
   width: min(100% - 40px, 1240px);
   min-height: 84px;
@@ -458,6 +466,7 @@ a {
 
 .services-section {
   background: #ffffff;
+  padding-top: clamp(11rem, 22vw, 19rem);
 }
 
 .services-list {

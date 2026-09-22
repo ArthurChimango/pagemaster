@@ -25,7 +25,7 @@ const projects = [
     title: 'Ecossistema IsaBlack',
     category: 'Site institucional',
     description: 'Arquitetura, mídia, conteúdo e ensino reunidos em uma experiência digital editorial.',
-    image: '/assets/projects/isablack.webp',
+    image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=82',
     href: 'https://www.isablack.com.br/',
     featured: true,
   },
@@ -33,7 +33,7 @@ const projects = [
     title: 'Dr. Marcio Irber',
     category: 'Landing page médica',
     description: 'Autoridade profissional, serviços e agendamento organizados em uma jornada simples.',
-    image: '/assets/projects/dr-marcio-irber.webp',
+    image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=1200&q=82',
     href: 'https://drmarcioirber.com.br/',
     featured: true,
   },
@@ -111,22 +111,65 @@ export default function Home() {
         </nav>
       </header>
 
-      <section className="hero" id="top">
-        <div className="hero-copy">
-          <p className="eyebrow">Estratégia, design e tecnologia</p>
-          <h1>Sites que deixam claro por que escolher você.</h1>
-          <p className="hero-text">
-            Projetos digitais objetivos, rápidos e pensados para transformar visitas em oportunidades de negócio.
+      <section
+        className="legacy-hero relative pt-40 px-6 flex flex-col items-center overflow-visible bg-brand-primary rounded-b-[3rem] shadow-2xl"
+        id="top"
+      >
+        <div className="absolute inset-0 z-0 bg-grid-pattern opacity-40 rounded-b-[3rem]" />
+        <div className="absolute top-1/4 left-10 w-4 h-4 rounded-full border-2 border-white/40 hidden md:block z-0" />
+        <div className="absolute top-20 right-32 w-3 h-3 rounded-full bg-white hidden md:block z-0" />
+        <div className="absolute bottom-1/3 right-[15%] w-3 h-3 rounded-full border-2 border-[#60A5FA]/80 hidden lg:block z-0" />
+
+        <div className="relative z-10 text-center w-full max-w-[1400px] mx-auto">
+          <img
+            src="/assets/logo.png"
+            alt="PageMaster"
+            className="h-12 md:h-16 mx-auto mb-8 object-contain brightness-0 invert drop-shadow-md"
+          />
+
+          <h1 className="text-[12vw] md:text-[8vw] font-extrabold leading-[0.85] text-white mb-8 tracking-tight">
+            <span className="sr-only">Criação de sites, landing pages e sistemas web:</span>
+            MUITO ALÉM<br />
+            <span className="text-blue-200">DE SITES.</span><br />
+            MÁQUINAS DE<br />
+            <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]">VENDAS.</span>
+          </h1>
+
+          <p className="text-lg md:text-2xl text-blue-50 font-medium max-w-2xl mx-auto leading-relaxed drop-shadow-md mb-10">
+            Não criamos apenas sites. Construímos experiências digitais e automações que trabalham pelo seu negócio.
           </p>
-          <div className="hero-actions">
-            <a className="button button-primary" href="#portfolio">Ver projetos</a>
-            <a className="button button-secondary" href="#contato">Falar sobre meu site</a>
+
+          <div className="flex flex-col items-center gap-6 relative z-30 mb-16">
+            <a
+              href="#contato"
+              className="group relative inline-flex items-center gap-4 px-8 py-5 bg-brand-secondary text-white rounded-full overflow-hidden shadow-[0_0_40px_rgba(15,23,42,0.4)] hover:shadow-[0_0_60px_rgba(6,182,212,0.6)] hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="flex flex-col text-left relative z-10">
+                <span className="legacy-hero-kicker text-[10px] font-mono font-bold uppercase tracking-widest leading-none mb-1">Fale conosco</span>
+                <span className="text-lg font-extrabold uppercase tracking-widest leading-none">Iniciar projeto</span>
+              </div>
+              <span className="text-xl transform group-hover:translate-x-2 transition-transform relative z-10" aria-hidden="true">→</span>
+            </a>
+
+            <div className="flex flex-wrap justify-center gap-4">
+              <a
+                href="/catalogo"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-md hover:-translate-y-0.5 duration-200"
+              >
+                Simulador catálogo
+              </a>
+              <a
+                href="/agendamento"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-md hover:-translate-y-0.5 duration-200"
+              >
+                Simulador agendamento
+              </a>
+            </div>
           </div>
         </div>
-        <div className="hero-note" aria-label="Resumo de atuação">
-          <span>PageMaster</span>
-          <strong>Do primeiro clique ao contato.</strong>
-          <p>Uma mensagem clara, uma boa experiência e o caminho mais curto até o seu cliente.</p>
+
+        <div className="relative w-full max-w-5xl mx-auto z-20 -mb-24 md:-mb-40 lg:-mb-56 px-4 flex justify-center drop-shadow-2xl">
+          <img src="/assets/fundo.png" alt="Prévia de projetos PageMaster em celulares" className="w-full h-auto object-contain" />
         </div>
       </section>
 

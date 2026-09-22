@@ -10,7 +10,7 @@ const portfolioItems = [
         category: "b2b",
         categoryLabel: "Site Institucional — Arquitetura, Mídia & Ensino",
         badge: "Cliente Real",
-        image: "/assets/projects/isablack.webp",
+        image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=82",
         link: "https://www.isablack.com.br/",
         description: "Ecossistema institucional que reúne arquitetura, mídia, conteúdo e ensino em uma experiência editorial."
     },
@@ -20,7 +20,7 @@ const portfolioItems = [
         category: "saude",
         categoryLabel: "Landing Page Médica",
         badge: "Cliente Real",
-        image: "/assets/projects/dr-marcio-irber.webp",
+        image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=1200&q=82",
         link: "https://drmarcioirber.com.br/",
         description: "Landing page médica focada em autoridade profissional, serviços e agendamento de consultas."
     },
