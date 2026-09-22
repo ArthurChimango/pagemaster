@@ -31,8 +31,8 @@ const spaceMono = Space_Mono({
 
 
 export const metadata = {
-  title: "PageMaster | Criação de Sites, Sistemas Web e Landing Pages em Uberlândia",
-  description: "Desenvolvimento de sites profissionais, landing pages de alta conversão e sistemas sob medida em Uberlândia. Cardápios digitais, agendamentos online e mais.",
+  title: "PageMaster | Sites, Landing Pages e Sistemas Web",
+  description: "Sites institucionais, landing pages e sistemas web claros, rápidos e pensados para transformar visitas em oportunidades de negócio.",
   icons: {
     icon: "/favicon.png",
     shortcut: "/favicon.png",
@@ -47,8 +47,8 @@ export const metadata = {
   },
   openGraph: {
     type: "website",
-    title: "PageMaster | Criação de Sites, Sistemas Web e Landing Pages em Uberlândia",
-    description: "Desenvolvimento de sites profissionais, landing pages de alta conversão e sistemas sob medida em Uberlândia. Cardápios digitais, agendamentos online e mais.",
+    title: "PageMaster | Sites, Landing Pages e Sistemas Web",
+    description: "Sites institucionais, landing pages e sistemas web claros, rápidos e pensados para transformar visitas em oportunidades de negócio.",
     images: [
       {
         url: "https://pagemaster.com.br/assets/fundo.png",
@@ -59,15 +59,15 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PageMaster | Criação de Sites, Sistemas Web e Landing Pages em Uberlândia",
-    description: "Desenvolvimento de sites profissionais, landing pages de alta conversão e sistemas sob medida em Uberlândia. Cardápios digitais, agendamentos online e mais.",
+    title: "PageMaster | Sites, Landing Pages e Sistemas Web",
+    description: "Sites institucionais, landing pages e sistemas web claros, rápidos e pensados para transformar visitas em oportunidades de negócio.",
     images: ["https://pagemaster.com.br/assets/fundo.png"],
   },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-PT" className={`${inter.variable} ${playfair.variable} ${outfit.variable} ${bebas.variable} ${spaceMono.variable} h-full antialiased`}>
+    <html lang="pt-BR" className={`${inter.variable} ${playfair.variable} ${outfit.variable} ${bebas.variable} ${spaceMono.variable} h-full antialiased`}>
       <head>
         {/* Google Tag Manager */}
         <Script id="gtm" strategy="afterInteractive">
