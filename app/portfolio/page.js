@@ -5,6 +5,26 @@ import Link from 'next/link';
 
 const portfolioItems = [
     {
+        id: 7,
+        title: "Ecossistema IsaBlack",
+        category: "b2b",
+        categoryLabel: "Site Institucional — Arquitetura, Mídia & Ensino",
+        badge: "Cliente Real",
+        image: "/assets/projects/isablack.webp",
+        link: "https://www.isablack.com.br/",
+        description: "Ecossistema institucional que reúne arquitetura, mídia, conteúdo e ensino em uma experiência editorial."
+    },
+    {
+        id: 8,
+        title: "Dr. Marcio Irber",
+        category: "saude",
+        categoryLabel: "Landing Page Médica",
+        badge: "Cliente Real",
+        image: "/assets/projects/dr-marcio-irber.webp",
+        link: "https://drmarcioirber.com.br/",
+        description: "Landing page médica focada em autoridade profissional, serviços e agendamento de consultas."
+    },
+    {
         id: 1,
         title: "Carlos Alberto Arquitetura",
         category: "b2b",
@@ -41,7 +61,7 @@ const portfolioItems = [
         categoryLabel: "Lojas & Varejo (Casa Pronta Udi)",
         badge: "Casa Pronta Udi",
         image: "https://www.paulomauro.com.br/wp-content/uploads/2023/02/paulomauro-blog-capa-como-economizar-em-moveis-planejados.jpg",
-        link: "templates/catalogo.html",
+        link: "https://casaprontaudia.com.br/",
         description: "Catálogo digital interativo desenvolvido sob medida para a empresa Casa Pronta Udi."
     },
     {
@@ -81,7 +101,7 @@ export default function Portfolio() {
     ];
 
     const filteredItems = portfolioItems.filter(item => {
-        const matchesCategory = selectedCategory === "all" 
+        const matchesCategory = selectedCategory === "all"
             || item.category === selectedCategory
             || (selectedCategory === "cases" && (item.badge === "Cliente Real" || item.badge === "Casa Pronta Udi"));
         const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -163,8 +183,8 @@ export default function Portfolio() {
                                     type="button"
                                     onClick={() => setSelectedCategory(cat.key)}
                                     className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 border ${selectedCategory === cat.key
-                                            ? 'bg-brand-primary text-white border-brand-primary shadow-lg shadow-blue-500/20'
-                                            : 'bg-white text-brand-muted border-brand-border hover:bg-gray-50'
+                                        ? 'bg-brand-primary text-white border-brand-primary shadow-lg shadow-blue-500/20'
+                                        : 'bg-white text-brand-muted border-brand-border hover:bg-gray-50'
                                         }`}
                                 >
                                     {cat.label}
